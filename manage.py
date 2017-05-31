@@ -2,6 +2,25 @@
 import os
 import sys
 
+from errno import errorcode
+import MySQLdb
+
+
+"""DB Verbindung testen"""
+try:
+    db = MySQLdb.connect('localhost', 'qmaster', 'SaRiPuF16', 'quizgame')
+except MySQLdb.connector.Error as err:
+  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    print("Something is wrong with your user name or password")
+  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+    print("Database does not exist")
+  else:
+    print(err)
+else:
+  print("ok")
+  db.close()
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Semesterprojekt.settings")
     try:
@@ -20,3 +39,4 @@ if __name__ == "__main__":
             )
         raise
     execute_from_command_line(sys.argv)
+
