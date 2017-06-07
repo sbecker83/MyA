@@ -8,7 +8,7 @@ import MySQLdb
 
 """DB Verbindung testen"""
 try:
-    db = MySQLdb.connect('localhost', 'qmaster', 'SaRiPuF16', 'quizgame')
+    db = MySQLdb.connect('localhost', 'MaSaRi', 'OOPss2017', 'MyAdb')
 except MySQLdb.connector.Error as err:
   if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
     print("Something is wrong with your user name or password")

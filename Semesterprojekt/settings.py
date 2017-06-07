@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'MyA.apps.MyaConfig',
+    'bootstrap3',
+    'MyA',
 ]
 
 
@@ -80,9 +81,9 @@ WSGI_APPLICATION = 'Semesterprojekt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'quizgame',
-        'USER': 'qmaster',
-        'PASSWORD': 'SaRiPuF16',
+        'NAME': 'MyAdb',
+        'USER': 'MaSaRi',
+        'PASSWORD': 'OOPss2017',
         'HOST': 'localhost',
         'PORT': '3306',
     }
