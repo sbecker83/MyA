@@ -8,8 +8,8 @@ import MySQLdb
 
 """DB Verbindung testen"""
 try:
-    db = MySQLdb.connect('localhost', 'MaSaRi', 'OOPss2017', 'MyAdb')
-except MySQLdb.connector.Error as err:
+    db = MySQLdb.connect('localhost', 'MaSaRi', 'OOPss2017', 'myadb')
+except MySQLdb.connection.Error as err:
   if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
     print("Something is wrong with your user name or password")
   elif err.errno == errorcode.ER_BAD_DB_ERROR:

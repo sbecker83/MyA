@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'Semesterprojekt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'MyAdb',
+        'NAME': 'myadb',
         'USER': 'MaSaRi',
         'PASSWORD': 'OOPss2017',
         'HOST': 'localhost',

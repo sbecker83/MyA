@@ -7,7 +7,6 @@ from datetime import datetime
 # id = models.AutoField(primary_key=True)
 
 class Mitarbeiter(models.Model):
-    url = models.URLField()
     nickname = models.CharField('nickname', max_length=75)
     pwd = models.CharField('pwd', max_length=100)
     vorname = models.CharField('vorname', max_length=100)
@@ -24,6 +23,12 @@ class Mitarbeiter(models.Model):
     fax = models.CharField('fax', null=True, max_length=100)
     mobile = models.CharField('mobile', null=True, max_length=100)
     email = models.CharField('email', null=True, max_length=100)
+
+    #def __str__(self):
+    #    return self.vorname, self.nachname, self.titel, self.position
+
+    def __str__(self):
+        return "{} {} {} {}".format(self.vorname, self.nachname, self.titel, self.position)
 
 class Kunden(models.Model):
     firma = models.CharField('firma', max_length=100)

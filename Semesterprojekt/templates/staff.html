@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_titel }}</title>
+</head>
+<body>
+<h2>{{ page_titel }}</h2>
+
+    <table>
+        <tr>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Titel</th>
+            <th>Position</th>
+        </tr>
+        <tr>
+            {% for mitarbeiter in mitarbeiters %}
+                <tr>
+                <td>{{ mitarbeiter.vorname }}</td>
+                <td>{{ mitarbeiter.nachname }}</td>
+                <td>{{ mitarbeiter.titel }}</td>
+                <td>{{ mitarbeiter.position }}</td>
+                </tr>
+
+            {% endfor %}
+        </tr>
+    </table>
+</body>
+</html>

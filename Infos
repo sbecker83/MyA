@@ -1,0 +1,74 @@
+Bootstrap3 Paket
+pip install django-bootstrap3
+
+=>Test:
+=>pip install pytz django-crispy-forms
+=>http://django-crispy-forms.readthedocs.io/en/latest/
+
+
+==========================================================================================================================
+Installation Django (https://docs.djangoproject.com/en/1.11/howto/windows/)
+--------------------------------------------------------------------------
+
+Python 3 installieren (https://www.python.org/downloads/)
+Django Download (https://pypi.python.org/pypi/Django/1.10)
+
+createsuperuser (Administrator anlegen)
+makemigrations MyA
+migrate (für alle Tabellen anzulegen)
+migrate MyA (für Tabellen aus model.py)
+
+
+==========================================================================================================================
+DB Schema anlegen
+-----------------------
+CREATE USER 'MaSaRi'@'localhost' IDENTIFIED BY 'OOPss2017';
+
+GRANT ALL PRIVILEGES ON *.* TO 'MaSaRi'@'localhost' IDENTIFIED BY 'OOPss2017'
+REQUIRE NONE WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0
+MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+
+
+
+DB Struktur anlegen
+-----------------------
+CREATE DATABASE IF NOT EXISTS MyAdb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+USE  MyAdb;
+
+GRANT ALL PRIVILEGES ON `MyAdb`.* TO 'MaSaRi'@'localhost';
+
+==========================================================================================================================
+Test Datenimport in Tabelle Mitarbeiter
+----------------------------------------------
+Eingabe in der Python Console: 2 Datensätze anlegen: ok
+
+from MyA.models import *
+m1=Mitarbeiter (nickname='Hugo123', pwd='Hugo123', vorname='Hugo', nachname='Irgendwas', anrede='H', titel='Schnoessel vom Dienst', position='hohes Tier')
+m1.save()
+from MyA.models import *
+m2=Mitarbeiter (nickname='Pia0815', pwd='Pia0815', vorname='Pia', nachname='Hopper', anrede='F', titel='Beautyqueen', position='niederes Volk')
+m2.save()
+
+Benutzer ausgeben: ok
+
+mitarbeiters = Mitarbeiter.objects.all()
+for m in mitarbeiters:
+    print(m)
+==========================================================================================================================
+
+Infos
+-----------------------
+manage.py
+ = Datei zur Verwaltung des Projektes, Auf dieses Verzeichnis wird in allen anderen Kapiteln mit Projektverzeichnis Bezug genommen.
+
+Semesterprojekt\settings.py
+= Das für die Konfigurationen des Projektes (Arbeitsverzeichnis, DB Verbindung, etc.)
+
+MyA\admin.py
+= Registrierung der Models
+
+userauth
+= Ordner: App für die User Authentifizierung (Login, Logout, Register)
+
+
