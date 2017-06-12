@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{{ page_titel }}</h2>
+    <h2>{{ page_titel }}</h2>
 
-    <table>
+    <table border ="1">
+        <colgroup>
+            <col width="120">
+            <col width="120">
+            <col width="180">
+            <col width="180">
+        </colgroup>
         <tr>
             <th>Vorname</th>
             <th>Nachname</th>
@@ -22,4 +28,7 @@
             {% endfor %}
         </tr>
     </table>
+    <br>
+
+
 {% endblock %}
