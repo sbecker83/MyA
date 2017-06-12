@@ -9,11 +9,23 @@
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery=1 %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/myacquisition.css' %}" />
 </head>
 <body>
-    {# Display django.contrib.messages as Bootstrap alerts #}
-    {% bootstrap_messages %}
+    {% if user.is_authenticated %}
+        {% block navigation %}
+            {% include "navigation.html" %}
+        {% endblock %}
+    {% endif %}
+    <div class="container">
+        <div class="row">
+            {# Display django.contrib.messages as Bootstrap alerts #}
+            {% bootstrap_messages %}
 
-    {% block content %}{% endblock %}
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
 </body>
 </html>
