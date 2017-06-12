@@ -17,4 +17,6 @@ def get_staff(request):
 def new_staff(request):
     return render(request, 'staff/newStaff.html',  {'page_titel': 'Neue Mitarbeiter anlegen'})
 
-
+# Neue Mitarbeiter Anlegen
+def myProfile(request):
+    return render(request, 'profile.html',  {'page_titel': 'Mein Profil'})

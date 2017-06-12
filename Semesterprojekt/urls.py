@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from django.conf.urls import url
-from MyA.views import get_staff, new_staff
+from MyA.views import get_staff, new_staff, myProfile
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
@@ -34,6 +34,7 @@ urlpatterns = (
     url(r'^admin/', admin.site.urls),
     url(r'^staff/$', get_staff),
     url(r'^staff/newStaff/$', new_staff),
+    url(r'^myProfile/$', myProfile),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
 )
