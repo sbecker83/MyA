@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from django.conf.urls import url
-from MyA.views import get_staff, new_staff, myProfile
+from MyA.views import homesite, get_staff, new_staff, myProfile
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
@@ -32,6 +32,7 @@ url(r'^staff/$', staff)
 
 urlpatterns = (
     url(r'^admin/', admin.site.urls),
+    url(r'^index/$', homesite),
     url(r'^staff/$', get_staff),
     url(r'^staff/newStaff/$', new_staff),
     url(r'^myProfile/$', myProfile),

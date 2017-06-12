@@ -9,6 +9,10 @@ from MyA.models import Mitarbeiter
 # Create your views here.
 
 # Mitarbeiter - Hauptseite
+def homesite(request):
+    return render(request, 'index.html', {'page_titel': 'Startseite'})
+
+# Mitarbeiter - Hauptseite
 def get_staff(request):
     mitarbeiters = Mitarbeiter.objects.all()
     return render(request, 'staff/staff.html', {'page_titel': 'Mitarbeiter', 'mitarbeiters':mitarbeiters})
