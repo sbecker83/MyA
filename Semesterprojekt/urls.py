@@ -15,9 +15,10 @@ Including another URLconf
 """
 
 from django.conf.urls import url
-from MyA.views import homesite, get_staff, new_staff, myProfile
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+
+import MyA.views
 
 admin.autodiscover()
 
@@ -32,10 +33,10 @@ url(r'^staff/$', staff)
 
 urlpatterns = (
     url(r'^admin/', admin.site.urls),
-    url(r'^index/$', homesite),
-    url(r'^staff/$', get_staff),
-    url(r'^staff/newStaff/$', new_staff),
-    url(r'^myProfile/$', myProfile),
+    url(r'^index/$', MyA.views.homesite, name='index'),
+    url(r'^staff/$', MyA.views.get_staff, name='staff'),
+    url(r'^staff/newStaff/$', MyA.views.new_Staff, name='newStaff'),
+    url(r'^myProfile/$', MyA.views.myProfile, name='profile'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
 )

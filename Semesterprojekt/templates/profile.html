@@ -1,80 +1,17 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 
 {% block content %}
     <h2>{{ page_titel }}</h2>
+    <br>
+    <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
-    <h3>Persönliche Daten</h3>
-    <form>
-        <div class="form-group">
-            <label for="anrede">Anrede</label>
-            <select class="form-control" id="anrede">
-                <option>Bitte wählen</option>
-                <option>Frau</option>
-                <option>Herr</option>
-            </select>
-        </div>
+        {% csrf_token %}
 
-        <div class="form-group">
-            <label for="vorname">Vorname</label>
-            <input type="text" class="form-control" id="vorname" placeholder="Vorname">
-        </div>
-
-        <div class="form-group">
-            <label for="nachname">Nachname</label>
-            <input type="text" class="form-control" id="nachname" placeholder="Nachname">
-        </div>
-
-        <fieldset disabled>
-            <div class="form-group">
-                <label for="position">Position</label>
-                <input type="text" class="form-control" id="position" placeholder="Position">
-            </div>
-
-            <div class="form-group">
-                <label for="titel">Titel</label>
-                <input type="text" class="form-control" id="titel" placeholder="Titel">
-            </div>
-        </fieldset>
-    </form>
-
-    <h3>Kontaktdaten</h3>
-    <form>
-        <div class="form-group">
-            <label for="tel">Telefon</label>
-            <input type="tel" class="form-control" id="tel" placeholder="069123456789">
-        </div>
-
-        <div class="form-group">
-            <label for="fax">Fax</label>
-            <input type="fax" class="form-control" id="fax" placeholder="069987654321">
-        </div>
-
-        <div class="form-group">
-            <label for="mobil">Mobilnummer</label>
-            <input type="tel" class="form-control" id="tel" placeholder="0172123456789">
-        </div>
-
-        <div class="form-group">
-            <label for="email">eMail</label>
-            <input type="text" class="form-control" id="email" placeholder="vorname.nachname@domain.de">
-        </div>
-    </form>
-
-    <h3>Login Daten</h3>
-    <form>
-        <fieldset disabled>
-            <div class="form-group">
-                <label for="nickname">Nickname</label>
-                <input type="text" class="form-control" id="nickname" placeholder="Nickname">
-            </div>
-        </fieldset>
-        <div class="form-group">
-            <label for="pwd">Passwowrt</label>
-            <input type="text" class="form-control" id="pwd" placeholder="Password">
-        </div>
+        {% bootstrap_form form layout='horizontal' %}
 
         <button type="submit" class="btn btn-primary">Ändern</button>
-        <button type="submit" class="btn btn-primary">Abbrechen</button>
+        <button type="cancel" class="btn btn-primary">Abbrechen</button>
 
     </form>
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 
 {% block content %}
-    <h2>{{ page_titel }}</h2>
 
     <table border ="1">
         <colgroup>
@@ -17,12 +17,12 @@
             <th>Position</th>
         </tr>
         <tr>
-            {% for mitarbeiter in mitarbeiters %}
+            {% for staff in staffs %}
                 <tr>
-                <td>{{ mitarbeiter.vorname }}</td>
-                <td>{{ mitarbeiter.nachname }}</td>
-                <td>{{ mitarbeiter.titel }}</td>
-                <td>{{ mitarbeiter.position }}</td>
+                <td>{{ staffs.first }}</td>
+                <td>{{ staffs.last }}</td>
+                <td>{{ staffs.title }}</td>
+                <td>{{ staffs.position }}</td>
                 </tr>
 
             {% endfor %}
@@ -30,7 +30,6 @@
     </table>
     <br>
 
-    <a href="/staff/newStaff/"><button type="submit" class="btn btn-primary">Neu Anlegen</button></a>
-
+    <a href="{% url 'newStaff' %}" class="btn btn-primary">Neuer anlegen...</a>
 
 {% endblock %}
