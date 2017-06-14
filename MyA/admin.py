@@ -6,11 +6,11 @@ Das Attribut prepopulated_fields hilft in der Admin-Applikation dabei, dass Feld
 # Models beim Admin regisitrieren
 
 from django.contrib import admin
-from MyA.models import Staffs, Customer, Contacts, Events, MemberExt, MemberInt, Notes
+from MyA.models import Staffs, Customers, Contacts, Events, MemberExt, MemberInt, Notes
 
 
 admin.site.register(Staffs)
-admin.site.register(Customer)
+admin.site.register(Customers)
 admin.site.register(Contacts)
 admin.site.register(Events)
 admin.site.register(MemberExt)

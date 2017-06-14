@@ -23,13 +23,10 @@ class Staffs(models.Model):
     mobile = models.CharField('mobile', null=True, max_length=100)
     email = models.CharField('email', null=True, max_length=100)
 
-    #def __str__(self):
-    #    return self.vorname, self.nachname, self.titel, self.position
-
     def __str__(self):
         return "{} {} {} {}".format(self.firstname, self.lastname, self.title, self.position)
 
-class Customer(models.Model):
+class Customers(models.Model):
     company = models.CharField('company', max_length=100)
     street = models.CharField('street', null=True, max_length=100)
     plzcity = models.CharField('plzcity', null=True, max_length=100)
@@ -38,7 +35,7 @@ class Customer(models.Model):
     website = models.CharField('website', null=True, max_length=100)
 
 class Contacts(models.Model):
-    customer = models.ForeignKey(Customer)
+    customer = models.ForeignKey(Customers)
     firstname = models.CharField('firstname', max_length=100)
     lastname = models.CharField('lastname', max_length=100)
     GENDER=(
@@ -55,7 +52,7 @@ class Contacts(models.Model):
     email = models.CharField('email', null=True, max_length=100)
 
 class Events(models.Model):
-    staff = models.ManyToManyField(Staffs, through='MemberInt')           #many to many Field
+    staff = models.ManyToManyField(Staffs, through='MemberInt')       # many to many Field
     contact = models.ManyToManyField(Contacts, through='MemberExt')   # many to many Field
     date = models.DateTimeField('date', default=datetime.now())
     title = models.CharField('title', max_length=100)
