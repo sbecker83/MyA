@@ -14,7 +14,7 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 {# Definiere the Menüpunkte mit dem jeweiligen Namen aus der urls.py  #}  }
-                {% with 'startseite mitarbeiter profil logout' as list %}
+                {% with 'startseite mitarbeiter profil terminkalender logout' as list %}
                     {% for urlname in list.split %}
                         <li {% if request.resolver_match.url_name == urlname %}class="active"{% endif %}><a href="{% url urlname %}">{{ urlname|title }}</a></li>
                     {% endfor %}

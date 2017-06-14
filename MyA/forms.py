@@ -23,7 +23,7 @@ class StaffForm(ModelForm):
             'position': 'Position'
         }
 
-# form with fields to shwow staff profile
+# form with fields to show or update staff profile
 class StaffProfileForm(ModelForm):
     class Meta:
         model = Staffs

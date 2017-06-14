@@ -54,3 +54,7 @@ def myProfile(request):
         form = StaffProfileForm()
 
     return render(request, 'profile.html', {'page_titel': 'Mein Profil',  'form': form})
+
+# Calendar - View
+def calendar(request):
+    return render(request, 'calendar/calendar.html', {'page_titel': 'Terminkalender'})

@@ -28,6 +28,7 @@ urlpatterns = (
     url(r'^mitarbeiter/$', MyA.views.get_staff, name='mitarbeiter'),
     url(r'^mitarbeiter/neuerMA/$', MyA.views.new_Staff, name='newStaff'),
     url(r'^profil/$', MyA.views.myProfile, name='profil'),
+    url(r'^kalender/$', MyA.views.calendar, name='terminkalender'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
 )
