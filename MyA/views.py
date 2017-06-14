@@ -1,31 +1,30 @@
+#TODO File Description
 """
-Beschreibung zum Inhalt der Dabei
+File Description
 """
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
-from MyA.models import *
 from MyA.forms import *
 
 
 # Create your views here.
 
-# Mitarbeiter - Hauptseite
+# Index - View
 def homesite(request):
     return render(request, 'index.html', {'page_titel': 'Startseite'})
 
 
-# Mitarbeiter - Hauptseite
+# Staff - View
 def get_staff(request):
     mitarbeiter = Staffs.objects.all()
     return render(request, 'staff/staff.html', {'page_titel': 'Mitarbeiter', 'staffs': mitarbeiter})
 
 
-# Neue Mitarbeiter Anlegen
+# Create new Staff - View
 def new_Staff(request):
     if request.method == 'POST':
-        # Formular wurde abgeschickt
         form = StaffForm(request.POST)
         if form.is_valid():
             form.save()
@@ -40,11 +39,9 @@ def new_Staff(request):
     return render(request, 'staff/newStaff.html', {'page_titel': 'Neue Mitarbeiter anlegen', 'form': form})
 
 
-# Neue Mitarbeiter Anlegen
+# Staff Profile - View
 def myProfile(request):
-
     if request.method == 'POST':
-        # Formular wurde abgeschickt
         form = StaffProfileForm(request.POST)
         if form.is_valid():
             form.save()

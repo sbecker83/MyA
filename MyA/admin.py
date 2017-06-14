@@ -1,9 +1,9 @@
+#TODO: File Decsription
 """
-prepopulated_fields:
-Das Attribut prepopulated_fields hilft in der Admin-Applikation dabei, dass Feld slug bei der Eingabe automatisch zu füllen. In diesem Fall mit dem Attribut name des Models.
+File Decsription
 """
 
-# Models beim Admin regisitrieren
+# register models
 
 from django.contrib import admin
 from MyA.models import Staffs, Customers, Contacts, Events, MemberExt, MemberInt, Notes

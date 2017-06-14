@@ -1,7 +1,12 @@
+#TODO File Description
+"""
+ File Decsription:
+"""
+
 from django.forms import *
 from MyA.models import *
 
-
+# Form with fields to create or update staff
 class StaffForm(ModelForm):
     class Meta:
         model = Staffs
@@ -18,6 +23,7 @@ class StaffForm(ModelForm):
             'position': 'Position'
         }
 
+# form with fields to shwow staff profile
 class StaffProfileForm(ModelForm):
     class Meta:
         model = Staffs

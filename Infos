@@ -72,3 +72,8 @@ userauth
 = Ordner: App für die User Authentifizierung (Login, Logout, Register)
 
 
+url(r'^staff/$', staff)
+ r = raw String, wird nicht interpretiert
+ ^ = beginnt String
+ $ = end String
+ staff = Methode aufrufen

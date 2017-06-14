@@ -22,15 +22,6 @@ import MyA.views
 
 admin.autodiscover()
 
-""" 
-url(r'^staff/$', staff)
- r = raw String, wird nicht interpretiert
- ^ = beginnt String
- $ = end String
- staff = Methode aufrufen
-
-"""
-
 urlpatterns = (
     url(r'^admin/', admin.site.urls),
     url(r'^startseite/$', MyA.views.homesite, name='startseite'),
