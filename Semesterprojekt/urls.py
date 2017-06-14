@@ -31,4 +31,6 @@ urlpatterns = (
     url(r'^kalender/$', MyA.views.calendar, name='terminkalender'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
+    url (r'^kunden/$', MyA.views.get_customer, name='kundenliste'),
+    url (r'^kunden/neuerKD/$',  MyA.views.new_customer, name='neuerkunde')
 )

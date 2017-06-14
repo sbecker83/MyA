@@ -39,6 +39,9 @@ class Customers(models.Model):
     fax = models.CharField('fax', null=True, max_length=100)
     website = models.CharField('website', null=True, max_length=100)
 
+    def __str__(self):
+        return "{}".format (self.company)
+
 class Contacts(models.Model):
     customer = models.ForeignKey(Customers)
     firstname = models.CharField('firstname', max_length=100)
