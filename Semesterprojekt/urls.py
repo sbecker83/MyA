@@ -33,10 +33,10 @@ url(r'^staff/$', staff)
 
 urlpatterns = (
     url(r'^admin/', admin.site.urls),
-    url(r'^index/$', MyA.views.homesite, name='index'),
-    url(r'^staff/$', MyA.views.get_staff, name='staff'),
-    url(r'^staff/newStaff/$', MyA.views.new_Staff, name='newStaff'),
-    url(r'^myProfile/$', MyA.views.myProfile, name='profile'),
+    url(r'^startseite/$', MyA.views.homesite, name='startseite'),
+    url(r'^mitarbeiter/$', MyA.views.get_staff, name='mitarbeiter'),
+    url(r'^mitarbeiter/neuerMA/$', MyA.views.new_Staff, name='newStaff'),
+    url(r'^profil/$', MyA.views.myProfile, name='profil'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
 )
