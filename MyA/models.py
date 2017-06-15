@@ -58,6 +58,9 @@ class Contacts(models.Model):
     fax = models.CharField('fax', null=True, max_length=100)
     mobile = models.CharField('mobile', null=True,  max_length=100)
     email = models.CharField('email', null=True, max_length=100)
+    def __str__(self):
+        return "{} {} {} {}".format(self.company, self.firstname, self.lastname, self.position)
+
 
 class Events(models.Model):
     staff = models.ManyToManyField(Staffs, through='MemberInt')       # many to many Field

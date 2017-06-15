@@ -85,3 +85,29 @@ def new_customer(request):
         # form first call
         form = CustomerForm (instance=customer)
     return render(request, 'customer/newcustomer.html', {'page_titel': 'Kunden', 'form':form})
+
+# Contact - View
+def get_contact(request):
+    contacts = Contacts.objects.all()
+    return render(request, 'contact/contact.html', {'page_titel': 'Ansprechpartner', 'contacts':contacts})
+
+# Create new Customer
+def new_contact(request):
+    contact = Contacts ()
+    if request.method == 'POST':
+
+        #form sent off
+        form = ContactForm(request.POST,instance=contact)
+        #Validity check
+        if form.is_valid():
+            form.save()
+            messages.success (request, u'Daten erfoglreich geändert')
+            return HttpResponseRedirect(reverse('ansprechpartnerliste'))
+        else:
+            # error message
+            messages.error (request, u'Daten konnten nicht gespeichert werden')
+            pass
+    else:
+        # form first call
+        form = ContactForm(instance=contact)
+    return render(request, 'contact/newcontact.html', {'page_titel': 'Ansprechpartner', 'form':form})
