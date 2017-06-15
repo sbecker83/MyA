@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block title %}
+    {{ page_titel }}
+{% endblock %}
+{% block content %}
+    <h2>{{ page_titel }}</h2>
+
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col width="120">
+            <col width="120">
+            <col width="180">
+            <col width="180">
+        </colgroup>
+        <tr>
+            <th>Kunden</th>
+            <th>Strasse</th>
+            <th>PLZ/Ort</th>
+            <th>Telefonnr.</th>
+        </tr>
+        <tr>
+            {% for customer in customers %}
+                <tr>
+                <td>{{ customer.company }}</td>
+                <td>{{ customer.street }}</td>
+                <td>{{ customer.plzcity }}</td>
+                <td>{{ customer.phone }}</td>
+                </tr>
+
+            {% endfor %}
+        </tr>
+    </table>
+    <br>
+
+    <a href="{% url 'neuerkunde'  %}" class="btn btn-primary">Neu Anlegen</a>
+
+
+{% endblock %}

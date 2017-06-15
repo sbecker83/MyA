@@ -41,3 +41,17 @@ class StaffProfileForm(ModelForm):
             'title': 'Titel',
             'position': 'Position'
         }
+
+# Form for a customer - dynamically Form from model
+class CustomerForm(ModelForm):
+    class Meta:
+        model= Customers
+        fields = ('company', 'street', 'plzcity', 'phone', 'fax', 'website')
+        labels = {
+            'company': 'Firma',
+            'street': 'Strasse / Nr.',
+            'plzcity': 'PLZ / Ort',
+            'phone': 'Telefon',
+            'fax': 'Fax',
+            'website': 'Webseite'
+        }

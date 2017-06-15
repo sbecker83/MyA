@@ -6,6 +6,7 @@ File Description
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from MyA.forms import *
 
 
@@ -58,3 +59,29 @@ def myProfile(request):
 # Calendar - View
 def calendar(request):
     return render(request, 'calendar/calendar.html', {'page_titel': 'Terminkalender'})
+
+# Customer - View
+def get_customer(request):
+    customers = Customers.objects.all()
+    return render(request, 'customer/customer.html', {'page_titel': 'Kunden', 'customers':customers})
+
+# Create new Customer
+def new_customer(request):
+    customer = Customers ()
+    if request.method == 'POST':
+
+        #form sent off
+        form = CustomerForm(request.POST,instance=customer)
+        #Validity check
+        if form.is_valid():
+            form.save()
+            messages.success (request, u'Daten erfoglreich geändert')
+            return HttpResponseRedirect(reverse('kundenliste'))
+        else:
+            # error message
+            messages.error (request, u'Daten konnten nicht gespeichert werden')
+            pass
+    else:
+        # form first call
+        form = CustomerForm (instance=customer)
+    return render(request, 'customer/newcustomer.html', {'page_titel': 'Kunden', 'form':form})
