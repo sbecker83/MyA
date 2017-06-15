@@ -4,7 +4,7 @@ File Description
 """
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from MyA.forms import *
@@ -65,9 +65,16 @@ def get_customer(request):
     customers = Customers.objects.all()
     return render(request, 'customer/customer.html', {'page_titel': 'Kunden', 'customers':customers})
 
-# Create new Customer
-def new_customer(request):
-    customer = Customers ()
+
+# create a new customer or edit a customer
+def details_customer(request, pk=None):
+    if pk==None:
+        customer = Customers ()
+        page_title="Kunden anlegen"
+    else:
+        customer = get_object_or_404(Customers,id=pk)
+        page_title = "Kunden ändern"
+
     if request.method == 'POST':
 
         #form sent off
@@ -84,7 +91,7 @@ def new_customer(request):
     else:
         # form first call
         form = CustomerForm (instance=customer)
-    return render(request, 'customer/newcustomer.html', {'page_titel': 'Kunden', 'form':form})
+    return render(request, 'customer/detailsCustomer.html', {'page_titel': page_title, 'form':form})
 
 # Contact - View
 def get_contact(request):
