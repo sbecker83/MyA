@@ -18,6 +18,7 @@
             <th>Strasse</th>
             <th>PLZ/Ort</th>
             <th>Telefonnr.</th>
+            <th>&nbsp</th>
         </tr>
         <tr>
             {% for customer in customers %}
@@ -26,6 +27,7 @@
                 <td>{{ customer.street }}</td>
                 <td>{{ customer.plzcity }}</td>
                 <td>{{ customer.phone }}</td>
+                <td><a href="{% url 'editkunde' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
                 </tr>
 
             {% endfor %}
