@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block title %}
+    {{ page_titel }}
+{% endblock %}
+{% block content %}
+    <h2>{{ page_titel }}</h2>
+
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col width="120">
+            <col width="120">
+            <col width="180">
+            <col width="180">
+        </colgroup>
+        <tr>
+            <th>Firma</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Position</th>
+        </tr>
+        <tr>
+            {% for contact in contacts %}
+                <tr>
+                <td>{{ contact.customer }}</td>
+                <td>{{ contact.firstname }}</td>
+                <td>{{ contact.lastname }}</td>
+                <td>{{ contact.position }}</td>
+                </tr>
+
+            {% endfor %}
+        </tr>
+    </table>
+    <br>
+
+    <a href="{% url 'neueransprechpartner'  %}" class="btn btn-primary">Neu Anlegen</a>
+
+
+{% endblock %}

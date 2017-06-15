@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block title %}
+    {{ page_titel }}
+{% endblock %}
+{% block content %}
+    <h2>{{ page_titel }}</h2>
+    <br/>
+    <form action="" enctype="multipart/form-data" method="post"    class="form horizontal">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Abschicken</button>
+        <button type="cancel" class="btn btn-primary">Abbrechen</button>
+    </form>
+
+
+{% endblock %}

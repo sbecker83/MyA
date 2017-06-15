@@ -55,3 +55,21 @@ class CustomerForm(ModelForm):
             'fax': 'Fax',
             'website': 'Webseite'
         }
+
+# Form for a contac - dynamically Form from model
+class ContactForm(ModelForm):
+    class Meta:
+        model= Contacts
+        fields = ('customer', 'gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
+        labels = {
+            'customer': 'Firma',
+            'gender':'Anrede',
+            'firstname':'Vorname',
+            'lastname':'Nachname',
+            'phone':'Telefon',
+            'fax': 'Fax',
+            'mobile': 'Mobil',
+            'email': 'Mail',
+            'title': 'Titel',
+            'position': 'Position'
+        }

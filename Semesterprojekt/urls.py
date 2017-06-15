@@ -32,5 +32,7 @@ urlpatterns = (
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url (r'^kunden/$', MyA.views.get_customer, name='kundenliste'),
-    url (r'^kunden/neuerKD/$',  MyA.views.new_customer, name='neuerkunde')
+    url (r'^kunden/neuerKD/$',  MyA.views.new_customer, name='neuerkunde'),
+    url (r'^ansprechpartner/$', MyA.views.get_contact, name='ansprechpartnerliste'),
+    url (r'^ansprechpartner/neuerAP/$', MyA.views.new_contact, name='neueransprechpartner')
 )
