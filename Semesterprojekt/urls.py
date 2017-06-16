@@ -24,9 +24,11 @@ admin.autodiscover()
 
 urlpatterns = (
     url(r'^admin/', admin.site.urls),
-    url(r'^startseite/$', MyA.views.homesite, name='startseite'),
+    url(r'^$', MyA.views.homesite, name='startseite'),
     url(r'^mitarbeiter/$', MyA.views.get_staff, name='mitarbeiter'),
     url(r'^mitarbeiter/neuerMA/$', MyA.views.new_Staff, name='newStaff'),
+    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/change//?$', MyA.views.new_Staff, name='editStaff'),
+    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
     url(r'^profil/$', MyA.views.myProfile, name='profil'),
     url(r'^kalender/$', MyA.views.calendar, name='terminkalender'),
     url(r'^login/$', auth_views.login, name='login'),

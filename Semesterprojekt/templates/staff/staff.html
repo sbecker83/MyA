@@ -17,14 +17,16 @@
             <th>Nachname</th>
             <th>Titel</th>
             <th>Position</th>
+            <td>&nbsp</td>
         </tr>
         <tr>
             {% for staff in staffs %}
                 <tr>
-                <td>{{ staffs.first }}</td>
-                <td>{{ staffs.last }}</td>
-                <td>{{ staffs.title }}</td>
-                <td>{{ staffs.position }}</td>
+                <td>{{ staff.firstname }}</td>
+                <td>{{ staff.lastname }}</td>
+                <td>{{ staff.title }}</td>
+                <td>{{ staff.position }}</td>
+                <td><a href="{% url 'editStaff' pk=staff.id %}">{% bootstrap_icon 'edit' %}</a></td>
                 </tr>
 
             {% endfor %}
