@@ -6,13 +6,13 @@ File Decsription
 # register models
 
 from django.contrib import admin
-from MyA.models import Staffs, Customers, Contacts, Events, MemberExt, MemberInt, Notes
+from MyA.models import Employee, Customer, Contact, Event, MemberExt, MemberInt, Note
 
 
-admin.site.register(Staffs)
-admin.site.register(Customers)
-admin.site.register(Contacts)
-admin.site.register(Events)
+admin.site.register(Employee)
+admin.site.register(Customer)
+admin.site.register(Contact)
+admin.site.register(Event)
 admin.site.register(MemberExt)
 admin.site.register(MemberInt)
-admin.site.register(Notes)
+admin.site.register(Note)

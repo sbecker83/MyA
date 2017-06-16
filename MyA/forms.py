@@ -18,10 +18,10 @@ class UserEditForm(UserChangeForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
 
-# Form with fields to create or update staff
-class StaffForm(ModelForm):
+# Form with fields to create or update employees
+class EmployeeForm(ModelForm):
     class Meta:
-        model = Staffs
+        model = Employee
         fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
             'gender':'Anrede',
@@ -35,10 +35,10 @@ class StaffForm(ModelForm):
             'position': 'Position'
         }
 
-# form with fields to show or update staff profile
-class StaffProfileForm(ModelForm):
+# form with fields to show or update employee profile
+class EmployeeProfileForm(ModelForm):
     class Meta:
-        model = Staffs
+        model = Employee
         fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
             'gender':'Anrede',
@@ -55,7 +55,7 @@ class StaffProfileForm(ModelForm):
 # Form for a customer - dynamically Form from model
 class CustomerForm(ModelForm):
     class Meta:
-        model= Customers
+        model= Customer
         fields = ('company', 'street', 'plzcity', 'phone', 'fax', 'website')
         labels = {
             'company': 'Firma',
@@ -69,7 +69,7 @@ class CustomerForm(ModelForm):
 # Form for a contac - dynamically Form from model
 class ContactForm(ModelForm):
     class Meta:
-        model= Contacts
+        model= Contact
         fields = ('customer', 'gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
             'customer': 'Firma',
@@ -86,7 +86,7 @@ class ContactForm(ModelForm):
 # Form for a note - dynamically Form from model
 class NoteForm(ModelForm):
     class Meta:
-        model= Notes
+        model= Note
         fields = ('calltype', 'notetext' )
         labels = {
             'calltype': 'Type',

@@ -11,8 +11,8 @@ from django.contrib.auth.models import User
 
 # id = models.AutoField(primary_key=True)
 
-class Staffs(models.Model):
-    # this connects the staff to the django auth user model
+class Employee(models.Model):
+    # this connects the employee to the django auth user model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     #nickname = models.CharField('nickname', max_length=75)
@@ -35,7 +35,7 @@ class Staffs(models.Model):
     def __str__(self):
         return "{} {} {} {}".format(self.firstname, self.lastname, self.title, self.position)
 
-class Customers(models.Model):
+class Customer(models.Model):
     company = models.CharField('company', max_length=100)
     street = models.CharField('street', null=True, max_length=100)
     plzcity = models.CharField('plzcity', null=True, max_length=100)
@@ -46,8 +46,8 @@ class Customers(models.Model):
     def __str__(self):
         return "{}".format (self.company)
 
-class Contacts(models.Model):
-    customer = models.ForeignKey(Customers)
+class Contact(models.Model):
+    customer = models.ForeignKey(Customer)
     firstname = models.CharField('firstname', max_length=100)
     lastname = models.CharField('lastname', max_length=100)
     GENDER=(
@@ -66,26 +66,26 @@ class Contacts(models.Model):
         return "{} {} {} {}".format(self.company, self.firstname, self.lastname, self.position)
 
 
-class Events(models.Model):
-    staff = models.ManyToManyField(Staffs, through='MemberInt')       # many to many Field
-    contact = models.ManyToManyField(Contacts, through='MemberExt')   # many to many Field
+class Event(models.Model):
+    employee = models.ManyToManyField(Employee, through='MemberInt')       # many to many Field
+    contact = models.ManyToManyField(Contact, through='MemberExt')   # many to many Field
     date = models.DateTimeField('date', default=datetime.now())
     title = models.CharField('title', max_length=100)
     location = models.CharField('location', max_length=100)
 
 class MemberExt(models.Model):
-    contact = models.ForeignKey(Contacts)
-    event = models.ForeignKey(Events)
+    contact = models.ForeignKey(Contact)
+    event = models.ForeignKey(Event)
     status = models.IntegerField('status', default=0)
 
 class MemberInt(models.Model):
-    staff = models.ForeignKey(Staffs)
-    event = models.ForeignKey(Events)
+    employee = models.ForeignKey(Employee)
+    event = models.ForeignKey(Event)
     leader = models.BooleanField('leader', default=False)
     status = models.IntegerField('status', default=0)
 
-class Notes(models.Model):
-    contact = models.ForeignKey(Contacts)
-    staff = models.ForeignKey(Staffs)
+class Note(models.Model):
+    contact = models.ForeignKey(Contact)
+    employee = models.ForeignKey(Employee)
     calltype = models.IntegerField('calltype', default=0)
     notetext = models.CharField('notetext', max_length=200)
