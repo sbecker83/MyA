@@ -12,12 +12,17 @@
             <col width="120">
             <col width="180">
             <col width="180">
+            <col width="20">
+            <col width="20">
         </colgroup>
         <tr>
             <th>Firma</th>
             <th>Vorname</th>
             <th>Nachname</th>
             <th>Position</th>
+            <th>&nbsp</th>
+            <th>&nbsp</th>
+
         </tr>
         <tr>
             {% for contact in contacts %}
@@ -26,6 +31,9 @@
                 <td>{{ contact.firstname }}</td>
                 <td>{{ contact.lastname }}</td>
                 <td>{{ contact.position }}</td>
+                <td><a href="{% url 'editansprechpartner' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                <td><a href="{% url 'deleteansprechpartner' pk=customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
+
                 </tr>
 
             {% endfor %}

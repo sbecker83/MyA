@@ -12,6 +12,8 @@
             <col width="120">
             <col width="180">
             <col width="180">
+            <col width="20">
+            <col width="20">
         </colgroup>
         <tr>
             <th>Kunden</th>
@@ -19,15 +21,17 @@
             <th>PLZ/Ort</th>
             <th>Telefonnr.</th>
             <th>&nbsp</th>
+            <th>&nbsp</th>
         </tr>
         <tr>
             {% for customer in customers %}
                 <tr>
-                <td>{{ customer.company }}</td>
-                <td>{{ customer.street }}</td>
-                <td>{{ customer.plzcity }}</td>
-                <td>{{ customer.phone }}</td>
-                <td><a href="{% url 'editkunde' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                    <td>{{ customer.company }}</td>
+                    <td>{{ customer.street }}</td>
+                    <td>{{ customer.plzcity }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td><a href="{% url 'editkunde' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                    <td><a href="{% url 'deletekunde' pk=customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
                 </tr>
 
             {% endfor %}
