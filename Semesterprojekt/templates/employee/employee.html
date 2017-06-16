@@ -20,13 +20,13 @@
             <td>&nbsp</td>
         </tr>
         <tr>
-            {% for staff in staffs %}
+            {% for employee in employees %}
                 <tr>
-                <td>{{ staff.firstname }}</td>
-                <td>{{ staff.lastname }}</td>
-                <td>{{ staff.title }}</td>
-                <td>{{ staff.position }}</td>
-                <td><a href="{% url 'editStaff' pk=staff.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                <td>{{ employee.firstname }}</td>
+                <td>{{ employee.lastname }}</td>
+                <td>{{ employee.title }}</td>
+                <td>{{ employee.position }}</td>
+                <td><a href="{% url 'editEmployee' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a></td>
                 </tr>
 
             {% endfor %}
@@ -34,6 +34,6 @@
     </table>
     <br>
 
-    <a href="{% url 'newStaff' %}" class="btn btn-primary">Neuer anlegen...</a>
+    <a href="{% url 'newEmployee' %}" class="btn btn-primary">Neuer anlegen...</a>
 
 {% endblock %}
