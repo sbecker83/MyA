@@ -73,3 +73,12 @@ class ContactForm(ModelForm):
             'title': 'Titel',
             'position': 'Position'
         }
+# Form for a note - dynamically Form from model
+class NoteForm(ModelForm):
+    class Meta:
+        model= Notes
+        fields = ('calltype', 'notetext' )
+        labels = {
+            'calltype': 'Type',
+            'notetext':'Text der Notiz'
+        }
