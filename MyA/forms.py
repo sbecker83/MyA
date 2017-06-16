@@ -4,7 +4,19 @@
 """
 
 from django.forms import *
+from django.contrib.auth.forms import UserChangeForm
 from MyA.models import *
+
+class UserEditForm(UserChangeForm):
+    """ A user edit form. This form inherits from UserChangeForm and only changes the fields which are used/shown
+    """
+    class Meta:
+        model = User
+        # overwrites the fields of the super class
+        fields = {'username','password'}
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
 
 # Form with fields to create or update staff
 class StaffForm(ModelForm):
@@ -27,13 +39,11 @@ class StaffForm(ModelForm):
 class StaffProfileForm(ModelForm):
     class Meta:
         model = Staffs
-        fields = ('gender', 'firstname', 'lastname', 'nickname', 'pwd', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
+        fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
             'gender':'Anrede',
             'firstname':'Vorname',
             'lastname':'Nachname',
-            'nickname':'Nickname',
-            'pwd':'Passwort',
             'phone':'Telefon',
             'fax': 'Fax',
             'mobile': 'Mobil',

@@ -8,7 +8,9 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from MyA.forms import *
-
+from django.contrib.admin.views.decorators import user_passes_test
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm,SetPasswordForm
 
 # Create your views here.
 
@@ -18,26 +20,91 @@ def homesite(request):
 
 
 # Staff - View
+# only the superuser is allowed for this view
+@user_passes_test(lambda u: u.is_superuser)
 def get_staff(request):
     mitarbeiter = Staffs.objects.all()
     return render(request, 'staff/staff.html', {'page_titel': 'Mitarbeiter', 'staffs': mitarbeiter})
 
 
 # Create new Staff - View
-def new_Staff(request):
+# only the superuser is allowed for this view
+@user_passes_test(lambda u: u.is_superuser)
+def new_Staff(request, pk=None):
+    is_edit = False
+    if pk==None:
+        # a new user is will be created
+        user = User()
+        staff = Staffs()
+        page_title = "Mitarbeiter anlegen"
+    else:
+        # an existing user will be edited
+        is_edit = True
+        staff = get_object_or_404(Staffs,id=pk)
+        user = staff.user
+        page_title = "Mitarbeiter editieren"
     if request.method == 'POST':
-        form = StaffForm(request.POST)
-        if form.is_valid():
-            form.save()
+        # the form for a new user and an existing user differs (password field)
+        if is_edit:
+            user_form = UserEditForm(request.POST, instance=user)
+        else:
+            user_form = UserCreationForm(request.POST, instance=user)
+
+        form = StaffForm(request.POST, instance=staff)
+        if form.is_valid() and user_form.is_valid():
+            user = user_form.save()
+            # we need to set the relationsship between the user and the staff manually
+            staff = form.save(commit=False)
+            staff.user = user
+            staff.save()
+
             messages.success(request, u'Mitarbeiter angelegt')
-            return HttpResponseRedirect(reversed('staff'))
+            return HttpResponseRedirect(reversed('mitarbeiter'))
         else:
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
     else:
-        form = StaffForm()
+        form = StaffForm(instance=staff)
+        # the form for a new user and an existing user differs (password field)
+        if is_edit:
+            user_form = UserEditForm(instance=user)
+        else:
+            user_form = UserCreationForm(instance=user)
 
-    return render(request, 'staff/newStaff.html', {'page_titel': 'Neue Mitarbeiter anlegen', 'form': form})
+    return render(request, 'staff/newStaff.html', {'page_titel': page_title, 'user_form': user_form, 'form': form})
+
+
+# only the superuser is allowed for this view
+@user_passes_test(lambda u: u.is_superuser)
+def set_password(request, pk):
+    user = get_object_or_404(User, id=pk)
+    page_title = "Passwort für User " + user.username + " ändern"
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Das Passwort wurde geändert')
+        else:
+            messages.error(request, 'Fehler')
+    else:
+        form = SetPasswordForm(user)
+    return render(request, 'staff/password.html', {'page_titel': page_title, 'form': form})
+
+def change_password(request,pk=None):
+    user = request.user
+    page_title = "Eigenes Passwort ändern"
+    if request.method == 'POST':
+        form = PasswordChangeForm(user,request.POST)
+        if form.is_valid():
+            user = form.save()
+            # we need to update the session after a password change
+            update_session_auth_hash(request,user)
+            messages.success(request,'Das Passwort wurde geändert')
+        else:
+            messages.error(request,'Fehler')
+    else:
+        form = PasswordChangeForm(instance=user)
+    return render(request, 'staff/password.html', {'page_titel': page_title, 'form': form})
 
 
 # Staff Profile - View

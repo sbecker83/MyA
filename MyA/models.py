@@ -5,14 +5,18 @@ File Decsription
 
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 # id = models.AutoField(primary_key=True)
 
 class Staffs(models.Model):
-    nickname = models.CharField('nickname', max_length=75)
-    pwd = models.CharField('pwd', max_length=100)
+    # this connects the staff to the django auth user model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    #nickname = models.CharField('nickname', max_length=75)
+    #pwd = models.CharField('pwd', max_length=100)
     firstname = models.CharField('firstname', max_length=100)
     lastname = models.CharField('lastname', max_length=100)
     GENDER=(
