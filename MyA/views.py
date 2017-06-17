@@ -66,7 +66,8 @@ def details_employee(request, pk=None):
             employee.save()
 
             messages.success(request, u'Mitarbeiter angelegt')
-            return HttpResponseRedirect(reversed('mitarbeiter'))
+
+            return HttpResponseRedirect(reverse('mitarbeiter'))
         else:
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
