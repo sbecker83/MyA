@@ -2,7 +2,7 @@
 """
 File Description
 """
-
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
@@ -27,10 +27,14 @@ def get_employees(request):
     return render(request, 'employee/employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
 
 
+def edit_profile(request):
+    # get the current employee from the current user id
+    employee = Employee.objects.get(user=request.user.id)
+    # use the view for creating and editing employees but for the current user id
+    return details_employee(request, pk=employee.id)
+
 # Create new Employee - View
-# only the superuser is allowed for this view
-@user_passes_test(lambda u: u.is_superuser)
-def new_employee(request, pk=None):
+def details_employee(request, pk=None):
     is_edit = False
     if pk==None:
         # a new user is will be created
@@ -42,6 +46,9 @@ def new_employee(request, pk=None):
         is_edit = True
         employee = get_object_or_404(Employee, id=pk)
         user = employee.user
+        # check if the current user has permission to edit this employee/user
+        if not (request.user.is_superuser or user == request.user ):
+            raise PermissionDenied
         page_title = "Mitarbeiter editieren"
     if request.method == 'POST':
         # the form for a new user and an existing user differs (password field)
@@ -105,23 +112,6 @@ def change_password(request,pk=None):
     else:
         form = PasswordChangeForm(instance=user)
     return render(request, 'employee/password.html', {'page_title': page_title, 'form': form})
-
-
-# Employee Profile - View
-def myProfile(request):
-    if request.method == 'POST':
-        form = EmployeeProfileForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, u'Daten erfoglreich geändert')
-            return HttpResponseRedirect(reversed('profile'))
-        else:
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
-            pass
-    else:
-        form = EmployeeProfileForm()
-
-    return render(request, 'profile.html', {'page_title': 'Mein Profil',  'form': form})
 
 # Calendar - View
 def calendar(request):

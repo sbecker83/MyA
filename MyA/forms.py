@@ -35,23 +35,6 @@ class EmployeeForm(ModelForm):
             'position': 'Position'
         }
 
-# form with fields to show or update employee profile
-class EmployeeProfileForm(ModelForm):
-    class Meta:
-        model = Employee
-        fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
-        labels = {
-            'gender':'Anrede',
-            'firstname':'Vorname',
-            'lastname':'Nachname',
-            'phone':'Telefon',
-            'fax': 'Fax',
-            'mobile': 'Mobil',
-            'email': 'Mail',
-            'title': 'Titel',
-            'position': 'Position'
-        }
-
 # Form for a customer - dynamically Form from model
 class CustomerForm(ModelForm):
     class Meta:
