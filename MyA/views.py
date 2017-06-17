@@ -114,6 +114,37 @@ def change_password(request,pk=None):
         form = PasswordChangeForm(instance=user)
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
+# only the superuser is allowed for this view
+@user_passes_test(lambda u: u.is_superuser)
+def toggle_employee_active(request,pk=None):
+    if pk==None:
+        messages.error (request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
+    else:
+        employee = get_object_or_404(Employee, id=pk)
+        user = employee.user
+        if user.is_active:
+            user.is_active = False
+            user.save()
+            messages.success(request, u'Mitarbeiter erfolgreich deaktiviert')
+        else:
+            user.is_active = True
+            user.save()
+            messages.success(request, u'Mitarbeiter erfolgreich aktiviert')
+    return HttpResponseRedirect(reverse('mitarbeiter'))
+
+# only the superuser is allowed for this view
+@user_passes_test(lambda u: u.is_superuser)
+def delete_employee(request,pk=None):
+    if pk==None:
+        messages.error (request, u'Daten konnten nicht gelöscht werden')
+    else:
+        employee = get_object_or_404(Employee, id=pk)
+        user = employee.user
+        employee.delete()
+        user.delete()
+        messages.success(request, u'Daten erfolgreich gelöscht')
+    return HttpResponseRedirect(reverse('mitarbeiter'))
+
 # Calendar - View
 def calendar(request):
     return render(request, 'calendar/calendar.html', {'page_title': 'Terminkalender'})
@@ -139,7 +170,7 @@ def details_customer(request, pk=None):
         #Validity check
         if form.is_valid():
             form.save()
-            messages.success (request, u'Daten erfoglreich geändert')
+            messages.success (request, u'Daten erfolgreich geändert')
             return HttpResponseRedirect(reverse('kundenliste'))
         else:
             # error message
@@ -162,7 +193,7 @@ def delete_customer(request, pk=None):
             nocontact = 1
         if nocontact==0 :
             customer.delete()
-            messages.success (request, u'Daten erfoglreich gelöscht')
+            messages.success (request, u'Daten erfolgreich gelöscht')
         else:
             messages.error (request, u'Daten konnten nicht gelöscht werden')
     return HttpResponseRedirect (reverse ('kundenliste'))
@@ -188,7 +219,7 @@ def details_contact(request, pk=None):
         # Validity check
         if form.is_valid ():
             form.save ()
-            messages.success (request, u'Daten erfoglreich geändert')
+            messages.success (request, u'Daten erfolgreich geändert')
             return HttpResponseRedirect (reverse ('ansprechpartnerliste'))
         else:
             # error message
@@ -213,7 +244,7 @@ def delete_contact(request, pk=None):
             no_notes_and_events = 1
         if no_notes_and_events==0 :
             contact.delete()
-            messages.success (request, u'Daten erfoglreich gelöscht')
+            messages.success (request, u'Daten erfolgreich gelöscht')
         else:
             messages.error (request, u'Daten konnten nicht gelöscht werden')
     return HttpResponseRedirect (reverse ('ansprechpartnerliste'))
@@ -239,7 +270,7 @@ def details_note(request, pk=None):
         #Validity check
         if form.is_valid():
             form.save()
-            messages.success (request, u'Daten erfoglreich geändert')
+            messages.success (request, u'Daten erfolgreich geändert')
             return HttpResponseRedirect(reverse('kundenliste'))
         else:
             # error message
