@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-{% block title %}
-    {{ page_title }}
-{% endblock %}
+
 {% block content %}
     <h2>{{ page_title }}</h2>
-    <br/>
-    <form action="" enctype="multipart/form-data" method="post"    class="form horizontal">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit" class="btn btn-primary">Abschicken</button>
-        <button type="cancel" class="btn btn-primary">Abbrechen</button>
-    </form>
+    <br>
+    <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
+        {% csrf_token %}
+
+        {# all forms given are rendered #}
+        {% for form in forms %}
+            {% bootstrap_form form layout='horizontal' %}
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
+
+    </form>
 
 {% endblock %}

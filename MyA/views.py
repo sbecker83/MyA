@@ -57,11 +57,11 @@ def details_employee(request, pk=None):
         else:
             user_form = UserCreationForm(request.POST, instance=user)
 
-        form = EmployeeForm(request.POST, instance=employee)
-        if form.is_valid() and user_form.is_valid():
+        employee_form = EmployeeForm(request.POST, instance=employee)
+        if employee_form.is_valid() and user_form.is_valid():
             user = user_form.save()
             # we need to set the relationsship between the user and the employee manually
-            employee = form.save(commit=False)
+            employee = employee_form.save(commit=False)
             employee.user = user
             employee.save()
 
@@ -72,14 +72,14 @@ def details_employee(request, pk=None):
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
     else:
-        form = EmployeeForm(instance=employee)
+        employee_form = EmployeeForm(instance=employee)
         # the form for a new user and an existing user differs (password field)
         if is_edit:
             user_form = UserEditForm(instance=user)
         else:
             user_form = UserCreationForm(instance=user)
 
-    return render(request, 'employee/newEmployee.html', {'page_title': page_title, 'user_form': user_form, 'form': form})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [user_form, employee_form]})
 
 
 # only the superuser is allowed for this view
@@ -90,13 +90,13 @@ def set_password(request, pk):
     if request.method == 'POST':
         form = SetPasswordForm(user, request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
             messages.success(request, 'Das Passwort wurde geändert')
         else:
             messages.error(request, 'Fehler')
     else:
         form = SetPasswordForm(user)
-    return render(request, 'employee/password.html', {'page_title': page_title, 'form': form})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 def change_password(request,pk=None):
     user = request.user
@@ -112,7 +112,7 @@ def change_password(request,pk=None):
             messages.error(request,'Fehler')
     else:
         form = PasswordChangeForm(instance=user)
-    return render(request, 'employee/password.html', {'page_title': page_title, 'form': form})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 # Calendar - View
 def calendar(request):
@@ -148,7 +148,7 @@ def details_customer(request, pk=None):
     else:
         # form first call
         form = CustomerForm (instance=customer)
-    return render(request, 'details.html', {'page_title': page_title, 'form':form})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 # delete a customer
 def delete_customer(request, pk=None):
@@ -197,7 +197,7 @@ def details_contact(request, pk=None):
     else:
         # form first call
         form = ContactForm (instance=contact)
-    return render(request, 'details.html', {'page_title': page_title, 'form':form})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 # delete a contact
 def delete_contact(request, pk=None):
@@ -248,7 +248,7 @@ def details_note(request, pk=None):
     else:
         # form first call
         form = NoteForm (instance=note)
-    return render(request, 'details.html', {'page_title': page_title, 'form':form})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 # delete a customer
 def delete_note(request, pk=None):
