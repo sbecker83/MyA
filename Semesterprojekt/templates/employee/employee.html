@@ -7,39 +7,31 @@
     <h2>{{ page_title }}</h2>
 
     <table class="table table-bordered table-striped">
-        <colgroup>
-            <col width="120">
-            <col width="120">
-            <col width="180">
-            <col width="180">
-            <col width="20">
-            <col width="20">
-        </colgroup>
         <tr>
             <th>Anrede</th>
             <th>Vorname</th>
             <th>Nachname</th>
             <th>eMail-Adresse</th>
             <th>Titel</th>
-            <th>Postiion</th>
+            <th>Position</th>
             <th>&nbsp</th>
-            <th>&nbsp</th>
-        </tr>
-        <tr>
-            {% for employee in employees %}
-                <tr>
-                    <td>{{ employee.gender }}</td>
-                    <td>{{ employee.firstname }}</td>
-                    <td>{{ employee.lastname }}</td>
-                    <td>{{ employee.email }}</td>
-                    <td>{{ employee.title }}</td>
-                    <td>{{ employee.position }}</td>
-                    <td><a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                    <td><a href="{% url 'deleteMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a></td>
-                </tr>
 
-            {% endfor %}
         </tr>
+        {% for employee in employees %}
+             <tr {% if not employee.user.is_active %}class="text-muted"{% endif %}>
+                <td>{{ employee.gender }}</td>
+                <td>{{ employee.firstname }}</td>
+                <td>{{ employee.lastname }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.title }}</td>
+                <td>{{ employee.position }}</td>
+                <td>
+                    <a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
+                    <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'lock' %}</a>
+                    <a href="{% url 'deleteMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
     <br>
 
