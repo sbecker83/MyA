@@ -24,10 +24,10 @@ class EmployeeForm(ModelForm):
         model = Employee
         fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
-            'gender':'Anrede',
-            'firstname':'Vorname',
-            'lastname':'Nachname',
-            'phone':'Telefon',
+            'gender': 'Anrede',
+            'firstname': 'Vorname',
+            'lastname': 'Nachname',
+            'phone': 'Telefon',
             'fax': 'Fax',
             'mobile': 'Mobil',
             'email': 'Mail',
@@ -38,7 +38,7 @@ class EmployeeForm(ModelForm):
 # Form for a customer - dynamically Form from model
 class CustomerForm(ModelForm):
     class Meta:
-        model= Customer
+        model = Customer
         fields = ('company', 'street', 'plzcity', 'phone', 'fax', 'website')
         labels = {
             'company': 'Firma',
@@ -52,7 +52,7 @@ class CustomerForm(ModelForm):
 # Form for a contac - dynamically Form from model
 class ContactForm(ModelForm):
     class Meta:
-        model= Contact
+        model = Contact
         fields = ('customer', 'gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
             'customer': 'Firma',
@@ -69,7 +69,7 @@ class ContactForm(ModelForm):
 # Form for a note - dynamically Form from model
 class NoteForm(ModelForm):
     class Meta:
-        model= Note
+        model = Note
         fields = ('calltype', 'notetext' )
         labels = {
             'calltype': 'Type',

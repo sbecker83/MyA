@@ -1,34 +1,49 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-
+{% block title %}
+    {{ page_title }}
+{% endblock %}
 {% block content %}
+    <h2>{{ page_title }}</h2>
 
     <table class="table table-bordered table-striped">
-
+        <colgroup>
+            <col width="120">
+            <col width="120">
+            <col width="180">
+            <col width="180">
+            <col width="20">
+            <col width="20">
+        </colgroup>
         <tr>
+            <th>Anrede</th>
             <th>Vorname</th>
             <th>Nachname</th>
+            <th>eMail-Adresse</th>
             <th>Titel</th>
-            <th>Position</th>
-            <td>&nbsp</td>
+            <th>Postiion</th>
+            <th>&nbsp</th>
+            <th>&nbsp</th>
         </tr>
+        <tr>
             {% for employee in employees %}
-
-                <tr {% if not employee.user.is_active %}class="text-muted"{% endif %}>
+                <tr>
+                    <td>{{ employee.gender }}</td>
                     <td>{{ employee.firstname }}</td>
                     <td>{{ employee.lastname }}</td>
+                    <td>{{ employee.email }}</td>
                     <td>{{ employee.title }}</td>
                     <td>{{ employee.position }}</td>
-                    <td>
-                        <a href="{% url 'editEmployee' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
-                        <a href="{% url 'toggleEmployee' pk=employee.id %}">{% bootstrap_icon 'lock' %}</a>
-                        <a href="{% url 'deleteEmployee' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a>
-                    </td>
+                    <td><a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                    <td><a href="{% url 'deleteMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a></td>
                 </tr>
+
             {% endfor %}
+        </tr>
     </table>
     <br>
 
-    <a href="{% url 'newEmployee' %}" class="btn btn-primary">Neuer Mitarbeiter</a>
+    <a href="{% url 'neuerMitarbeiter'  %}" class="btn btn-primary">Neu Anlegen</a>
+
 
 {% endblock %}

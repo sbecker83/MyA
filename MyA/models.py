@@ -35,6 +35,7 @@ class Employee(models.Model):
     def __str__(self):
         return "{} {} {} {}".format(self.firstname, self.lastname, self.title, self.position)
 
+
 class Customer(models.Model):
     company = models.CharField('company', max_length=100)
     street = models.CharField('street', null=True, max_length=100)
@@ -44,7 +45,8 @@ class Customer(models.Model):
     website = models.CharField('website', null=True, max_length=100)
 
     def __str__(self):
-        return "{}".format (self.company)
+        return "{}".format(self.company)
+
 
 class Contact(models.Model):
     customer = models.ForeignKey(Customer)
@@ -62,6 +64,7 @@ class Contact(models.Model):
     fax = models.CharField('fax', null=True, max_length=100)
     mobile = models.CharField('mobile', null=True,  max_length=100)
     email = models.CharField('email', null=True, max_length=100)
+    
     def __str__(self):
         return "{} {} {} {}".format(self.company, self.firstname, self.lastname, self.position)
 
@@ -73,16 +76,19 @@ class Event(models.Model):
     title = models.CharField('title', max_length=100)
     location = models.CharField('location', max_length=100)
 
+
 class MemberExt(models.Model):
     contact = models.ForeignKey(Contact)
     event = models.ForeignKey(Event)
     status = models.IntegerField('status', default=0)
+
 
 class MemberInt(models.Model):
     employee = models.ForeignKey(Employee)
     event = models.ForeignKey(Event)
     leader = models.BooleanField('leader', default=False)
     status = models.IntegerField('status', default=0)
+
 
 class Note(models.Model):
     contact = models.ForeignKey(Contact)
