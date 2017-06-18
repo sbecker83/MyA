@@ -30,7 +30,7 @@ def get_employee(request):
 
 
 # create a new employee or edit a employee
-def details_employee(request, pk=None):
+def details_employee(request, pk=None, is_profile = False):
     is_edit = False
     if pk == None:
         # a new user is will be created
@@ -46,7 +46,7 @@ def details_employee(request, pk=None):
         if not (request.user.is_superuser or user == request.user):
             raise PermissionDenied
         # set page title
-        if request.path == '/profil/':
+        if is_profile:
             page_title = "Profil bearbeiten"
         else:
             page_title = "Mitarbeiter ändern"
@@ -65,9 +65,12 @@ def details_employee(request, pk=None):
             employee.user = user
             employee.save()
 
-            messages.success(request, u'Mitarbeiter angelegt')
-
-            return HttpResponseRedirect(reverse('mitarbeiterListe'))
+            if is_profile:
+                messages.success(request, u'Profil gespeichert')
+                return HttpResponseRedirect(reverse('profil'))
+            else:
+                messages.success(request, u'Mitarbeiter gespeichert')
+                return HttpResponseRedirect(reverse('mitarbeiterListe'))
         else:
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
@@ -91,7 +94,7 @@ def edit_profile(request, pk=None):
     employee = Employee.objects.get(user=request.user.id)
 
     # use the view for creating and editing employees but for the current user id
-    return details_employee(request, pk=employee.id)
+    return details_employee(request, pk=employee.id, is_profile=True)
 
 
 # ======================================================== #
@@ -114,7 +117,7 @@ def set_password(request, pk):
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 
-def change_password(request, pk=None):
+def change_password(request):
     user = request.user
     page_title = "Eigenes Passwort ändern"
     if request.method == 'POST':
@@ -127,7 +130,7 @@ def change_password(request, pk=None):
         else:
             messages.error(request, 'Fehler')
     else:
-        form = PasswordChangeForm(instance=user)
+        form = PasswordChangeForm(user=user)
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 

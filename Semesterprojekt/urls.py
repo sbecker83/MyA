@@ -30,14 +30,14 @@ urlpatterns = (
     # employee - overview, new, edit, delete
     url(r'^mitarbeiter/$', MyA.views.get_employee, name='mitarbeiterListe'),
     url(r'^mitarbeiter/neuerMA/$', MyA.views.details_employee, name='neuerMitarbeiter'),
-    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/?$', MyA.views.details_employee, name='editMitarbeiter'),
-    #url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/change//?$', MyA.views.details_employee, name='editmitarbeiter'),
-    #url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
+    #url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/?$', MyA.views.details_employee, name='editMitarbeiter'),
+    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/change//?$', MyA.views.details_employee, name='editMitarbeiter'),
+    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
     url(r'^mitarbeiter/deleteMa/(?P<pk>[0-9]+)/?$', MyA.views.delete_employee, name='deleteMitarbeiter'),
 
     # user profil and pwd change of current user
     url(r'^profil/$', MyA.views.edit_profile, name='profil'),
-    url(r'^profil/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
+    url(r'^password/$', MyA.views.change_password, name='setPasswordForUser'),
     url(r'^profil/toggleMa/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggleMitarbeiter'),
 
     # calendar
