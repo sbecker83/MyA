@@ -56,7 +56,20 @@ mitarbeiters = Mitarbeiter.objects.all()
 for m in mitarbeiters:
     print(m)
 ==========================================================================================================================
+Kalender APP
+-----------------------
+Pakete installieren: django-event-rsvp
 
+settings.py anpassen:
+
+INSTALLED_APPS = (
+    ...,
+    'filer',
+    'event_rsvp',
+)
+
+
+==========================================================================================================================
 Infos
 -----------------------
 manage.py

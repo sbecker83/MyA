@@ -167,9 +167,36 @@ def delete_employee(request, pk=None):
 # ======================================================== #
 # Calendar - View
 # ======================================================== #
-def calendar(request):
+def get_calendar(request):
     return render(request, 'calendar/calendar.html', {'page_title': 'Terminkalender'})
 
+
+# create a new customer or edit a customer
+def details_calendar(request, pk=None):
+    if pk == None:
+        events = Event()
+        page_title = "Neuen Termin anlegen"
+    else:
+        events = get_object_or_404(Event, id=pk)
+        page_title = "Termin ändern"
+
+    if request.method == 'POST':
+
+        # form sent off
+        form = EventForm(request.POST, instance=events)
+        # Validity check
+        if form.is_valid():
+            form.save()
+            messages.success(request, u'Daten erfolgreich geändert')
+            return HttpResponseRedirect(reverse('kalender'))
+        else:
+            # error message
+            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            pass
+    else:
+        # form first call
+        form = EventForm(instance=events)
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 # ======================================================== #
 # Customer - View

@@ -41,7 +41,9 @@ urlpatterns = (
     url(r'^profil/toggleMa/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggleEmployee'),
 
     # caledar
-    url(r'^kalender/$', MyA.views.calendar, name='terminkalender'),
+    url(r'^kalender/$', MyA.views.get_calendar, name='terminkalender'),
+    url(r'^kalender/neuerTermin/?$', MyA.views.details_calendar, name='neuerTermin'),
+    url(r'^kalender/editTermin/?$', MyA.views.details_calendar, name='editTermin'),
 
     # login / logout
     url(r'^login/$', auth_views.login, name='login'),
