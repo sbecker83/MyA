@@ -18,6 +18,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, SetP
 def homesite(request):
     return render(request, 'index.html', {'page_title': 'Startseite'})
 
+
 # ======================================================== #
 # Employee - View
 # ======================================================== #
@@ -31,7 +32,7 @@ def get_employee(request):
 # create a new employee or edit a employee
 def details_employee(request, pk=None):
     is_edit = False
-    if pk==None:
+    if pk == None:
         # a new user is will be created
         user = User()
         employee = Employee()
@@ -117,11 +118,11 @@ def change_password(request, pk=None):
     user = request.user
     page_title = "Eigenes Passwort ändern"
     if request.method == 'POST':
-        form = PasswordChangeForm(user,request.POST)
+        form = PasswordChangeForm(user, request.POST)
         if form.is_valid():
             user = form.save()
             # we need to update the session after a password change
-            update_session_auth_hash(request,user)
+            update_session_auth_hash(request, user)
             messages.success(request, 'Das Passwort wurde geändert')
         else:
             messages.error(request, 'Fehler')
@@ -133,8 +134,8 @@ def change_password(request, pk=None):
 # only the superuser is allowed for this view
 @user_passes_test(lambda u: u.is_superuser)
 def toggle_employee_active(request, pk=None):
-    if pk==None:
-        messages.error (request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
+    if pk == None:
+        messages.error(request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
     else:
         employee = get_object_or_404(Employee, id=pk)
         user = employee.user
@@ -152,7 +153,7 @@ def toggle_employee_active(request, pk=None):
 # only the superuser is allowed for this view
 @user_passes_test(lambda u: u.is_superuser)
 def delete_employee(request, pk=None):
-    if pk==None:
+    if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         employee = get_object_or_404(Employee, id=pk)
@@ -180,7 +181,7 @@ def get_customer(request):
 
 # create a new customer or edit a customer
 def details_customer(request, pk=None):
-    if pk==None:
+    if pk == None:
         customer = Customer()
         page_title = "Kunden anlegen"
     else:
@@ -189,9 +190,9 @@ def details_customer(request, pk=None):
 
     if request.method == 'POST':
 
-        #form sent off
+        # form sent off
         form = CustomerForm(request.POST, instance=customer)
-        #Validity check
+        # Validity check
         if form.is_valid():
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
@@ -209,7 +210,7 @@ def details_customer(request, pk=None):
 # delete a customer
 def delete_customer(request, pk=None):
     if pk == None:
-        messages.error (request, u'Daten konnten nicht gelöscht werden')
+        messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         customer = get_object_or_404(Customer, id=pk)
         # check if customer has no contacts
@@ -265,9 +266,9 @@ def delete_contact(request, pk=None):
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
-        contact = get_object_or_404 (Contact, id=pk)
+        contact = get_object_or_404(Contact, id=pk)
         # check if contact has no notes and no events / memberext
-        no_notes_and_events= 0
+        no_notes_and_events = 0
         for n in Note.objects.raw('SELECT * FROM mya_notes where contact_id='+pk):
             no_notes_and_events = 1
         for e in MemberExt.objects.raw('SELECT * FROM mya_memberext where contact_id='+pk):
@@ -285,14 +286,14 @@ def delete_contact(request, pk=None):
 # ======================================================== #
 def get_notes(request):
     notes = Note.objects.all()
-    return render(request, 'note/note.html', {'page_title': 'Notizen', 'notes':notes})
+    return render(request, 'note/note.html', {'page_title': 'Notizen', 'notes': notes})
 
 
 # create a new note or edit a note
 def details_note(request, pk=None):
-    if pk==None:
+    if pk == None:
         note = Note()
-        page_title="Notiz anlegen"
+        page_title = "Notiz anlegen"
     else:
         note = get_object_or_404(Note, id=pk)
         page_title = "Notiz ändern"
@@ -318,7 +319,7 @@ def details_note(request, pk=None):
 
 # delete a note
 def delete_note(request, pk=None):
-    if pk==None:
+    if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         note = get_object_or_404(Note, id=pk)
