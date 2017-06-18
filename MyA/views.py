@@ -117,7 +117,7 @@ def set_password(request, pk):
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 
-def change_password(request, pk=None):
+def change_password(request):
     user = request.user
     page_title = "Eigenes Passwort ändern"
     if request.method == 'POST':
@@ -130,7 +130,7 @@ def change_password(request, pk=None):
         else:
             messages.error(request, 'Fehler')
     else:
-        form = PasswordChangeForm(instance=user)
+        form = PasswordChangeForm(user=user)
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 

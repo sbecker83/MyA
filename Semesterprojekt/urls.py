@@ -37,7 +37,7 @@ urlpatterns = (
 
     # user profil and pwd change of current user
     url(r'^profil/$', MyA.views.edit_profile, name='profil'),
-    url(r'^profil/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
+    url(r'^password/$', MyA.views.change_password, name='setPasswordForUser'),
     url(r'^profil/toggleMa/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggleMitarbeiter'),
 
     # calendar
