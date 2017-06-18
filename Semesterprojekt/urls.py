@@ -40,7 +40,7 @@ urlpatterns = (
     url(r'^profil/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
     url(r'^profil/toggleMa/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggleEmployee'),
 
-    # caledar
+    # calendar
     url(r'^kalender/$', MyA.views.get_calendar, name='terminkalender'),
     url(r'^kalender/neuerTermin/?$', MyA.views.details_calendar, name='neuerTermin'),
     url(r'^kalender/editTermin/?$', MyA.views.details_calendar, name='editTermin'),

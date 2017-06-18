@@ -58,15 +58,8 @@ for m in mitarbeiters:
 ==========================================================================================================================
 Kalender APP
 -----------------------
-Pakete installieren: django-event-rsvp
-
-settings.py anpassen:
-
-INSTALLED_APPS = (
-    ...,
-    'filer',
-    'event_rsvp',
-)
+Pakete installieren:
+django-bootstrap3-datetimepicker-2 Version 2.4.2
 
 
 ==========================================================================================================================

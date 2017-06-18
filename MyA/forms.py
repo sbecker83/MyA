@@ -2,7 +2,6 @@
 """
  File Decsription:
 """
-
 from django.forms import *
 from django.contrib.auth.forms import UserChangeForm
 from MyA.models import *

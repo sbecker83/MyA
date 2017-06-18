@@ -40,10 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Apps for calendarium
-    'filer',
-    'event_rsvp',
-
     # Bootstrap / CSS
     'bootstrap3',
 
