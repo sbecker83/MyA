@@ -258,13 +258,19 @@ def delete_customer(request, pk=None):
 # ======================================================== #
 # Contact - View
 # ======================================================== #
-def get_contact(request):
-    contacts = Contact.objects.all()
-    return render(request, 'contact/contact.html', {'page_title': 'Ansprechpartner', 'contacts': contacts})
+# all contacts of the selected customer (fk)
+def get_contact(request, fk=None):
+    contacts = Contact.objects.all().filter(customer_id=fk)
+    # paraameter selcted customer for the contact.html using by call view new contact
+    return render(request, 'contact/contact.html', {'page_title': 'Ansprechpartner',
+                        'contacts': contacts, 'selected_customer_id':fk})
 
 
 # create a new contact or edit a contact
-def details_contact(request, pk=None):
+# parameters for create and edit selected customer (foreign key)
+#            for edit primary key of the contact
+def details_contact(request, pk=None, fk=None):
+
     if pk == None:
         contact = Contact()
         page_title = "Ansprechpartner anlegen"
@@ -275,31 +281,37 @@ def details_contact(request, pk=None):
     if request.method == 'POST':
 
         # form sent off
-        form = ContactForm(request.POST, instance=contact)
+        # parameter of the form selcted customer (fk) per initial
+        form = ContactForm(request.POST, instance=contact, initial={'customer': fk})
         # Validity check
         if form.is_valid():
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('ansprechpartnerliste'))
+            # parameter to filter to the selected customer (fk) per args
+            return HttpResponseRedirect(reverse('ansprechpartnerliste', args=[fk]))
+
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
     else:
         # form first call
-        form = ContactForm(instance=contact)
+        # parameter of the form selcted customer (fk) per initial
+        form = ContactForm(instance=contact,  initial={'customer': fk})
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 
 # delete a contact
+# parameters primary key of the contact and selected customer (foreign key)
 def delete_contact(request, pk=None):
+    fk=1
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         contact = get_object_or_404(Contact, id=pk)
         # check if contact has no notes and no events / memberext
         no_notes_and_events = 0
-        for n in Note.objects.raw('SELECT * FROM mya_notes where contact_id='+pk):
+        for n in Note.objects.raw('SELECT * FROM mya_note where contact_id='+pk):
             no_notes_and_events = 1
         for e in MemberExt.objects.raw('SELECT * FROM mya_memberext where contact_id='+pk):
             no_notes_and_events = 1
@@ -308,7 +320,8 @@ def delete_contact(request, pk=None):
             messages.success(request, u'Daten erfolgreich gelöscht')
         else:
             messages.error(request, u'Daten konnten nicht gelöscht werden')
-    return HttpResponseRedirect(reverse('ansprechpartnerliste'))
+    # paramter to filter to the selected customer (fk) per args
+    return HttpResponseRedirect (reverse ('ansprechpartnerliste', args=[fk]))
 
 
 # ======================================================== #
