@@ -93,5 +93,5 @@ class MemberInt(models.Model):
 class Note(models.Model):
     contact = models.ForeignKey(Contact)
     employee = models.ForeignKey(Employee)
-    calltype = models.IntegerField('calltype', default=0)
-    notetext = models.CharField('notetext', max_length=200)
+    notetext = models.CharField('notetext', max_length=300)
+    date = models.DateTimeField ('date', default=datetime.now ())

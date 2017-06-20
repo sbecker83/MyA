@@ -80,6 +80,12 @@ class ContactForm(ModelForm):
             'position': 'Position'
         }
 
+"""  widgets = {
+            'customer' :  TextInput(attrs={'disabled':'disabled'})
+        }
+"""
+
+
 
 # Form for a note - dynamically Form from model
 class NoteForm(ModelForm):
@@ -88,9 +94,9 @@ class NoteForm(ModelForm):
     """
     class Meta:
         model = Note
-        fields = ('calltype', 'notetext')
+        fields = ('date', 'notetext')
         labels = {
-            'calltype': 'Type',
+            'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
 
