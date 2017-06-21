@@ -283,8 +283,12 @@ def details_contact(request, pk=None, fk=None):
         # form sent off
         # parameter of the form selcted customer (fk) per initial
         form = ContactForm(request.POST, instance=contact, initial={'customer': fk})
+
+
         # Validity check
         if form.is_valid():
+            form = form.save (commit=False)
+            form.customer_id = fk
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
             # parameter to filter to the selected customer (fk) per args
