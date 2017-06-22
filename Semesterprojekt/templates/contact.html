@@ -32,7 +32,7 @@
                 <td>{{ contact.lastname }}</td>
                 <td>{{ contact.position }}</td>
                 <td><a href="{% url 'editansprechpartner' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                <td><a href="{% url 'deleteansprechpartner' pk=contact.id %}">{% bootstrap_icon 'trash' %}</a></td>
+                <td><a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
 
                 </tr>
 
@@ -42,6 +42,7 @@
     <br>
 
     <a href="{% url 'neueransprechpartner' fk=selected_customer_id  %}" class="btn btn-primary">Neu Anlegen</a>
+    <a href="{% url 'kundenliste'  %}" class="btn btn-primary">Zurück</a>
 
 
 {% endblock %}
