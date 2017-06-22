@@ -206,7 +206,7 @@ def details_calendar(request, pk=None):
 # ======================================================== #
 def get_customer(request):
     customers = Customer.objects.all()
-    return render(request, 'customer/customer.html', {'page_title': 'Kunden', 'customers': customers})
+    return render(request, 'customer.html', {'page_title': 'Kunden', 'customers': customers})
 
 
 # create a new customer or edit a customer
@@ -261,8 +261,14 @@ def delete_customer(request, pk=None):
 # all contacts of the selected customer (fk)
 def get_contact(request, fk=None):
     contacts = Contact.objects.all().filter(customer_id=fk)
+    # show the company in the title - select from customer
+    customers = Customer.objects.filter (id=fk)
+    for c in customers:
+        customername = " - " + c.company
+    page_title = "Ansprechpartner" + customername
+
     # paraameter selcted customer for the contact.html using by call view new contact
-    return render(request, 'contact/contact.html', {'page_title': 'Ansprechpartner',
+    return render(request, 'contact.html', {'page_title': page_title,
                         'contacts': contacts, 'selected_customer_id':fk})
 
 
@@ -270,13 +276,19 @@ def get_contact(request, fk=None):
 # parameters for create and edit selected customer (foreign key)
 #            for edit primary key of the contact
 def details_contact(request, pk=None, fk=None):
-
+    # show the company in the title - select from customer
+    customers = Customer.objects.filter(id=fk)
+    for c in customers:
+        customername =" - " + c.company
+    # set page-title for a nwe contact or for edit contact
     if pk == None:
+        # new contact
         contact = Contact()
-        page_title = "Ansprechpartner anlegen"
+        page_title = "Ansprechpartner anlegen" + customername
     else:
+        # edit contact
         contact = get_object_or_404(Contact, id=pk)
-        page_title = "Ansprechpartner ändern"
+        page_title = "Ansprechpartner ändern" + customername
 
     if request.method == 'POST':
 
@@ -288,6 +300,7 @@ def details_contact(request, pk=None, fk=None):
         # Validity check
         if form.is_valid():
             form = form.save (commit=False)
+            # set customer-id
             form.customer_id = fk
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
@@ -301,14 +314,15 @@ def details_contact(request, pk=None, fk=None):
     else:
         # form first call
         # parameter of the form selcted customer (fk) per initial
+        custome= Customer.objects.filter(id=fk)
         form = ContactForm(instance=contact,  initial={'customer': fk})
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 
 # delete a contact
 # parameters primary key of the contact and selected customer (foreign key)
-def delete_contact(request, pk=None):
-    fk=1
+def delete_contact(request, pk=None,fk=None):
+
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
@@ -333,7 +347,7 @@ def delete_contact(request, pk=None):
 # ======================================================== #
 def get_notes(request):
     notes = Note.objects.all()
-    return render(request, 'note/note.html', {'page_title': 'Notizen', 'notes': notes})
+    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes})
 
 
 # create a new note or edit a note

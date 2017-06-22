@@ -59,7 +59,7 @@ urlpatterns = (
     url(r'^ansprechpartner/(?P<fk>[0-9]+)/?$', MyA.views.get_contact, name='ansprechpartnerliste'),
     url(r'^ansprechpartner/neuerAP/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='neueransprechpartner'),
     url(r'^ansprechpartner/editAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='editansprechpartner'),
-    url(r'^ansprechpartner/deleteAP/(?P<pk>[0-9]+)/?$', MyA.views.delete_contact, name='deleteansprechpartner'),
+    url(r'^ansprechpartner/deleteAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='deleteansprechpartner'),
 
     # note - overview, new, edit, delete
     url(r'^notiz/$', MyA.views.get_notes, name='notizliste'),

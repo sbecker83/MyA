@@ -64,6 +64,7 @@ class ContactForm(ModelForm):
     """
     A form for create or update contacts
     """
+
     class Meta:
         model = Contact
         """
