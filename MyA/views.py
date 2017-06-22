@@ -4,7 +4,7 @@ File Description: view.py
 Definition pf all view
 """
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -12,7 +12,7 @@ from MyA.forms import *
 from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, SetPasswordForm
-
+from MyA.admin import EmployeeResource, CustomerResource, ContactResource, NoteResource
 
 # Index - View
 def homesite(request):
@@ -26,7 +26,7 @@ def homesite(request):
 @user_passes_test(lambda u: u.is_superuser)
 def get_employee(request):
     employees = Employee.objects.all()
-    return render(request, 'employee/employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
+    return render(request, 'employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
 
 
 # create a new employee or edit a employee
@@ -84,6 +84,16 @@ def details_employee(request, pk=None, is_profile = False):
 
     return render(request, 'details.html', {'page_title': page_title, 'forms': [user_form, employee_form]})
 
+def export_employees(request):
+    dataset = EmployeeResource().export()
+    filename = 'employees.xls'
+
+    # set the response as a downloadable excel file
+    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+    # set the file name
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+
+    return response
 
 # ======================================================== #
 # Profile - View
@@ -254,6 +264,16 @@ def delete_customer(request, pk=None):
             messages.error(request, u'Daten konnten nicht gelöscht werden')
     return HttpResponseRedirect(reverse('kundenliste'))
 
+def export_customers(request):
+    dataset = CustomerResource().export()
+    filename = 'customers.xls'
+
+    # set the response as a downloadable excel file
+    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+    # set the file name
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+
+    return response
 
 # ======================================================== #
 # Contact - View
@@ -341,6 +361,16 @@ def delete_contact(request, pk=None,fk=None):
     # paramter to filter to the selected customer (fk) per args
     return HttpResponseRedirect (reverse ('ansprechpartnerliste', args=[fk]))
 
+def export_contacts(request):
+    dataset = ContactResource().export()
+    filename = 'contacts.xls'
+
+    # set the response as a downloadable excel file
+    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+    # set the file name
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+
+    return response
 
 # ======================================================== #
 # Note - View
@@ -387,3 +417,15 @@ def delete_note(request, pk=None):
         note.delete()
 
     return HttpResponseRedirect(reverse('notizliste'))
+
+
+def export_notes(request):
+    dataset = NoteResource().export()
+    filename = 'notes.xls'
+
+    # set the response as a downloadable excel file
+    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+    # set the file name
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+
+    return response
