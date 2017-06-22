@@ -1,5 +1,5 @@
 <!-- File Decsription: HTML Template for the navigation !-->
-
+{% load mya_tags %}
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -13,26 +13,16 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                {# Definiere the Menüpunkte mit dem jeweiligen Namen aus der urls.py  #}  }
-                {% with 'startseite kundenliste' as list %}
-                    {% for urlname in list.split %}
-                        <li {% if request.resolver_match.url_name == urlname %}class="active"{% endif %}><a href="{% url urlname %}">{{ urlname|title }}</a></li>
-                    {% endfor %}
-                {% endwith %}
-
+                <li class="{% active 'startseite' %}"><a href="{% url 'startseite' %}">Home</a></li>
+                <li class="{% active 'kundenliste' %}"><a href="{% url 'kundenliste' %}">Kundenliste</a></li>
                 {% if request.user.is_superuser %}
-                    {% with 'mitarbeiterListe' as admin_only_list %}
-                        {% for urlname in admin_only_list.split %}
-                            <li {% if request.resolver_match.url_name == urlname %}class="active"{% endif %}><a href="{% url urlname %}">{{ urlname|title }}</a></li>
-                        {% endfor %}
-                    {% endwith %}
+                    <li class="{% active 'mitarbeiterListe' %}"><a href="{% url 'mitarbeiterListe' %}">Mitarbeiter</a></li>
                 {% endif %}
-
-             {% with 'terminkalender profil logout' as list %}
-                    {% for urlname in list.split %}
-                        <li {% if request.resolver_match.url_name == urlname %}class="active"{% endif %}><a href="{% url urlname %}">{{ urlname|title }}</a></li>
-                    {% endfor %}
-                {% endwith %}
+                <li class="{% active 'terminkalender' %}"><a href="{% url 'terminkalender' %}">Terminkalender</a></li>
+                {% if not request.user.is_superuser %}
+                    <li class="{% active 'profil' %}"><a href="{% url 'profil' %}">Profil</a></li>
+                {% endif %}
+                <li class="{% active 'logout' %}"><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
