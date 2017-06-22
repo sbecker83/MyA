@@ -30,6 +30,8 @@ class CustomerResource(resources.ModelResource):
 class ContactResource(resources.ModelResource):
     class Meta:
         model = Contact
+        # the fields are added manually because the company name of the customer relationship should be shown instead of the id
+        fields = ('id', 'firstname', 'lastname', 'gender', 'title', 'position', 'phone', 'fax', 'mobile', 'email', 'customer__id', 'customer__company',)
 
 class NoteResource(resources.ModelResource):
     class Meta:
