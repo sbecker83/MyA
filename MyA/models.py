@@ -43,6 +43,7 @@ class Customer(models.Model):
     phone = models.CharField('phone', null=True, max_length=100)
     fax = models.CharField('fax', null=True, max_length=100)
     website = models.CharField('website', null=True, max_length=100)
+    is_active = models.BooleanField('is_active', default=True)
 
     def __str__(self):
         return "{}".format(self.company)
@@ -64,6 +65,7 @@ class Contact(models.Model):
     fax = models.CharField('fax', null=True, max_length=100)
     mobile = models.CharField('mobile', null=True,  max_length=100)
     email = models.CharField('email', null=True, max_length=100)
+    is_active = models.BooleanField('is_active', default=True)
     
     def __str__(self):
         return "{} {} {} {}".format(self.company, self.firstname, self.lastname, self.position)
