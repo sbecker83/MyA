@@ -15,6 +15,7 @@
             <ul class="nav navbar-nav">
                 <li class="{% active 'startseite' %}"><a href="{% url 'startseite' %}">Home</a></li>
                 <li class="{% active 'kundenliste' %}"><a href="{% url 'kundenliste' %}">Kundenliste</a></li>
+                <li class="{% active 'notizliste' %}"><a href="{% url 'notizliste' %}">Notizen</a></li>
                 {% if request.user.is_superuser %}
                     <li class="{% active 'mitarbeiterListe' %}"><a href="{% url 'mitarbeiterListe' %}">Mitarbeiter</a></li>
                 {% endif %}
