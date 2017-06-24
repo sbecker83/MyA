@@ -3,6 +3,7 @@
 File Description: view.py
 Definition pf all view
 """
+from calendar import *
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -13,6 +14,7 @@ from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, SetPasswordForm
 from MyA.admin import EmployeeResource, CustomerResource, ContactResource, NoteResource
+
 
 # Index - View
 def homesite(request):
@@ -176,40 +178,6 @@ def delete_employee(request, pk=None):
         messages.success(request, u'Daten erfolgreich gelöscht')
     return HttpResponseRedirect(reverse('mitarbeiterListe'))
 
-
-# ======================================================== #
-# Calendar - View
-# ======================================================== #
-def get_calendar(request):
-    return render(request, 'calendar/calendar.html', {'page_title': 'Terminkalender'})
-
-
-# create a new customer or edit a customer
-def details_calendar(request, pk=None):
-    if pk == None:
-        events = Event()
-        page_title = "Neuen Termin anlegen"
-    else:
-        events = get_object_or_404(Event, id=pk)
-        page_title = "Termin ändern"
-
-    if request.method == 'POST':
-
-        # form sent off
-        form = EventForm(request.POST, instance=events)
-        # Validity check
-        if form.is_valid():
-            form.save()
-            messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('kalender'))
-        else:
-            # error message
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
-            pass
-    else:
-        # form first call
-        form = EventForm(instance=events)
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 # ======================================================== #
 # Customer - View
@@ -429,3 +397,90 @@ def export_notes(request):
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
 
     return response
+
+
+# ======================================================== #
+# Calendar - View
+# ======================================================== #
+def named_day(day_number):
+    # show the name of the day
+    return datetime(1900, 1, day_number).strftime("%A")
+
+
+def named_month(month_number):
+    # show the name of the month
+    return datetime(1900, month_number, 1).strftime("%B")
+
+
+def get_calendar(request, act_year=None, act_month=None):
+    # actually year, month and day as integer
+    c = LocaleHTMLCalendar(locale='de_DE')
+
+    act_year = datetime.now().year
+    act_month = datetime.now().month
+    act_day = datetime.now().day
+
+    days_of_month = monthrange(act_year, act_month)
+    all_month_day = monthcalendar(act_year, act_month)
+
+    # Calculate values for the calender controls. (Januar = 1)
+    previous_year = act_year - 1
+    previous_month = act_month - 1
+    if previous_month == 0:
+        previous_year = act_year - 1
+        previous_month = 12
+    next_year = act_year + 1
+    next_month = act_month + 1
+    if next_month == 13:
+        next_year = act_year + 1
+        next_month = +1
+    year_after_this = act_year + 1
+    year_befor_this = act_year - 1
+    return render(request, 'calendar.html',
+                  {'page_title': 'Terminkalender',
+                   'calendar': all_month_day,
+                   'day': act_day,
+                   'day_name': named_day(act_day),
+                   'days_of_month': days_of_month,
+                   'month': act_month,
+                   'month_name': named_month(act_month),
+                   'year': act_year,
+                   'previous_month': previous_month,
+                   'previous_month_name': named_month(previous_month),
+                   'previous_year': previous_year,
+                   'next_month': next_month,
+                   'next_month_name': named_month(next_month),
+                   'next_year': next_year,
+                   'year_before_this': year_befor_this,
+                   'ear_after_this': year_after_this
+                   })
+
+
+# create a new customer or edit a customer
+def details_calendar(request, pk=None):
+    if pk == None:
+        events = Event()
+        page_title = "Neuen Termin anlegen"
+    else:
+        events = get_object_or_404(Event, id=pk)
+        page_title = "Termin ändern"
+
+    if request.method == 'POST':
+
+        # form sent off
+        form = EventForm(request.POST, instance=events)
+        # Validity check
+        if form.is_valid():
+            form.save()
+            messages.success(request, u'Daten erfolgreich geändert')
+            return HttpResponseRedirect(reverse('kalender'))
+        else:
+            # error message
+            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            pass
+    else:
+        # form first call
+        form = EventForm(instance=events)
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+
+

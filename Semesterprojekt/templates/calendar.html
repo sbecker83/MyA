@@ -1,0 +1,77 @@
+<!-- File Decsription: HTML template for the site "terminkalender" !-->
+
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <h2>{{ page_title }}</h2>
+    <br>
+    {{ year }}
+    <hr>
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+        </colgroup>
+            <tr>
+                <td> &lt;&lt; {{ previous_month_name }} </td>
+                <td></td>
+                <td></td>
+                <td>{{ month_name }}</td>
+                <td></td>
+                <td></td>
+                <td>{{ next_month_name }} &gt;&gt;</td>
+        </tr>
+        <tr>
+            <th>Montag</th>
+            <th>Dienstag</th>
+            <th>Mittwoch</th>
+            <th>Donnerstag</th>
+            <th>Freitag</th>
+            <th>Samstag</th>
+            <th>Sonntag</th>
+        </tr>
+        <tr>
+            <td>
+                <a href="{% url 'neuerTermin' %}">{% bootstrap_icon 'plus' %}</a>
+                <a href="{% url 'editTermin' %}">{% bootstrap_icon 'edit' %}</a>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <br>
+     <table class="table table-bordered table-striped">
+        <colgroup>
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+            <col width="50">
+        </colgroup>
+        <tr>
+            {% for x in days_of_month %}
+                <td>{{ x }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for x in calendar %}
+                <td>{{ x }}</td>
+            {% endfor %}
+        </tr>
+     </table>
+
+
+
+{% endblock %}
