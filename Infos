@@ -1,3 +1,18 @@
+Welche Pakete brauchen wir für unser Projekt?
+
+Django 1.10.7 oder 1.11.2
+django-bootstrap3
+django-import-export
+mysqlclient
+pip
+pytz
+schedule
+setuptools
+
+
+
+
+==========================================================================================================================
 Bootstrap3 Paket
 pip install django-bootstrap3
 
