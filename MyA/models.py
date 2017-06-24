@@ -6,6 +6,7 @@ File Decsription
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 # Create your models here.
 
@@ -25,30 +26,39 @@ class Employee(models.Model):
         ('M', 'Male'),
     )
     gender = models.CharField('salutation', default='N', max_length=1, choices=GENDER)
-    title = models.CharField('title', null=True, max_length=100)
+    title = models.CharField('title', blank=True, max_length=100)
     position = models.CharField('position', max_length=100)
-    phone = models.CharField('phone', null=True, max_length=25)
-    fax = models.CharField('fax', null=True, max_length=100)
-    mobile = models.CharField('mobile', null=True, max_length=100)
-    email = models.CharField('email', null=True, max_length=100)
+    phone = models.CharField('phone', blank=True, max_length=25)
+    fax = models.CharField('fax', blank=True, max_length=100)
+    mobile = models.CharField('mobile', blank=True, max_length=100)
+    email = models.CharField('email', blank=True, max_length=100)
 
     def __str__(self):
         return "{} {} {} {}".format(self.firstname, self.lastname, self.title, self.position)
 
 
 class Customer(models.Model):
-    company = models.CharField('company', max_length=100)
-    street = models.CharField('street', null=True, max_length=100)
-    plzcity = models.CharField('plzcity', null=True, max_length=100)
-    phone = models.CharField('phone', null=True, max_length=100)
-    fax = models.CharField('fax', null=True, max_length=100)
-    website = models.CharField('website', null=True, max_length=100)
+    # Check the input of the telephone number - numbers and as a separator / or -
+    phoneRegex = RegexValidator (regex=r'^[0-9 -\/]+$',
+                                 message="Telefonnummern mit / oder -")
+    # Check the input of the 5 digit zip code and enter the city
+    plzcityRegex = RegexValidator (regex=r'^\d{5} [a-zA-ZäöüÄÖÜ -ß]+$',
+                                   message="5 stellige PLZ und Stadt")
+    company = models.CharField ('company', max_length=100)
+    street = models.CharField ('street', blank=True, max_length=100)
+    plzcity = models.CharField ('plzcity', validators=[plzcityRegex], blank=True, max_length=100)
+    phone = models.CharField ('phone', validators=[phoneRegex], blank=True, max_length=100)
+    fax = models.CharField ('fax', validators=[phoneRegex], blank=True, max_length=100)
+    website = models.CharField ('website', blank=True, max_length=100)
 
     def __str__(self):
         return "{}".format(self.company)
 
 
 class Contact(models.Model):
+    # Check the input of the telephone number - numbers and as a separator / or -
+    phoneRegex = RegexValidator (regex=r'^[0-9 -\/]+$',
+                                 message="Telefonnummern mit / oder -")
     customer = models.ForeignKey(Customer)
     firstname = models.CharField('firstname', max_length=100)
     lastname = models.CharField('lastname', max_length=100)
@@ -57,16 +67,16 @@ class Contact(models.Model):
         ('F', 'Female'),
         ('M', 'Male'),
     )
-    gender = models.CharField('gender', default='N', max_length=1, choices=GENDER)
-    title = models.CharField('title', null=True, max_length=100)
-    position = models.CharField('position', max_length=100)
-    phone = models.CharField('phone', null=True, max_length=25)
-    fax = models.CharField('fax', null=True, max_length=100)
-    mobile = models.CharField('mobile', null=True,  max_length=100)
-    email = models.CharField('email', null=True, max_length=100)
+    gender = models.CharField ('gender', default='N', max_length=1, choices=GENDER)
+    title = models.CharField ('title', blank=True, max_length=100)
+    position = models.CharField ('position', max_length=100)
+    phone = models.CharField ('phone', validators=[phoneRegex], blank=True, max_length=25)
+    fax = models.CharField ('fax', validators=[phoneRegex], blank=True, max_length=100)
+    mobile = models.CharField ('mobile', blank=True, max_length=100)
+    email = models.EmailField ('email', blank=True, max_length=100)
     
     def __str__(self):
-        return "{} {} {} {}".format(self.company, self.firstname, self.lastname, self.position)
+        return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)
 
 
 class Event(models.Model):
@@ -95,3 +105,6 @@ class Note(models.Model):
     employee = models.ForeignKey(Employee)
     notetext = models.CharField('notetext', max_length=300)
     date = models.DateTimeField ('date', default=datetime.now ())
+
+    def __str__(self):
+        return "{}".format (self.notetext)

@@ -6,15 +6,15 @@
 {% block content %}
     <h2>{{ page_title }}</h2>
 
-    <table class="table table-bordered table-striped">
+   <table class="table table-bordered table-striped">
         <colgroup>
-            <col width="180">
-            <col width="180">
+            <col width="120">
+            <col width="240">
             <col width="20">
             <col width="20">
         </colgroup>
         <tr>
-            <th>Notiztype</th>
+            <th>Datum</th>
             <th>Notiz</th>
             <th>&nbsp</th>
             <th>&nbsp</th>
@@ -22,10 +22,10 @@
         <tr>
             {% for note in notes %}
                 <tr>
-                    <td>{{ note.calltype }}</td>
+                    <td>{{ note.date }}</td>
                     <td>{{ note.notetext }}</td>
-                    <td><a href="{% url 'editnotiz' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                    <td><a href="{% url 'deletenotiz' pk=customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
+                    <td><a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                    <td><a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a></td>
                 </tr>
 
             {% endfor %}
