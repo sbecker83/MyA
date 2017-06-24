@@ -18,7 +18,19 @@ from MyA.admin import EmployeeResource, CustomerResource, ContactResource, NoteR
 
 # Index - View
 def homesite(request):
-    return render(request, 'index.html', {'page_title': 'Startseite'})
+    employee = Employee.objects.get(user=request.user.id)
+    employee_name = employee.firstname + " " + employee.lastname
+    try:
+        my_notes = Note.objects.filter(employee=employee.id)
+    except ObjectDoesNotExist:
+        my_notes = []
+
+    try:
+        my_events = Event.objects.filter(employee=employee)
+    except ObjectDoesNotExist:
+        my_events = []
+
+    return render(request, 'index.html', {'page_title': 'Startseite', 'employee_name': employee_name, 'my_notes': my_notes, 'my_events': my_events})
 
 
 # ======================================================== #

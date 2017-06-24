@@ -7,6 +7,9 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 # Create your models here.
 
@@ -36,6 +39,16 @@ class Employee(models.Model):
     def __str__(self):
         return "{} {} {} {}".format(self.firstname, self.lastname, self.title, self.position)
 
+@receiver(post_save, sender=User)
+def create_employee_for_superuser(sender, instance, created, **kwargs):
+    """This signal receiver guarentees a creation of an employee object when the superuser is created"""
+    if created and instance.is_superuser:
+        employee = Employee()
+        employee.firstname=instance.username
+        employee.email=instance.email
+        employee.position="Administrator"
+        employee.user=instance
+        employee.save()
 
 class Customer(models.Model):
     # Check the input of the telephone number - numbers and as a separator / or -
@@ -74,7 +87,7 @@ class Contact(models.Model):
     fax = models.CharField ('fax', validators=[phoneRegex], blank=True, max_length=100)
     mobile = models.CharField ('mobile', blank=True, max_length=100)
     email = models.EmailField ('email', blank=True, max_length=100)
-    
+
     def __str__(self):
         return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)
 
