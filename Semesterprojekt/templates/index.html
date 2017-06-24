@@ -4,5 +4,55 @@
 {% load bootstrap3 %}
 
 {% block content %}
+    {% if request.user.is_superuse %}
+        <h1>Willkommen Admin</h1>
+        <p>Als Admin kannst du Mitarbeiter bearbeiten</p>
+    {% endif %}
+    <h1>Willkommen {{ employee_name }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Meine Notizen</h2>
+            {% if my_notes %}
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Datum</th>
+                        <th>Notiz</th>
+                    </tr>
+                {% for my_note in my_notes %}
+                    <tr>
+                        <td>{{ note.date }}</td>
+                        <td>{{ note.notetext }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+                <p><a href="{% url 'notizliste' %}">Zur Notizenverwaltung...</a></p>
+            {% else %}
+                <p>Bislang keine Notizen.</p>
+            {% endif %}
+            <a href="{% url 'neuenotiz'  %}" class="btn btn-primary">Neu Anlegen</a>
+        </div>
+        <div class="col-md-6">
+            <h2>Meine Termine</h2>
+            {% if my_events %}
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Datum</th>
+                        <th>Titel</th>
+                        <th>Ort</th>
+                    </tr>
+                {% for my_event in my_events %}
+                    <tr>
+                        <td>{{ event.date }}</td>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.location }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+                <p><a href="{% url 'terminkalender' %}">Zum Terminkalender...</a></p>
+            {% else %}
+                <p>Bislang keine Termine.</p>
+            {% endif %}
+            <a href="{% url 'neuerTermin' %}" class="btn btn-primary">Neu Anlegen</a>
+        </div>
 
 {% endblock %}
