@@ -74,7 +74,7 @@ class Contact(models.Model):
     fax = models.CharField ('fax', validators=[phoneRegex], blank=True, max_length=100)
     mobile = models.CharField ('mobile', blank=True, max_length=100)
     email = models.EmailField ('email', blank=True, max_length=100)
-
+    
     def __str__(self):
         return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)
 
