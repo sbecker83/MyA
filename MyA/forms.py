@@ -67,22 +67,7 @@ class ContactForm(ModelForm):
 
     class Meta:
         model = Contact
-        """
-         fields = ('customer', 'gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
-        labels = {
-            'customer': 'Firma',
-            'gender': 'Anrede',
-            'firstname': 'Vorname',
-            'lastname': 'Nachname',
-            'phone': 'Telefon',
-            'fax': 'Fax',
-            'mobile': 'Mobil',
-            'email': 'Mail',
-            'title': 'Titel',
-            'position': 'Position'
-        }
 
-        """
         fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
         labels = {
             'gender': 'Anrede',
@@ -96,11 +81,6 @@ class ContactForm(ModelForm):
             'position': 'Position'
         }
         exclude ={'customer'}
-"""  widgets = {
-            'customer' :  TextInput(attrs={'disabled':'disabled'})
-        }
-"""
-
 
 
 # Form for a note - dynamically Form from model
