@@ -20,8 +20,8 @@
                     </tr>
                 {% for my_note in my_notes %}
                     <tr>
-                        <td>{{ note.date }}</td>
-                        <td>{{ note.notetext }}</td>
+                        <td>{{ my_note.date }}</td>
+                        <td>{{ my_note.notetext }}</td>
                     </tr>
                 {% endfor %}
                 </table>
@@ -42,9 +42,9 @@
                     </tr>
                 {% for my_event in my_events %}
                     <tr>
-                        <td>{{ event.date }}</td>
-                        <td>{{ event.title }}</td>
-                        <td>{{ event.location }}</td>
+                        <td>{{ my_event.date }}</td>
+                        <td>{{ my_event.title }}</td>
+                        <td>{{ my_event.location }}</td>
                     </tr>
                 {% endfor %}
                 </table>
