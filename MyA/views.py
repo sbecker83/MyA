@@ -369,23 +369,37 @@ def details_note(request, pk=None):
         note = get_object_or_404(Note, id=pk)
         page_title = "Notiz ändern"
 
+
     if request.method == 'POST':
 
         # form sent off
         form = NoteForm(request.POST, instance=note)
         # Validity check
         if form.is_valid():
-            form.save()
+            form = form.save (commit=False)
+            # set contact from the Select-Contact-Field - value form the request
+            form.contact_id = request.POST.get('selcontact')
+            form.save ()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('kundenliste'))
+            return HttpResponseRedirect(reverse('notizliste'))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
+
     else:
-        # form first call
-        form = NoteForm(instance=note)
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+
+        if pk == None:
+            # form first call - to insert a new note
+            form = NoteForm (instance=note)
+        else:
+            # form first call with a pk - to edit a note
+            # transfer the customer_id and the contact_id for the unbound selection fields
+            form = NoteForm (instance=note,  mycustomer=note.contact.customer_id, mycontact=note.contact_id)
+
+    # Contact list for use in javascript for the dynamic list
+    mylist = Contact.objects.all()
+    return render(request, 'noteinput.html', {'page_title': page_title, 'forms': [form],'mylist':mylist})
 
 
 # delete a note

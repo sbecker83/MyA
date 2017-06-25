@@ -87,14 +87,32 @@ class ContactForm(ModelForm):
 class NoteForm(ModelForm):
     """
     A form for create or update notes
+    With two fields for selecting customer/company and the respective contact
     """
+
+    selcustomer = ModelChoiceField(queryset=Customer.objects.all (), label='Firma',widget=Select(attrs={"onChange":'mySelect()'}))
+    selcontact = ModelChoiceField(queryset=Contact.objects.all (), label='Ansprecchpartner')
+
     class Meta:
         model = Note
-        fields = ('date', 'notetext')
+        fields = ('selcustomer', 'selcontact', 'employee', 'date', 'notetext')
         labels = {
+            'employee': 'Mitarbeiter',
             'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
+
+    def __init__(self,  *args, **kwargs):
+        # Initialize the two unbound fields and assign the values ​​when editing notes
+        # Transfer by parameter in the views.py
+        mycustomer = kwargs.pop ('mycustomer', None)
+        mycontact = kwargs.pop ('mycontact', None)
+        super (NoteForm, self).__init__ (*args, **kwargs)
+        if mycustomer != None:
+            self.fields['selcustomer'].initial = mycustomer
+            # filter the contactlist
+            self.fields['selcontact'].queryset = Contact.objects.filter(customer=mycustomer)
+            self.fields['selcontact'].initial=mycontact
 
 
 # Form with fields to create or update employees
