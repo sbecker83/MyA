@@ -4,7 +4,7 @@ File Description: view.py
 Definition pf all view
 """
 from calendar import *
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
@@ -30,7 +30,10 @@ def homesite(request):
     except ObjectDoesNotExist:
         my_events = []
 
-    return render(request, 'index.html', {'page_title': 'Startseite', 'employee_name': employee_name, 'my_notes': my_notes, 'my_events': my_events})
+    return render(request, 'index.html', {'page_title': 'Startseite',
+                                          'employee_name': employee_name,
+                                          'my_notes': my_notes,
+                                          'my_events': my_events})
 
 
 # ======================================================== #
@@ -279,7 +282,7 @@ def details_contact(request, pk=None, fk=None):
     # show the company in the title - select from customer
     customers = Customer.objects.filter(id=fk)
     for c in customers:
-        customername =" - " + c.company
+        customername = " - " + c.company
     # set page-title for a nwe contact or for edit contact
     if pk == None:
         # new contact
@@ -299,7 +302,7 @@ def details_contact(request, pk=None, fk=None):
 
         # Validity check
         if form.is_valid():
-            form = form.save (commit=False)
+            form = form.save(commit=False)
             # set customer-id
             form.customer_id = fk
             form.save()
@@ -314,14 +317,13 @@ def details_contact(request, pk=None, fk=None):
     else:
         # form first call
         # parameter of the form selcted customer (fk) per initial
-        custome= Customer.objects.filter(id=fk)
         form = ContactForm(instance=contact,  initial={'customer': fk})
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 
 # delete a contact
 # parameters primary key of the contact and selected customer (foreign key)
-def delete_contact(request, pk=None,fk=None):
+def delete_contact(request, pk=None, fk=None):
 
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
@@ -339,7 +341,7 @@ def delete_contact(request, pk=None,fk=None):
         else:
             messages.error(request, u'Daten konnten nicht gelöscht werden')
     # paramter to filter to the selected customer (fk) per args
-    return HttpResponseRedirect (reverse ('ansprechpartnerliste', args=[fk]))
+    return HttpResponseRedirect(reverse('ansprechpartnerliste', args=[fk]))
 
 def export_contacts(request):
     dataset = ContactResource().export()
@@ -351,6 +353,7 @@ def export_contacts(request):
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
 
     return response
+
 
 # ======================================================== #
 # Note - View
@@ -376,10 +379,10 @@ def details_note(request, pk=None):
         form = NoteForm(request.POST, instance=note)
         # Validity check
         if form.is_valid():
-            form = form.save (commit=False)
+            form = form.save(commit=False)
             # set contact from the Select-Contact-Field - value form the request
             form.contact_id = request.POST.get('selcontact')
-            form.save ()
+            form.save()
             messages.success(request, u'Daten erfolgreich geändert')
             return HttpResponseRedirect(reverse('notizliste'))
         else:
@@ -391,15 +394,15 @@ def details_note(request, pk=None):
 
         if pk == None:
             # form first call - to insert a new note
-            form = NoteForm (instance=note)
+            form = NoteForm(instance=note)
         else:
             # form first call with a pk - to edit a note
             # transfer the customer_id and the contact_id for the unbound selection fields
-            form = NoteForm (instance=note,  mycustomer=note.contact.customer_id, mycontact=note.contact_id)
+            form = NoteForm(instance=note,  mycustomer=note.contact.customer_id, mycontact=note.contact_id)
 
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
-    return render(request, 'noteinput.html', {'page_title': page_title, 'forms': [form],'mylist':mylist})
+    return render(request, 'noteinput.html', {'page_title': page_title, 'forms': [form], 'mylist': mylist})
 
 
 # delete a note
@@ -438,35 +441,51 @@ def named_month(month_number):
     return datetime(1900, month_number, 1).strftime("%B")
 
 
-def get_calendar(request, act_year=None, act_month=None):
+def get_calendar(request, year=None, month=None):
     # actually year, month and day as integer
-    c = LocaleHTMLCalendar(locale='de_DE')
+    #year = datetime.now().year
+    #month = datetime.now().month
+    #day = datetime.now().day
 
-    act_year = datetime.now().year
-    act_month = datetime.now().month
-    act_day = datetime.now().day
+    if year!=None and month!=None:
+        act_year = int(year)
+        act_month = int(month)
+        #act_day = int(day)
+    else:
+        act_year = datetime.now().year
+        act_month = datetime.now().month
+        #act_day = datetime.now().day
+
+    # all event of model Event
+    event_all = Event.objects.all()
+    # all events on actully day
+    #event_today = Event.objects.raw('SELECT * FROM mya_event where date ='+str(act_day))
 
     days_of_month = monthrange(act_year, act_month)
     all_month_day = monthcalendar(act_year, act_month)
 
     # Calculate values for the calender controls. (Januar = 1)
-    previous_year = act_year - 1
+    # Annahme gleiches Jahr
+    #previous_year = act_year - 1
+    previous_year = act_year
     previous_month = act_month - 1
     if previous_month == 0:
         previous_year = act_year - 1
         previous_month = 12
-    next_year = act_year + 1
+    #next_year = act_year + 1
+    next_year = act_year
     next_month = act_month + 1
     if next_month == 13:
         next_year = act_year + 1
-        next_month = +1
+        next_month = 1
     year_after_this = act_year + 1
     year_befor_this = act_year - 1
+
     return render(request, 'calendar.html',
                   {'page_title': 'Terminkalender',
                    'calendar': all_month_day,
-                   'day': act_day,
-                   'day_name': named_day(act_day),
+                   #'day': act_day,
+                   #'day_name': named_day(act_day),
                    'days_of_month': days_of_month,
                    'month': act_month,
                    'month_name': named_month(act_month),
@@ -478,16 +497,24 @@ def get_calendar(request, act_year=None, act_month=None):
                    'next_month_name': named_month(next_month),
                    'next_year': next_year,
                    'year_before_this': year_befor_this,
-                   'ear_after_this': year_after_this
+                   'year_after_this': year_after_this,
+                   'events': event_all
+                   # 'event_today': event_today
                    })
 
 
 # create a new customer or edit a customer
-def details_calendar(request, pk=None):
+def details_calendar(request, pk=None, year=None, month=None, day=None):
+    act_year = int(year)
+    act_month = int(month)
+    act_day = int(day)
+
+    act_date = datetime(act_year, act_month, act_day).__format__('%d.%m.%Y')
     if pk == None:
         events = Event()
         page_title = "Neuen Termin anlegen"
     else:
+
         events = get_object_or_404(Event, id=pk)
         page_title = "Termin ändern"
 
@@ -495,18 +522,25 @@ def details_calendar(request, pk=None):
 
         # form sent off
         form = EventForm(request.POST, instance=events)
+
+        # str_date = str(act_date) + ' ' + str('12:00')
+        # form.cleaned_data['starttime'] = datetime.strptime(str_date, '%d.%m.%Y H:M').date()
+
         # Validity check
         if form.is_valid():
+            form.save(commit=False)
+            str_date = str(act_date) + ' ' + request.POST.get('my_starttime')
+            form.starttime=datetime.strptime(str_date, '%d.%m.%Y H:M').date()
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('kalender'))
+            return HttpResponseRedirect(reverse('terminkalender'))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
     else:
         # form first call
-        form = EventForm(instance=events)
+        form = EventForm(instance=events, initial={'date': act_date})
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
 

@@ -1,4 +1,4 @@
-#TODO File Description
+# TODO File Description
 """
  File Decsription:
 """
@@ -17,7 +17,8 @@ class UserEditForm(UserChangeForm):
         fields = {'username', 'password'}
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        # TODO Syntax geändert: UserEditForm und self eingefügt => für Matthias
+        super(UserEditForm, self).__init__(*args, **kwargs)
 
 
 # Form with fields to create or update employees
@@ -80,7 +81,7 @@ class ContactForm(ModelForm):
             'title': 'Titel',
             'position': 'Position'
         }
-        exclude ={'customer'}
+        exclude = {'customer'}
 
 
 # Form for a note - dynamically Form from model
@@ -90,8 +91,9 @@ class NoteForm(ModelForm):
     With two fields for selecting customer/company and the respective contact
     """
 
-    selcustomer = ModelChoiceField(queryset=Customer.objects.all (), label='Firma',widget=Select(attrs={"onChange":'mySelect()'}))
-    selcontact = ModelChoiceField(queryset=Contact.objects.all (), label='Ansprecchpartner')
+    selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
+                                   widget=Select(attrs={"onChange": 'mySelect()'}))
+    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprecchpartner')
 
     class Meta:
         model = Note
@@ -105,14 +107,14 @@ class NoteForm(ModelForm):
     def __init__(self,  *args, **kwargs):
         # Initialize the two unbound fields and assign the values ​​when editing notes
         # Transfer by parameter in the views.py
-        mycustomer = kwargs.pop ('mycustomer', None)
-        mycontact = kwargs.pop ('mycontact', None)
-        super (NoteForm, self).__init__ (*args, **kwargs)
+        mycustomer = kwargs.pop('mycustomer', None)
+        mycontact = kwargs.pop('mycontact', None)
+        super(NoteForm, self).__init__(*args, **kwargs)
         if mycustomer != None:
             self.fields['selcustomer'].initial = mycustomer
             # filter the contactlist
             self.fields['selcontact'].queryset = Contact.objects.filter(customer=mycustomer)
-            self.fields['selcontact'].initial=mycontact
+            self.fields['selcontact'].initial = mycontact
 
 
 # Form with fields to create or update employees
@@ -120,11 +122,28 @@ class EventForm(ModelForm):
     """
     A form for create or update employees and update profil of current user
     """
+    my_starttime = CharField(label='Startzeit')
+    my_endtime = CharField(label='Endzeit')
+
     class Meta:
         model = Event
-        fields = ('date', 'title', 'location')
+        fields = ('date', 'title', 'my_starttime', 'my_endtime', 'location')
         labels = {
             'date': 'Datum',
             'title': 'Beschreibung',
             'location': 'Ort'
         }
+
+
+    """
+    def clean_starttime(self):
+        str_date = str(self.date) + ' ' + str(self.starttime)
+        starttime = datetime.strptime(str_date, '%d.%m.%Y HH:mm').date()
+        return starttime
+
+    def clean(self):
+        super(ModelForm, self).clean()
+        str_date = str(self.cleaned_data['date']) + ' ' + str(self.cleaned_data['starttime'])
+        self.cleaned_data['starttime'] = datetime.strptime(str_date, '%d.%m.%Y HH:mm').date()
+        return self.cleaned_data
+    """
