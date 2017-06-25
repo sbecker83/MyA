@@ -21,7 +21,7 @@ def homesite(request):
     employee = Employee.objects.get(user=request.user.id)
     employee_name = employee.firstname + " " + employee.lastname
     try:
-        my_notes = Note.objects.filter(employee=employee.id)
+        my_notes = Note.objects.filter(employee=employee)
     except ObjectDoesNotExist:
         my_notes = []
 
