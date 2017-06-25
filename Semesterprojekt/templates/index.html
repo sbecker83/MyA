@@ -48,11 +48,13 @@
                     </tr>
                 {% endfor %}
                 </table>
-                <p><a href="{% url 'terminkalender' %}">Zum Terminkalender...</a></p>
+                <!-- TODO Link anpassen -->
+                <p><!--a href="{#% url 'terminkalender' %#}">Zum Terminkalender...</--a!--></p>
             {% else %}
                 <p>Bislang keine Termine.</p>
             {% endif %}
-            <a href="{% url 'neuerTermin' %}" class="btn btn-primary">Neu Anlegen</a>
+        <!-- TODO Link anpassen -->
+            <!--a href="{#% url 'neuerTermin' %#}" class="btn btn-primary">Neu Anlegen</a!-->
         </div>
 
 {% endblock %}
