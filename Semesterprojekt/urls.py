@@ -30,7 +30,6 @@ urlpatterns = (
     # employee - overview, new, edit, delete
     url(r'^mitarbeiter/$', MyA.views.get_employee, name='mitarbeiterListe'),
     url(r'^mitarbeiter/neuerMA/$', MyA.views.details_employee, name='neuerMitarbeiter'),
-    #url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/?$', MyA.views.details_employee, name='editMitarbeiter'),
     url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/change//?$', MyA.views.details_employee, name='editMitarbeiter'),
     url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
     url(r'^mitarbeiter/deleteMa/(?P<pk>[0-9]+)/?$', MyA.views.delete_employee, name='deleteMitarbeiter'),
@@ -42,8 +41,9 @@ urlpatterns = (
     url(r'^profil/toggleMa/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggleMitarbeiter'),
 
     # calendar
-    url(r'^kalender/$', MyA.views.get_calendar, name='terminkalender'),
-    url(r'^kalender/neuerTermin/?$', MyA.views.details_calendar, name='neuerTermin'),
+    url(r'^kalender/?$', MyA.views.get_calendar, name='terminkalender'),
+    url(r'^kalender/(?P<year>[0-9]+)/(?P<month>[0-9]+)/?$', MyA.views.get_calendar, name='terminkalender'),
+    url(r'^kalender/neuerTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$', MyA.views.details_calendar, name='neuerTermin'),
     url(r'^kalender/editTermin/?$', MyA.views.details_calendar, name='editTermin'),
 
     # login / logout
