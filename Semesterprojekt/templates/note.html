@@ -5,37 +5,37 @@
 {% endblock %}
 {% block content %}
     <h2>{{ page_title }}</h2>
+    <div class="content">
+        <table class="table table-bordered table-striped">
+            <colgroup>
+                <col width="120">
+                <col width="240">
+                <col width="20">
+                <col width="20">
+            </colgroup>
+            <tr>
+                <th>Datum</th>
+                <th>Notiz</th>
+                <th>&nbsp</th>
+                <th>&nbsp</th>
+            </tr>
+            <tr>
+                {% for note in notes %}
+                    <tr>
+                        <td>{{ note.date }}</td>
+                        <td>{{ note.notetext }}</td>
+                        <td><a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                        <td><a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a></td>
+                    </tr>
 
-   <table class="table table-bordered table-striped">
-        <colgroup>
-            <col width="120">
-            <col width="240">
-            <col width="20">
-            <col width="20">
-        </colgroup>
-        <tr>
-            <th>Datum</th>
-            <th>Notiz</th>
-            <th>&nbsp</th>
-            <th>&nbsp</th>
-        </tr>
-        <tr>
-            {% for note in notes %}
-                <tr>
-                    <td>{{ note.date }}</td>
-                    <td>{{ note.notetext }}</td>
-                    <td><a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                    <td><a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a></td>
-                </tr>
+                {% endfor %}
+            </tr>
+        </table>
+        <br>
 
-            {% endfor %}
-        </tr>
-    </table>
-    <br>
-
-    <a href="{% url 'neuenotiz'  %}" class="btn btn-primary">Neu Anlegen</a>
-    <a href="{% url 'exportNotiz'  %}" class="btn btn-primary">Excel Export</a>
-
+        <a href="{% url 'neuenotiz'  %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'exportNotiz'  %}" class="btn btn-primary">Excel Export</a>
+    </div>
 
 
 {% endblock %}

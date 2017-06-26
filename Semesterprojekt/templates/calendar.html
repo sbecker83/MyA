@@ -5,57 +5,58 @@
 
 {% block content %}
     <h2>{{ page_title }}</h2>
-    <br>
+    <div class="content">
 
-    <a href="{% url 'terminkalender' year=year_before_this month=month %}"> &lt;&lt; </a>
-    {{ year }}
-    <a href="{% url 'terminkalender' year=year_after_this month=month %}"> &gt;&gt;</a>
+        <a href="{% url 'terminkalender' year=year_before_this month=month %}"> &lt;&lt; </a>
+        {{ year }}
+        <a href="{% url 'terminkalender' year=year_after_this month=month %}"> &gt;&gt;</a>
 
-    <hr>
-    <table class="table table-bordered table-striped">
-        <colgroup>
-            <col width="50">
-            <col width="50">
-            <col width="50">
-            <col width="50">
-            <col width="50">
-            <col width="50">
-            <col width="50">
-        </colgroup>
-            <tr>
-                <td><a href="{% url 'terminkalender' year=previous_year month=previous_month %}"> &lt;&lt; {{ previous_month_name }} </a></td>
-                <td></td>
-                <td></td>
-                <td>{{ month_name }}</td>
-                <td></td>
-                <td></td>
-                <td><a href="{% url 'terminkalender' year=next_year month=next_month %}">{{ next_month_name }} &gt;&gt;</a></td>
-        </tr>
-        <tr>
-            <th>Montag</th>
-            <th>Dienstag</th>
-            <th>Mittwoch</th>
-            <th>Donnerstag</th>
-            <th>Freitag</th>
-            <th>Samstag</th>
-            <th>Sonntag</th>
-        </tr>
-        <tr>
-            {% for entry in calendar %}
+        <hr>
+        <table class="table table-bordered table-striped">
+            <colgroup>
+                <col width="50">
+                <col width="50">
+                <col width="50">
+                <col width="50">
+                <col width="50">
+                <col width="50">
+                <col width="50">
+            </colgroup>
                 <tr>
-                    {% for x in entry %}
-                        {% if x == 0 %}
-                            <td></td>
-                        {% else %}
-                            <td>
-                                {{ x }}
-                                <a href="{% url 'neuerTermin' year=year month=month day=x %}">{% bootstrap_icon 'plus' %}</a>
-                                <a href="{% url 'editTermin' %}">{% bootstrap_icon 'edit' %}</a>
-                            </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-             {% endfor %}
-        </tr>
-    </table>
+                    <td><a href="{% url 'terminkalender' year=previous_year month=previous_month %}"> &lt;&lt; {{ previous_month_name }} </a></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ month_name }}</td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="{% url 'terminkalender' year=next_year month=next_month %}">{{ next_month_name }} &gt;&gt;</a></td>
+            </tr>
+            <tr>
+                <th>Montag</th>
+                <th>Dienstag</th>
+                <th>Mittwoch</th>
+                <th>Donnerstag</th>
+                <th>Freitag</th>
+                <th>Samstag</th>
+                <th>Sonntag</th>
+            </tr>
+            <tr>
+                {% for entry in calendar %}
+                    <tr>
+                        {% for x in entry %}
+                            {% if x == 0 %}
+                                <td></td>
+                            {% else %}
+                                <td>
+                                    {{ x }}
+                                    <a href="{% url 'neuerTermin' year=year month=month day=x %}">{% bootstrap_icon 'plus' %}</a>
+                                    <a href="{% url 'editTermin' %}">{% bootstrap_icon 'edit' %}</a>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                 {% endfor %}
+            </tr>
+        </table>
+    </div>
 {% endblock %}

@@ -5,46 +5,47 @@
 {% endblock %}
 {% block content %}
     <h2>{{ page_title }}</h2>
+    <div class="content">
 
-    <table class="table table-bordered table-striped">
-        <colgroup>
-            <col width="120">
-            <col width="120">
-            <col width="180">
-            <col width="180">
-            <col width="20">
-            <col width="20">
-        </colgroup>
-        <tr>
-            <th>Firma</th>
-            <th>Vorname</th>
-            <th>Nachname</th>
-            <th>Position</th>
-            <th>&nbsp</th>
-            <th>&nbsp</th>
+        <table class="table table-bordered table-striped">
+            <colgroup>
+                <col width="120">
+                <col width="120">
+                <col width="180">
+                <col width="180">
+                <col width="20">
+                <col width="20">
+            </colgroup>
+            <tr>
+                <th>Firma</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Position</th>
+                <th>&nbsp</th>
+                <th>&nbsp</th>
 
-        </tr>
-        <tr>
-            {% for contact in contacts %}
-                <tr>
-                <td>{{ contact.customer }}</td>
-                <td>{{ contact.firstname }}</td>
-                <td>{{ contact.lastname }}</td>
-                <td>{{ contact.position }}</td>
-                <td><a href="{% url 'editansprechpartner' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                <td><a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
+            </tr>
+            <tr>
+                {% for contact in contacts %}
+                    <tr>
+                    <td>{{ contact.customer }}</td>
+                    <td>{{ contact.firstname }}</td>
+                    <td>{{ contact.lastname }}</td>
+                    <td>{{ contact.position }}</td>
+                    <td><a href="{% url 'editansprechpartner' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                    <td><a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
 
-                </tr>
+                    </tr>
 
-            {% endfor %}
-        </tr>
-    </table>
-    <br>
+                {% endfor %}
+            </tr>
+        </table>
+        <br>
 
-    <a href="{% url 'neueransprechpartner' fk=selected_customer_id  %}" class="btn btn-primary">Neu Anlegen</a>
-    <a href="{% url 'kundenliste'  %}" class="btn btn-primary">Zurück</a>
-    <a href="{% url 'exportAnsprechpartner'  %}" class="btn btn-primary">Excel Export</a>
+        <a href="{% url 'neueransprechpartner' fk=selected_customer_id  %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'kundenliste'  %}" class="btn btn-primary">Zurück</a>
+        <a href="{% url 'exportAnsprechpartner'  %}" class="btn btn-primary">Excel Export</a>
 
-
+    </div>
 
 {% endblock %}
