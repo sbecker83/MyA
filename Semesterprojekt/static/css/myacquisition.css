@@ -1,3 +1,44 @@
-body {
-    padding-top: 70px;
+h2 {
+    font-size: 22px;
 }
+
+.active {
+    text-decoration: none;
+    background-color: #81c04d;
+}
+
+.navbar-default {
+    background-color: #37444e;
+}
+
+.navbar-default .navbar-brand {
+    color: #ffffff;
+}
+.navbar-text a {
+    margin-left: 10px;
+    margin-right: 5px;
+    color: #92a4b2;
+}
+
+.row {
+    background-color: #ebeef0;
+}
+
+.sidebar-offcanvas {
+    background-color: #fafafa;
+}
+
+.sidebar-offcanvas, .sidebar-offcanvas a {
+    color: #707980;
+}
+
+.sidebar-offcanvas li a:hover {
+    background-color: #ffffff;
+}
+
+.content {
+    background-color: #ffffff;
+    margin: 15px 0;
+    padding: 10px 15px;
+}
+

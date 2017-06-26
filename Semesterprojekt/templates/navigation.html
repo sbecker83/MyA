@@ -1,30 +1,27 @@
 <!-- File Decsription: HTML Template for the navigation !-->
 {% load mya_tags %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">{% block title %}My Acquisition{% endblock %}</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="{% active 'startseite' %}"><a href="{% url 'startseite' %}">Home</a></li>
-                <li class="{% active 'kundenliste' %}"><a href="{% url 'kundenliste' %}">Kundenliste</a></li>
-                <li class="{% active 'notizliste' %}"><a href="{% url 'notizliste' %}">Notizen</a></li>
-                {% if request.user.is_superuser %}
-                    <li class="{% active 'mitarbeiterListe' %}"><a href="{% url 'mitarbeiterListe' %}">Mitarbeiter</a></li>
-                {% endif %}
-                <li class="{% active 'terminkalender' %}"><a href="{% url 'terminkalender' %}">Terminkalender</a></li>
-                {% if not request.user.is_superuser %}
-                    <li class="{% active 'profil' %}"><a href="{% url 'profil' %}">Profil</a></li>
-                {% endif %}
-                <li class="{% active 'logout' %}"><a href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
+{% load bootstrap3 %}
+
+    <ul class="nav">
+        <li class="{% active 'startseite' %}"><a href="{% url 'startseite' %}">{% bootstrap_icon 'dashboard' %} Dashboard</a></li>
+        <li class="{% active 'kundenliste' %}"><a href="{% url 'kundenliste' %}">{% bootstrap_icon 'briefcase' %} Kundenliste</a></li>
+        <li class="{% active 'notizliste' %}"><a href="{% url 'notizliste' %}">{% bootstrap_icon 'list-alt' %} Notizen</a></li>
+        <li class="{% active 'terminkalender' %}"><a href="{% url 'terminkalender' %}">{% bootstrap_icon 'calendar' %} Terminkalender</a></li>
+    </ul>
+
+    {% if request.user.is_superuser %}
+        <div class="divider">Admin-Bereich</div>
+        <ul class="nav">
+            <li class="{% active 'mitarbeiterListe' %}"><a href="{% url 'mitarbeiterListe' %}">{% bootstrap_icon 'user' %} Mitarbeiter</a></li>
+        </ul>
+    {% endif %}
+
+
+<!-- Menu Toggle Script -->
+<script>
+$(document).ready(function() {
+  $('[data-toggle=offcanvas]').click(function() {
+    $('.row-offcanvas').toggleClass('active');
+  });
+});
+</script>

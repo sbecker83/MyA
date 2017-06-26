@@ -5,38 +5,38 @@
 {% endblock %}
 {% block content %}
     <h2>{{ page_title }}</h2>
+    <div class="content">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Anrede</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>eMail-Adresse</th>
+                <th>Titel</th>
+                <th>Position</th>
+                <th>&nbsp</th>
 
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Anrede</th>
-            <th>Vorname</th>
-            <th>Nachname</th>
-            <th>eMail-Adresse</th>
-            <th>Titel</th>
-            <th>Position</th>
-            <th>&nbsp</th>
-
-        </tr>
-        {% for employee in employees %}
-             <tr {% if not employee.user.is_active %}class="text-muted"{% endif %}>
-                <td>{{ employee.gender }}</td>
-                <td>{{ employee.firstname }}</td>
-                <td>{{ employee.lastname }}</td>
-                <td>{{ employee.email }}</td>
-                <td>{{ employee.title }}</td>
-                <td>{{ employee.position }}</td>
-                <td>
-                    <a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
-                    <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'lock' %}</a>
-                    <a href="{% url 'deleteMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a>
-                </td>
             </tr>
-        {% endfor %}
-    </table>
-    <br>
+            {% for employee in employees %}
+                 <tr {% if not employee.user.is_active %}class="text-muted"{% endif %}>
+                    <td>{{ employee.gender }}</td>
+                    <td>{{ employee.firstname }}</td>
+                    <td>{{ employee.lastname }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.title }}</td>
+                    <td>{{ employee.position }}</td>
+                    <td>
+                        <a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
+                        <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'lock' %}</a>
+                        <a href="{% url 'deleteMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
 
-    <a href="{% url 'neuerMitarbeiter'  %}" class="btn btn-primary">Neu Anlegen</a>
-    <a href="{% url 'exportMitarbeiter'  %}" class="btn btn-primary">Excel Export</a>
+        <a href="{% url 'neuerMitarbeiter'  %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'exportMitarbeiter'  %}" class="btn btn-primary">Excel Export</a>
 
-
+    </div>
 {% endblock %}

@@ -6,20 +6,22 @@
 
 {% block content %}
     <h2>{{ page_title }}</h2>
-    <br>
-    <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+    <div class="content">
 
-        {% csrf_token %}
+        <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
-        {# all forms given are rendered #}
-        {% for form in forms %}
-            {% bootstrap_form form layout='horizontal' %}
-        {% endfor %}
+            {% csrf_token %}
 
-        <button type="submit" class="btn btn-primary">Speichern</button>
-        <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
+            {# all forms given are rendered #}
+            {% for form in forms %}
+                {% bootstrap_form form layout='horizontal' %}
+            {% endfor %}
 
-    </form>
+            <button type="submit" class="btn btn-primary">Speichern</button>
+            <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
+
+        </form>
+    </div>
     <script type="text/javascript">
         function mySelect() {
             mycustomer = document.getElementById("id_selcustomer").value;
