@@ -6,11 +6,12 @@ from django.forms import *
 from django.contrib.auth.forms import UserChangeForm
 from MyA.models import *
 
-
 class UserEditForm(UserChangeForm):
     """
     A user edit form. This form inherits from UserChangeForm and only changes the fields which are used/shown
     """
+    required_css_class = 'required'
+
     class Meta:
         model = User
         # overwrites the fields of the super class
@@ -25,6 +26,8 @@ class EmployeeForm(ModelForm):
     """
     A form for create or update employees and update profil of current user
     """
+    required_css_class = 'required'
+
     class Meta:
         model = Employee
         fields = ('gender', 'firstname', 'lastname', 'phone', 'fax', 'mobile', 'email', 'title', 'position')
@@ -46,6 +49,8 @@ class CustomerForm(ModelForm):
     """
     A form for create or update customers
     """
+    required_css_class = 'required'
+
     class Meta:
         model = Customer
         fields = ('company', 'street', 'plzcity', 'phone', 'fax', 'website')
@@ -64,6 +69,7 @@ class ContactForm(ModelForm):
     """
     A form for create or update contacts
     """
+    required_css_class = 'required'
 
     class Meta:
         model = Contact
@@ -89,6 +95,7 @@ class NoteForm(ModelForm):
     A form for create or update notes
     With two fields for selecting customer/company and the respective contact
     """
+    required_css_class = 'required'
 
     selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
                                    widget=Select(attrs={"onChange": 'mySelect()'}))
@@ -120,6 +127,7 @@ class FilterNoteForm(Form):
     """
     A form for filter notes
     """
+    required_css_class = 'required'
 
     selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all(), required=False)
     selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
@@ -132,6 +140,7 @@ class EventForm(ModelForm):
     """
     A form for create or update events
     """
+    required_css_class = 'required'
 
     class Meta:
         model = Event
