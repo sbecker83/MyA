@@ -6,6 +6,17 @@
 {% block content %}
     <h2>{{ page_title }}</h2>
     <div class="content">
+        <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+
+            {% csrf_token %}
+            {# all forms given are rendered #}
+            {% for form in forms %}
+                {% bootstrap_form form layout='horizontal' %}
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">Filter anwenden</button>
+
+        </form>
         <table class="table table-bordered table-striped">
             <tr>
                 <th>Datum</th>
@@ -32,6 +43,34 @@
         <a href="{% url 'neuenotiz'  %}" class="btn btn-primary">Neu Anlegen</a>
         <a href="{% url 'exportNotiz'  %}" class="btn btn-primary">Excel Export</a>
     </div>
+<script type="text/javascript">
+        function mySelect() {
+            mycustomer = document.getElementById("id_selcustomer").value;
+
+            var ddcontact = document.getElementById("id_selcontact");
+            while (ddcontact.options.length > 0) {
+                ddcontact.remove(0);
+            }
+            opt = document.createElement("option");
+            opt.value = '';
+            opt.text= '---------';
+            opt.setAttribute('selected', true);
+            ddcontact.add(opt);
+            {% for contact in mylist %}
+                if ( mycustomer == {{ contact.customer.id }}) {
+                    opt = document.createElement("option");
+                    opt.value = {{ contact.id }};
+                    opt.text= '{{ contact.firstname }} {{ contact.lastname }}';
+                    ddcontact.add(opt);
+                }
+
+            {% endfor %}
+
+
+
+        }
+
+    </script>
 
 
 {% endblock %}

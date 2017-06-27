@@ -199,7 +199,7 @@ def delete_employee(request, pk=None):
 # ======================================================== #
 def get_customer(request):
     customers = Customer.objects.all
-    return render(request, 'customer.html', {'page_title': 'Kunden', 'customers': customers})
+    return render(request, 'customer.html', {'page_title': 'Kunden','customers': customers})
 
 
 # create a new customer or edit a customer
@@ -400,8 +400,23 @@ def export_contacts(request):
 # Note - View
 # ======================================================== #
 def get_notes(request):
-    notes = Note.objects.all()
-    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes})
+    if request.method == 'POST':
+        selemployee=request.POST.get('selemployee')
+        selcontact=request.POST.get('selcontact')
+        if selemployee == '' and selcontact == '':
+            notes = Note.objects.all ()
+        elif selemployee != '' and selcontact == '':
+            notes = Note.objects.filter (employee_id=selemployee)
+        elif selemployee == '' and selcontact != '':
+            notes = Note.objects.filter (contact_id=selcontact)
+        elif selemployee != '' and selcontact != '':
+            notes = Note.objects.filter (employee_id=selemployee, contact_id=selcontact)
+    else:
+        notes = Note.objects.all()
+    form = FilterNoteForm()
+    # Contact list for use in javascript for the dynamic list
+    mylist = Contact.objects.all ()
+    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes, 'forms':[form], 'mylist': mylist})
 
 
 # create a new note or edit a note

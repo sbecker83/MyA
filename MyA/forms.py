@@ -116,6 +116,16 @@ class NoteForm(ModelForm):
             self.fields['selcontact'].queryset = Contact.objects.filter(customer=mycustomer)
             self.fields['selcontact'].initial = mycontact
 
+class FilterNoteForm(Form):
+    """
+    A form for filter notes
+    """
+
+    selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all (), required=False)
+    selcustomer = ModelChoiceField (queryset=Customer.objects.all (), label='Firma',
+                                    widget=Select (attrs={"onChange": 'mySelect()'}), required=False)
+    selcontact = ModelChoiceField (queryset=Contact.objects.all (), label='Ansprecchpartner', required=False)
+
 
 # Form with fields to create or update employees
 class EventForm(ModelForm):
