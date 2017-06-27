@@ -60,6 +60,7 @@ class Customer(models.Model):
     phone = models.CharField('phone', validators=[phoneRegex], blank=True, max_length=100)
     fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
     website = models.CharField('website', blank=True, max_length=100)
+    status = models.IntegerField ('status', default=0)
 
     def __str__(self):
         return "{}".format(self.company)
@@ -83,6 +84,7 @@ class Contact(models.Model):
     fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
     mobile = models.CharField('mobile', blank=True, max_length=100)
     email = models.EmailField('email', blank=True, max_length=100)
+    status = models.IntegerField ('status', default=0)
 
     def __str__(self):
         return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)

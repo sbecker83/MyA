@@ -198,7 +198,7 @@ def delete_employee(request, pk=None):
 # Customer - View
 # ======================================================== #
 def get_customer(request):
-    customers = Customer.objects.all()
+    customers = Customer.objects.all
     return render(request, 'customer.html', {'page_title': 'Kunden', 'customers': customers})
 
 
@@ -231,20 +231,40 @@ def details_customer(request, pk=None):
 
 
 # delete a customer
-def delete_customer(request, pk=None):
+def delete_customer(request, pk=None, status=None):
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
-        customer = get_object_or_404(Customer, id=pk)
-        # check if customer has no contacts
-        nocontact = 0
-        for c in Contact.objects.raw('SELECT * FROM mya_contact where customer_id='+pk):
-            nocontact = 1
-        if nocontact == 0:
-            customer.delete()
-            messages.success(request, u'Daten erfolgreich gelöscht')
+        if status=='2':
+
+            customer = get_object_or_404(Customer, id=pk)
+            # check if customer has no contacts
+            nocontact = 0
+            for c in Contact.objects.raw('SELECT * FROM mya_contact where customer_id='+pk):
+                nocontact = 1
+            if nocontact == 0:
+                customer.delete()
+                messages.success(request, u'Daten erfolgreich gelöscht')
+            else:
+                if customer.status == 0:
+                    # Customer has contact so he can only be disabled
+                    customer.status = 1
+                    Contact.objects.select_related ().filter (customer=customer.id).update (status = 1)
+                    customer.save ()
+                    messages.success (request, u'Daten erfolgreich de-/aktiviert')
+                else:
+                    messages.error (request, u'Daten konnten nicht gelöscht werden')
         else:
-            messages.error(request, u'Daten konnten nicht gelöscht werden')
+            customer = get_object_or_404 (Customer, id=pk)
+
+            if customer.status == 0:
+                customer.status = 1
+                Contact.objects.select_related ().filter (customer=customer.id).update (status=1)
+            elif customer.status == 1:
+                customer.status = 0
+                Contact.objects.select_related ().filter (customer=customer.id).update (status=0)
+            customer.save ()
+            messages.success (request, u'Daten erfolgreich de-/aktiviert')
     return HttpResponseRedirect(reverse('kundenliste'))
 
 def export_customers(request):
@@ -299,7 +319,6 @@ def details_contact(request, pk=None, fk=None):
         # parameter of the form selcted customer (fk) per initial
         form = ContactForm(request.POST, instance=contact, initial={'customer': fk})
 
-
         # Validity check
         if form.is_valid():
             form = form.save(commit=False)
@@ -323,23 +342,45 @@ def details_contact(request, pk=None, fk=None):
 
 # delete a contact
 # parameters primary key of the contact and selected customer (foreign key)
-def delete_contact(request, pk=None, fk=None):
+def delete_contact(request, pk=None, fk=None, status=None):
 
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
-        contact = get_object_or_404(Contact, id=pk)
-        # check if contact has no notes and no events / memberext
-        no_notes_and_events = 0
-        for n in Note.objects.raw('SELECT * FROM mya_note where contact_id='+pk):
-            no_notes_and_events = 1
-        for e in MemberExt.objects.raw('SELECT * FROM mya_memberext where contact_id='+pk):
-            no_notes_and_events = 1
-        if no_notes_and_events == 0:
-            contact.delete()
-            messages.success(request, u'Daten erfolgreich gelöscht')
+        if status == '2':
+            contact = get_object_or_404 (Contact, id=pk)
+            # check if contact has no notes and no events / memberext
+            no_notes_and_events = 0
+            for n in Note.objects.raw ('SELECT * FROM mya_note where contact_id=' + pk):
+                no_notes_and_events = 1
+            for e in MemberExt.objects.raw ('SELECT * FROM mya_memberext where contact_id=' + pk):
+                no_notes_and_events = 1
+            if no_notes_and_events == 0:
+                contact.delete ()
+                messages.success (request, u'Daten erfolgreich gelöscht')
+            else:
+                # check if customer active
+                customer = Customer.objects.filter (id=contact.customer_id).first ()
+                if customer.status == 0 and  contact.status == 0:
+                    # contact has relaticns to a child-table so it can only be disabled
+                    contact.status = 1
+                    contact.save ()
+                    messages.success (request, u'Daten erfolgreich de-/aktiviert')
+                else:
+                    messages.error (request, u'Daten konnten nicht gelöscht werden')
         else:
-            messages.error(request, u'Daten konnten nicht gelöscht werden')
+            contact = get_object_or_404 (Contact, id=pk)
+            # check if customer active
+            customer = Customer.objects.filter(id=contact.customer_id).first()
+            if customer.status == 0:
+                if contact.status == 0:
+                    contact.status = 1
+                elif contact.status == 1:
+                    contact.status = 0
+                contact.save ()
+                messages.success (request, u'Daten erfolgreich de-/aktiviert')
+            else:
+                messages.error (request, u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
     # paramter to filter to the selected customer (fk) per args
     return HttpResponseRedirect(reverse('ansprechpartnerliste', args=[fk]))
 
