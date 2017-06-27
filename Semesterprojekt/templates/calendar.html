@@ -41,9 +41,12 @@
                 <th>Sonntag</th>
             </tr>
             <tr>
+                <!-- beginn fist for-iteration: access of all week show as arrays in calendar -->
                 {% for entry in calendar %}
                     <tr>
+                        <!-- beginn second for-iteration: acces of all array in entry of calender -->
                         {% for x in entry %}
+                            <!-- first if order: request to set blank rows when the entry in array is '0' -->
                             {% if x == 0 %}
                                 <td></td>
                             {% else %}
@@ -51,6 +54,16 @@
                                     {{ x }}
                                     <a href="{% url 'neuerTermin' year=year month=month day=x %}">{% bootstrap_icon 'plus' %}</a>
                                     <a href="{% url 'editTermin' %}">{% bootstrap_icon 'edit' %}</a>
+
+                                    <!-- beginn third for-iteration: list of all events -->
+                                    {% for event in all_events %}
+                                        <ul>
+                                            <li>{{ event.title }}</li>
+                                            <li>{{ event.location }}</li>
+                                            <li>{{ event.starttime }} {{ events.endtime }}</li>
+                                        </ul>
+
+                                    {% endfor %}
                                 </td>
                             {% endif %}
                         {% endfor %}
