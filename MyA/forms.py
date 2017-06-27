@@ -127,6 +127,7 @@ class FilterNoteForm(Form):
     selcontact = ModelChoiceField (queryset=Contact.objects.all (), label='Ansprecchpartner', required=False)
 
 
+
 # Form with fields to create or update employees
 class EventForm(ModelForm):
     """
