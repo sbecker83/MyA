@@ -94,9 +94,8 @@ class Event(models.Model):
     employee = models.ManyToManyField(Employee, through='MemberInt')       # many to many Field
     contact = models.ManyToManyField(Contact, through='MemberExt')   # many to many Field
     date = models.DateTimeField('date', default=datetime.now().__format__('%d.%m.%Y'))
-    # TODO Sandra: Format ändern
-    starttime = models.DateTimeField('date', default='00:00')
-    endtime = models.DateTimeField('date', default='00:00')
+    starttime = models.DateTimeField('starttime')
+    endtime = models.DateTimeField('endtime')
     title = models.CharField('title', max_length=100)
     location = models.CharField('location', max_length=100)
 

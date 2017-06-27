@@ -17,7 +17,6 @@ class UserEditForm(UserChangeForm):
         fields = {'username', 'password'}
 
     def __init__(self, *args, **kwargs):
-        # TODO Syntax geändert: UserEditForm und self eingefügt => für Matthias
         super(UserEditForm, self).__init__(*args, **kwargs)
 
 
@@ -116,45 +115,31 @@ class NoteForm(ModelForm):
             self.fields['selcontact'].queryset = Contact.objects.filter(customer=mycustomer)
             self.fields['selcontact'].initial = mycontact
 
+
 class FilterNoteForm(Form):
     """
     A form for filter notes
     """
 
-    selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all (), required=False)
-    selcustomer = ModelChoiceField (queryset=Customer.objects.all (), label='Firma',
-                                    widget=Select (attrs={"onChange": 'mySelect()'}), required=False)
-    selcontact = ModelChoiceField (queryset=Contact.objects.all (), label='Ansprecchpartner', required=False)
-
+    selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all(), required=False)
+    selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
+                                    widget=Select(attrs={"onChange": 'mySelect()'}), required=False)
+    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprecchpartner', required=False)
 
 
 # Form with fields to create or update employees
 class EventForm(ModelForm):
     """
-    A form for create or update employees and update profil of current user
+    A form for create or update events
     """
-    my_starttime = CharField(label='Startzeit')
-    my_endtime = CharField(label='Endzeit')
 
     class Meta:
         model = Event
-        fields = ('date', 'title', 'my_starttime', 'my_endtime', 'location')
+        fields = ('date', 'title', 'starttime', 'endtime', 'location')
         labels = {
             'date': 'Datum',
+            'starttime': 'Startzeit',
+            'endtime': 'Endzeit',
             'title': 'Beschreibung',
             'location': 'Ort'
         }
-
-
-    """
-    def clean_starttime(self):
-        str_date = str(self.date) + ' ' + str(self.starttime)
-        starttime = datetime.strptime(str_date, '%d.%m.%Y HH:mm').date()
-        return starttime
-
-    def clean(self):
-        super(ModelForm, self).clean()
-        str_date = str(self.cleaned_data['date']) + ' ' + str(self.cleaned_data['starttime'])
-        self.cleaned_data['starttime'] = datetime.strptime(str_date, '%d.%m.%Y HH:mm').date()
-        return self.cleaned_data
-    """

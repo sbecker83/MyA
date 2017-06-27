@@ -7,9 +7,11 @@
     <h2>{{ page_title }}</h2>
     <div class="content">
 
-        <a href="{% url 'terminkalender' year=year_before_this month=month %}"> &lt;&lt; </a>
-        {{ year }}
-        <a href="{% url 'terminkalender' year=year_after_this month=month %}"> &gt;&gt;</a>
+        <h2 style="text-align: center;">
+            <a href="{% url 'terminkalender' year=year_before_this month=month %}"> {% bootstrap_icon 'chevron-left' %} </a>
+            {{ year }}
+            <a href="{% url 'terminkalender' year=year_after_this month=month %}"> {% bootstrap_icon 'chevron-right' %} </a>
+        </h2>
 
         <hr>
         <table class="table table-bordered table-striped">
@@ -22,14 +24,18 @@
                 <col width="50">
                 <col width="50">
             </colgroup>
-                <tr>
-                    <td><a href="{% url 'terminkalender' year=previous_year month=previous_month %}"> &lt;&lt; {{ previous_month_name }} </a></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ month_name }}</td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="{% url 'terminkalender' year=next_year month=next_month %}">{{ next_month_name }} &gt;&gt;</a></td>
+            <tr>
+                <td>
+                    <a href="{% url 'terminkalender' year=previous_year month=previous_month %}"> {% bootstrap_icon 'chevron-left' %} {{ previous_month_name }} </a>
+                </td>
+                <td></td>
+                <td></td>
+                <td>{{ month_name }}</td>
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="{% url 'terminkalender' year=next_year month=next_month %}">{{ next_month_name }} {% bootstrap_icon 'chevron-right' %} </a>
+                </td>
             </tr>
             <tr>
                 <th>Montag</th>
@@ -49,26 +55,31 @@
                             <!-- first if order: request to set blank rows when the entry in array is '0' -->
                             {% if x == 0 %}
                                 <td></td>
+                                <!-- request to show all day of month in each column -->
                             {% else %}
                                 <td>
                                     {{ x }}
                                     <a href="{% url 'neuerTermin' year=year month=month day=x %}">{% bootstrap_icon 'plus' %}</a>
-                                    <a href="{% url 'editTermin' %}">{% bootstrap_icon 'edit' %}</a>
 
                                     <!-- beginn third for-iteration: list of all events -->
                                     {% for event in all_events %}
-                                        <ul>
-                                            <li>{{ event.title }}</li>
-                                            <li>{{ event.location }}</li>
-                                            <li>{{ event.starttime }} {{ events.endtime }}</li>
-                                        </ul>
-
+                                        <!-- second if order: request of event from date each column -->
+                                        {% if event.date.day == x and event.date.month == month and event.date.year == year %}
+                                            <ul>
+                                                <a href="{% url 'editTermin' year=year month=month day=x pk=event.id %}"> {{ event.title }} {% bootstrap_icon 'edit' %}</a>
+                                            </ul>
+                                            <!-- close second if -->
+                                        {% endif %}
+                                        <!-- close third for-iteration -->
                                     {% endfor %}
                                 </td>
+                                <!-- close first if -->
                             {% endif %}
+                            <!-- close second for-iteration -->
                         {% endfor %}
                     </tr>
-                 {% endfor %}
+                    <!-- close first for-iteration -->
+                {% endfor %}
             </tr>
         </table>
     </div>

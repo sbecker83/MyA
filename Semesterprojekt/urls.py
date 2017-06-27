@@ -44,7 +44,7 @@ urlpatterns = (
     url(r'^kalender/?$', MyA.views.get_calendar, name='terminkalender'),
     url(r'^kalender/(?P<year>[0-9]+)/(?P<month>[0-9]+)/?$', MyA.views.get_calendar, name='terminkalender'),
     url(r'^kalender/neuerTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$', MyA.views.details_calendar, name='neuerTermin'),
-    url(r'^kalender/editTermin/?$', MyA.views.details_calendar, name='editTermin'),
+    url(r'^kalender/editTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/?$', MyA.views.details_calendar, name='editTermin'),
 
     # login / logout
     url(r'^login/$', auth_views.login, name='login'),

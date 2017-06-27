@@ -1,7 +1,6 @@
-#TODO File Description
 """
-File Description: view.py
-Definition pf all view
+Fielname: view.py
+Description: All view definition and their logical
 """
 from calendar import *
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -47,7 +46,7 @@ def get_employee(request):
 
 
 # create a new employee or edit a employee
-def details_employee(request, pk=None, is_profile = False):
+def details_employee(request, pk=None, is_profile=False):
     is_edit = False
     if pk == None:
         # a new user is will be created
@@ -101,6 +100,7 @@ def details_employee(request, pk=None, is_profile = False):
 
     return render(request, 'details.html', {'page_title': page_title, 'forms': [user_form, employee_form]})
 
+
 def export_employees(request):
     dataset = EmployeeResource().export()
     filename = 'employees.xls'
@@ -111,6 +111,7 @@ def export_employees(request):
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
 
     return response
+
 
 # ======================================================== #
 # Profile - View
@@ -199,7 +200,7 @@ def delete_employee(request, pk=None):
 # ======================================================== #
 def get_customer(request):
     customers = Customer.objects.all
-    return render(request, 'customer.html', {'page_title': 'Kunden','customers': customers})
+    return render(request, 'customer.html', {'page_title': 'Kunden', 'customers': customers})
 
 
 # create a new customer or edit a customer
@@ -235,7 +236,7 @@ def delete_customer(request, pk=None, status=None):
     if pk == None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
-        if status=='2':
+        if status == '2':
 
             customer = get_object_or_404(Customer, id=pk)
             # check if customer has no contacts
@@ -249,23 +250,24 @@ def delete_customer(request, pk=None, status=None):
                 if customer.status == 0:
                     # Customer has contact so he can only be disabled
                     customer.status = 1
-                    Contact.objects.select_related ().filter (customer=customer.id).update (status = 1)
-                    customer.save ()
-                    messages.success (request, u'Daten erfolgreich de-/aktiviert')
+                    Contact.objects.select_related().filter(customer=customer.id).update(status=1)
+                    customer.save()
+                    messages.success(request, u'Daten erfolgreich de-/aktiviert')
                 else:
-                    messages.error (request, u'Daten konnten nicht gelöscht werden')
+                    messages.error(request, u'Daten konnten nicht gelöscht werden')
         else:
-            customer = get_object_or_404 (Customer, id=pk)
+            customer = get_object_or_404(Customer, id=pk)
 
             if customer.status == 0:
                 customer.status = 1
-                Contact.objects.select_related ().filter (customer=customer.id).update (status=1)
+                Contact.objects.select_related().filter(customer=customer.id).update(status=1)
             elif customer.status == 1:
                 customer.status = 0
-                Contact.objects.select_related ().filter (customer=customer.id).update (status=0)
-            customer.save ()
-            messages.success (request, u'Daten erfolgreich de-/aktiviert')
+                Contact.objects.select_related().filter(customer=customer.id).update(status=0)
+            customer.save()
+            messages.success(request, u'Daten erfolgreich de-/aktiviert')
     return HttpResponseRedirect(reverse('kundenliste'))
+
 
 def export_customers(request):
     dataset = CustomerResource().export()
@@ -278,6 +280,7 @@ def export_customers(request):
 
     return response
 
+
 # ======================================================== #
 # Contact - View
 # ======================================================== #
@@ -285,14 +288,13 @@ def export_customers(request):
 def get_contact(request, fk=None):
     contacts = Contact.objects.all().filter(customer_id=fk)
     # show the company in the title - select from customer
-    customers = Customer.objects.filter (id=fk)
+    customers = Customer.objects.filter(id=fk)
     for c in customers:
         customername = " - " + c.company
     page_title = "Ansprechpartner" + customername
 
     # paraameter selcted customer for the contact.html using by call view new contact
-    return render(request, 'contact.html', {'page_title': page_title,
-                        'contacts': contacts, 'selected_customer_id':fk})
+    return render(request, 'contact.html', {'page_title': page_title, 'contacts': contacts, 'selected_customer_id': fk})
 
 
 # create a new contact or edit a contact
@@ -348,28 +350,28 @@ def delete_contact(request, pk=None, fk=None, status=None):
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         if status == '2':
-            contact = get_object_or_404 (Contact, id=pk)
+            contact = get_object_or_404(Contact, id=pk)
             # check if contact has no notes and no events / memberext
             no_notes_and_events = 0
-            for n in Note.objects.raw ('SELECT * FROM mya_note where contact_id=' + pk):
+            for n in Note.objects.raw('SELECT * FROM mya_note where contact_id=' + pk):
                 no_notes_and_events = 1
-            for e in MemberExt.objects.raw ('SELECT * FROM mya_memberext where contact_id=' + pk):
+            for e in MemberExt.objects.raw('SELECT * FROM mya_memberext where contact_id=' + pk):
                 no_notes_and_events = 1
             if no_notes_and_events == 0:
-                contact.delete ()
-                messages.success (request, u'Daten erfolgreich gelöscht')
+                contact.delete()
+                messages.success(request, u'Daten erfolgreich gelöscht')
             else:
                 # check if customer active
-                customer = Customer.objects.filter (id=contact.customer_id).first ()
-                if customer.status == 0 and  contact.status == 0:
+                customer = Customer.objects.filter(id=contact.customer_id).first()
+                if customer.status == 0 and contact.status == 0:
                     # contact has relaticns to a child-table so it can only be disabled
                     contact.status = 1
-                    contact.save ()
-                    messages.success (request, u'Daten erfolgreich de-/aktiviert')
+                    contact.save()
+                    messages.success(request, u'Daten erfolgreich de-/aktiviert')
                 else:
-                    messages.error (request, u'Daten konnten nicht gelöscht werden')
+                    messages.error(request, u'Daten konnten nicht gelöscht werden')
         else:
-            contact = get_object_or_404 (Contact, id=pk)
+            contact = get_object_or_404(Contact, id=pk)
             # check if customer active
             customer = Customer.objects.filter(id=contact.customer_id).first()
             if customer.status == 0:
@@ -377,12 +379,14 @@ def delete_contact(request, pk=None, fk=None, status=None):
                     contact.status = 1
                 elif contact.status == 1:
                     contact.status = 0
-                contact.save ()
-                messages.success (request, u'Daten erfolgreich de-/aktiviert')
+                contact.save()
+                messages.success(request, u'Daten erfolgreich de-/aktiviert')
             else:
-                messages.error (request, u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
+                messages.error(request,
+                               u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
     # paramter to filter to the selected customer (fk) per args
     return HttpResponseRedirect(reverse('ansprechpartnerliste', args=[fk]))
+
 
 def export_contacts(request):
     dataset = ContactResource().export()
@@ -395,27 +399,28 @@ def export_contacts(request):
 
     return response
 
+
 # ======================================================== #
 # Note - View
 # ======================================================== #
 def get_notes(request):
     if request.method == 'POST':
-        selemployee=request.POST.get('selemployee')
-        selcontact=request.POST.get('selcontact')
+        selemployee = request.POST.get('selemployee')
+        selcontact = request.POST.get('selcontact')
         if selemployee == '' and selcontact == '':
-            notes = Note.objects.all ()
+            notes = Note.objects.all()
         elif selemployee != '' and selcontact == '':
-            notes = Note.objects.filter (employee_id=selemployee)
+            notes = Note.objects.filter(employee_id=selemployee)
         elif selemployee == '' and selcontact != '':
-            notes = Note.objects.filter (contact_id=selcontact)
+            notes = Note.objects.filter(contact_id=selcontact)
         elif selemployee != '' and selcontact != '':
-            notes = Note.objects.filter (employee_id=selemployee, contact_id=selcontact)
+            notes = Note.objects.filter(employee_id=selemployee, contact_id=selcontact)
     else:
         notes = Note.objects.all()
     form = FilterNoteForm()
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all ()
-    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes, 'forms':[form], 'mylist': mylist})
+    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist})
 
 
 # create a new note or edit a note
@@ -426,7 +431,6 @@ def details_note(request, pk=None):
     else:
         note = get_object_or_404(Note, id=pk)
         page_title = "Notiz ändern"
-
 
     if request.method == 'POST':
 
@@ -497,37 +501,26 @@ def named_month(month_number):
 
 
 def get_calendar(request, year=None, month=None):
-    # actually year, month and day as integer
-    #year = datetime.now().year
-    #month = datetime.now().month
-    #day = datetime.now().day
 
     if year!=None and month!=None:
         act_year = int(year)
         act_month = int(month)
-        #act_day = int(day)
     else:
         act_year = datetime.now().year
         act_month = datetime.now().month
-        #act_day = datetime.now().day
 
-    # all event of model Event
-    event_all = Event.objects.all()
-    # all events on actully day
-    #event_today = Event.objects.raw('SELECT * FROM mya_event where date ='+str(act_day))
+    # all events of model Event
+    all_events = Event.objects.all()
 
-    days_of_month = monthrange(act_year, act_month)
+    # all days of month, output: eg. for month March (3, 31)
     all_month_day = monthcalendar(act_year, act_month)
 
     # Calculate values for the calender controls. (Januar = 1)
-    # Annahme gleiches Jahr
-    #previous_year = act_year - 1
     previous_year = act_year
     previous_month = act_month - 1
     if previous_month == 0:
         previous_year = act_year - 1
         previous_month = 12
-    #next_year = act_year + 1
     next_year = act_year
     next_month = act_month + 1
     if next_month == 13:
@@ -539,9 +532,6 @@ def get_calendar(request, year=None, month=None):
     return render(request, 'calendar.html',
                   {'page_title': 'Terminkalender',
                    'calendar': all_month_day,
-                   #'day': act_day,
-                   #'day_name': named_day(act_day),
-                   'days_of_month': days_of_month,
                    'month': act_month,
                    'month_name': named_month(act_month),
                    'year': act_year,
@@ -553,7 +543,7 @@ def get_calendar(request, year=None, month=None):
                    'next_year': next_year,
                    'year_before_this': year_befor_this,
                    'year_after_this': year_after_this,
-                   'events': event_all
+                   'all_events': all_events
                    # 'event_today': event_today
                    })
 
@@ -578,14 +568,8 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
         # form sent off
         form = EventForm(request.POST, instance=events)
 
-        # str_date = str(act_date) + ' ' + str('12:00')
-        # form.cleaned_data['starttime'] = datetime.strptime(str_date, '%d.%m.%Y H:M').date()
-
         # Validity check
         if form.is_valid():
-            form.save(commit=False)
-            str_date = str(act_date) + ' ' + request.POST.get('my_starttime')
-            form.starttime=datetime.strptime(str_date, '%d.%m.%Y H:M').date()
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
             return HttpResponseRedirect(reverse('terminkalender'))
@@ -597,5 +581,3 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
         # form first call
         form = EventForm(instance=events, initial={'date': act_date})
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
-
-
