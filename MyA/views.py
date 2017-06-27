@@ -404,23 +404,80 @@ def export_contacts(request):
 # Note - View
 # ======================================================== #
 def get_notes(request):
+    filtertext=''
     if request.method == 'POST':
         selemployee = request.POST.get('selemployee')
+        selcustomer = request.POST.get ('selcustomer')
         selcontact = request.POST.get('selcontact')
-        if selemployee == '' and selcontact == '':
+
+        if selemployee == '' and selcustomer == '' and selcontact == '':
+            #No filter
             notes = Note.objects.all()
-        elif selemployee != '' and selcontact == '':
-            notes = Note.objects.filter(employee_id=selemployee)
-        elif selemployee == '' and selcontact != '':
-            notes = Note.objects.filter(contact_id=selcontact)
-        elif selemployee != '' and selcontact != '':
-            notes = Note.objects.filter(employee_id=selemployee, contact_id=selcontact)
+        elif  selcustomer != ''and selcontact == '':
+            # filter by customer - no contact
+            if selemployee == '':
+                notes = Note.objects.raw (
+                'SELECT * FROM mya_note WHERE contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
+
+            elif selemployee != '':
+                # filter employee and customer
+                notes = Note.objects.raw ('SELECT * FROM mya_note WHERE employee_id = ' + selemployee + \
+                                          ' AND contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
+                # show employee in filtertext
+                for e in Employee.objects.filter (id=int(selemployee)):
+                    if filtertext == '':
+                        filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
+                    else:
+                        filtertext += ', ' + e.firstname + ' ' + e.lastname
+            # show customer in filtertext
+            for c in Customer.objects.filter (id=int(selcustomer)):
+                if filtertext == '':
+                    filtertext = 'Filter nach: ' + c.company
+                else:
+                    filtertext += ', ' + c.company
+        else:
+
+            if selemployee != '' and selcontact != '':
+                # filter employee and contact
+                notes = Note.objects.filter (employee_id=int(selemployee), contact_id=int(selcontact))
+                # show employee in filtertext
+                for e in Employee.objects.filter (id=int(selemployee)):
+                    if filtertext == '':
+                        filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
+                    else:
+                        filtertext += ', ' + e.firstname + ' ' + e.lastname
+                # show contact in filtertext
+                for co in Contact.objects.filter (id=int (selcontact)):
+                    if filtertext == '':
+                        filtertext = 'Filter nach: ' + co.firstname + ' ' + co.lastname
+                    else:
+                        filtertext += ', ' + + co.firstname + ' ' + co.lastname
+            elif selemployee != '' and selcontact == '':
+                # filter employee
+                notes = Note.objects.filter (employee_id=int(selemployee))
+                # show employee in filtertext
+                for e in Employee.objects.filter (id=int(selemployee)):
+                    if filtertext == '':
+                        filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
+                    else:
+                        filtertext += ', ' + e.firstname + ' ' + e.lastname
+            elif selemployee == '' and selcontact != '':
+                # filter contact
+                notes = Note.objects.filter ( contact_id=int(selcontact))
+                # show contact in filtertext
+                for co in Contact.objects.filter (id=int (selcontact)):
+                    if filtertext == '':
+                        filtertext = 'Filter nach: ' + co.firstname + ' ' + co.lastname
+                    else:
+                        filtertext += ', ' + + co.firstname + ' ' + co.lastname
     else:
+        # first call
         notes = Note.objects.all()
-    form = FilterNoteForm()
+
+    form = FilterNoteForm ()
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all ()
-    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist})
+    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist,'page_filtertext':filtertext})
 
 
 # create a new note or edit a note
