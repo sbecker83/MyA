@@ -7,29 +7,25 @@
     <h2>{{ page_title }}</h2>
     <div class="content">
         <table class="table table-bordered table-striped">
-            <colgroup>
-                <col width="120">
-                <col width="240">
-                <col width="20">
-                <col width="20">
-            </colgroup>
             <tr>
                 <th>Datum</th>
+                <th>Mitarbeiter</th>
+                <th>Kunde/Ansprechpartner</th>
                 <th>Notiz</th>
                 <th>&nbsp</th>
-                <th>&nbsp</th>
             </tr>
-            <tr>
-                {% for note in notes %}
-                    <tr>
-                        <td>{{ note.date }}</td>
-                        <td>{{ note.notetext }}</td>
-                        <td><a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                        <td><a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a></td>
-                    </tr>
 
-                {% endfor %}
-            </tr>
+            {% for note in notes %}
+                <tr>
+                    <td>{{ note.date|date:"d.m.Y H:i" }}</td>
+                    <td>{{ note.employee.lastname }}, {{ note.employee.firstname }}</td>
+                    <td>{{ note.contact.customer }} / {{ note.contact.lastname }},{{ note.contact.firstname }} </td>
+                    <td>{{ note.notetext|truncatechars:50 }}</td>
+                    <td><a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a>
+                    <a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a></td>
+                </tr>
+            {% endfor %}
+
         </table>
         <br>
 

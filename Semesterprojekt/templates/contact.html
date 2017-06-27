@@ -8,37 +8,29 @@
     <div class="content">
 
         <table class="table table-bordered table-striped">
-            <colgroup>
-                <col width="120">
-                <col width="120">
-                <col width="180">
-                <col width="180">
-                <col width="20">
-                <col width="20">
-            </colgroup>
+
             <tr>
-                <th>Firma</th>
-                <th>Vorname</th>
-                <th>Nachname</th>
+                <th>Name</th>
                 <th>Position</th>
+                <th>Telefon/Fax</th>
+                <th>Handy</th>
+                <th>E-Mail</th>
                 <th>&nbsp</th>
-                <th>&nbsp</th>
-
             </tr>
-            <tr>
-                {% for contact in contacts %}
-                    <tr>
-                    <td>{{ contact.customer }}</td>
-                    <td>{{ contact.firstname }}</td>
-                    <td>{{ contact.lastname }}</td>
+
+            {% for contact in contacts %}
+                <tr {% if contact.status == 1 %}class="text-muted"{% endif %}>
+                    <td>{{ contact.firstname }} {{ contact.lastname }} </td>
                     <td>{{ contact.position }}</td>
-                    <td><a href="{% url 'editansprechpartner' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                    <td><a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id %}">{% bootstrap_icon 'trash' %}</a></td>
+                    <td>{{ contact.phone }} / {{ contact.fax }}</td>
+                    <td>{{ contact.mobile }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td><a href="{% url 'editansprechpartner' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a>
+                    <a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id status=contact.status%}">{% bootstrap_icon 'lock' %}</a>
+                    <a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id  status=2  %}">{% bootstrap_icon 'trash' %}</a></td>
+                </tr>
+            {% endfor %}
 
-                    </tr>
-
-                {% endfor %}
-            </tr>
         </table>
         <br>
 

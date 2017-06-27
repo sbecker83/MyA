@@ -54,14 +54,14 @@ urlpatterns = (
     url(r'^kunden/$', MyA.views.get_customer, name='kundenliste'),
     url(r'^kunden/neuerKD/$',  MyA.views.details_customer, name='neuerkunde'),
     url(r'^kunden/editKD/(?P<pk>[0-9]+)/?$',  MyA.views.details_customer, name='editkunde'),
-    url(r'^kunden/deleteKD/(?P<pk>[0-9]+)/?$',  MyA.views.delete_customer, name='deletekunde'),
+    url (r'^kunden/deleteKD/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.delete_customer, name='deletekunde'),
     url(r'^kunden/export$', MyA.views.export_customers, name='exportKunde'),
 
     # contact - overview, new, edit, delete
     url(r'^ansprechpartner/(?P<fk>[0-9]+)/?$', MyA.views.get_contact, name='ansprechpartnerliste'),
     url(r'^ansprechpartner/neuerAP/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='neueransprechpartner'),
     url(r'^ansprechpartner/editAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='editansprechpartner'),
-    url(r'^ansprechpartner/deleteAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='deleteansprechpartner'),
+    url(r'^ansprechpartner/deleteAP/(?P<status>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='deleteansprechpartner'),
     url(r'^ansprechpartner/export$', MyA.views.export_contacts, name='exportAnsprechpartner'),
 
     # note - overview, new, edit, delete
