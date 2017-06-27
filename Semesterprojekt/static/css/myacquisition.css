@@ -29,7 +29,9 @@ hr {
 
 .navbar-default .navbar-brand {
     color: #ffffff;
+    font-size: 22px;
 }
+
 .navbar-text a {
     margin-left: 10px;
     margin-right: 5px;
@@ -103,4 +105,13 @@ table .glyphicon {
 
 .footer {
     padding: 18px 0;
+}
+
+.text-muted {
+    color: #dddddd;
+    font-style: italic;
+}
+
+.form-group.required .control-label:after {
+    content:"*";
 }
