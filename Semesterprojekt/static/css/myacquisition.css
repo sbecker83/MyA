@@ -1,10 +1,26 @@
 h2 {
-    font-size: 22px;
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+a {
+    color: #00aced;
+}
+
+hr {
+    border-top: 1px solid #DDDDDD;
 }
 
 .active {
     text-decoration: none;
     background-color: #81c04d;
+}
+
+#sidebar .active a {
+    color: #ffffff;
 }
 
 .navbar-default {
@@ -20,7 +36,11 @@ h2 {
     color: #92a4b2;
 }
 
-.row {
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+}
+
+.row-offcanvas {
     background-color: #ebeef0;
 }
 
@@ -34,6 +54,12 @@ h2 {
 
 .sidebar-offcanvas li a:hover {
     background-color: #ffffff;
+    color: #000000;
+}
+
+.sidebar-offcanvas li.active a:hover {
+    background-color: #81c04d;
+    color: #ffffff;
 }
 
 .content {
@@ -42,3 +68,39 @@ h2 {
     padding: 10px 15px;
 }
 
+.btn-primary {
+    color: #fff;
+    background-color: #ef553a;
+    border-color: #ce5136;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #d54323;
+    border-color: #c85438;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+table .glyphicon {
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle:hover .icon-bar {
+    background-color: #ffffff;
+}
+
+.footer {
+    padding: 18px 0;
+}

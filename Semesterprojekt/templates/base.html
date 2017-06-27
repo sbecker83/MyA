@@ -10,9 +10,15 @@
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery=1 %}
+
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/myacquisition.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.css"/>
+
+    <!--<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.js"></script>-->
+
 </head>
 <body>
     <div class="container-fluid">
@@ -21,7 +27,7 @@
         {% include "top_navigation.html" %}
     {% endblock %}
 
-        <div class="row row-offcanvas row-offcanvas-left">
+        <div class="row row-offcanvas row-offcanvas-left row-eq-height">
             <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
             {% if user.is_authenticated %}
                 {% block navigation %}
@@ -38,6 +44,9 @@
 
 
             {% endblock %}
+            <div class="footer">
+                <hr>
+                © MyAcquisition 2017
             </div>
         </div>
     </div>
