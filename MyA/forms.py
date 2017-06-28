@@ -6,6 +6,7 @@ from django.forms import *
 from django.contrib.auth.forms import UserChangeForm
 from MyA.models import *
 
+
 class UserEditForm(UserChangeForm):
     """
     A user edit form. This form inherits from UserChangeForm and only changes the fields which are used/shown
@@ -152,3 +153,6 @@ class EventForm(ModelForm):
             'title': 'Beschreibung',
             'location': 'Ort'
         }
+        widgets = {'starttime': DateInput(attrs={'id': 'datetimepicker-start'}),
+                   'endtime': DateInput(attrs={'id': 'datetimepicker-end'})}
+

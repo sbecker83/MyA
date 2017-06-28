@@ -637,4 +637,4 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
     else:
         # form first call
         form = EventForm(instance=events, initial={'date': act_date})
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'eventinput.html', {'page_title': page_title, 'forms': [form]})
