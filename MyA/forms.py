@@ -110,6 +110,7 @@ class NoteForm(ModelForm):
             'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
+        widgets = {'date': DateTimeInput(attrs={'id': 'datetimepicker'})}
 
     def __init__(self,  *args, **kwargs):
         # Initialize the two unbound fields and assign the values ​​when editing notes
@@ -153,6 +154,6 @@ class EventForm(ModelForm):
             'title': 'Beschreibung',
             'location': 'Ort'
         }
-        widgets = {'starttime': DateInput(attrs={'id': 'datetimepicker-start'}),
-                   'endtime': DateInput(attrs={'id': 'datetimepicker-end'})}
+        widgets = {'starttime': DateTimeInput(attrs={'id': 'datetimepicker-start'}),
+                   'endtime': DateTimeInput(attrs={'id': 'datetimepicker-end'})}
 

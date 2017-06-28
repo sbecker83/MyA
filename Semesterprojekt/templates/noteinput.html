@@ -23,6 +23,13 @@
         </form>
     </div>
     <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker').datetimepicker({
+                locale: 'de',
+                sideBySide: true,
+            });
+        });
+
         function mySelect() {
             mycustomer = document.getElementById("id_selcustomer").value;
 
