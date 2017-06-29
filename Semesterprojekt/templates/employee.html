@@ -27,12 +27,13 @@
                     <td>{{ employee.position }}</td>
                     <td >
                         <a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
-                        {% if employee.user.is_active %}
-                        <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'remove' %}</a>
-                        {% else %}
-                        <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'ok' %}</a>
+                        {% if not employee.user.is_superuser %}
+                            {% if employee.user.is_active %}
+                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'remove' %}</a>
+                            {% else %}
+                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'ok' %}</a>
+                            {% endif %}
                         {% endif %}
-                        <a href="{% url 'deleteMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'trash' %}</a>
                     </td>
                 </tr>
             {% endfor %}
