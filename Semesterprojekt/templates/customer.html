@@ -1,32 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'list_base.html' %}
 {% load bootstrap3 %}
-{% block title %}
-    {{ page_title }}
-{% endblock %}
+
 {% block content %}
     <h2>{{ page_title }}</h2>
     <div class="content">
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Firma</th>
-                <th>Adresse</th>
-                <th>Telefon/Fax</th>
-                <th>Webseite</th>
-                <th>&nbsp</th>
-                <th>Kontakte</th>
-            </tr>
-            {% for customer in customers %}
-                <tr {% if customer.status == 1 %}class="text-muted"{% endif %}>
-                    <td>{{ customer.company }}</td>
-                    <td>{{ customer.plzcity }}, {{ customer.street }}</td>
-                    <td>{{ customer.phone }}/{{ customer.fax }}</td>
-                    <td>{{ customer.website }}</td>
-                    <td><a href="{% url 'editkunde' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a>
-                    <a href="{% url 'deletekunde' pk=customer.id status=customer.status %}">{% bootstrap_icon 'lock' %}</a>
-                    <a href="{% url 'deletekunde' pk=customer.id status=2 %}">{% bootstrap_icon 'trash' %}</a></td>
-                    <td><a href="{% url 'ansprechpartnerliste' fk=customer.id %}">{% bootstrap_icon 'list' %}</a></td>
+        <table id="data-table" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Firma</th>
+                    <th>Adresse</th>
+                    <th>Telefon/Fax</th>
+                    <th>Webseite</th>
+                    <th class="no-sort">&nbsp</th>
+                    <th class="no-sort">Kontakte</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                    <tr {% if customer.status == 1 %}class="text-muted"{% endif %}>
+                        <td>{{ customer.company }}</td>
+                        <td>{{ customer.plzcity }}, {{ customer.street }}</td>
+                        <td>{{ customer.phone }}/{{ customer.fax }}</td>
+                        <td>{{ customer.website }}</td>
+                        <td>
+                            <a href="{% url 'editkunde' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a>
+                            <a href="{% url 'deletekunde' pk=customer.id status=customer.status %}">{% bootstrap_icon 'lock' %}</a>
+                            <a href="{% url 'deletekunde' pk=customer.id status=2 %}">{% bootstrap_icon 'trash' %}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'ansprechpartnerliste' fk=customer.id %}">{% bootstrap_icon 'list' %}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
         <br>
 

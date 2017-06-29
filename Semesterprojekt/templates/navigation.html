@@ -1,27 +1,17 @@
-<!-- File Decsription: HTML Template for the navigation !-->
+<!-- File Description: HTML Template for the navigation !-->
 {% load mya_tags %}
 {% load bootstrap3 %}
 
+<ul class="nav">
+    <li class="{% active 'startseite' %}"><a href="{% url 'startseite' %}">{% bootstrap_icon 'dashboard' %} Dashboard</a></li>
+    <li class="{% active 'kundenliste' %}"><a href="{% url 'kundenliste' %}">{% bootstrap_icon 'briefcase' %} Kundenliste</a></li>
+    <li class="{% active 'notizliste' %}"><a href="{% url 'notizliste' %}">{% bootstrap_icon 'list-alt' %} Notizen</a></li>
+    <li class="{% active 'terminkalender' %}"><a href="{% url 'terminkalender' %}">{% bootstrap_icon 'calendar' %} Terminkalender</a></li>
+</ul>
+
+{% if request.user.is_superuser %}
+    <div class="divider">Admin-Bereich</div>
     <ul class="nav">
-        <li class="{% active 'startseite' %}"><a href="{% url 'startseite' %}">{% bootstrap_icon 'dashboard' %} Dashboard</a></li>
-        <li class="{% active 'kundenliste' %}"><a href="{% url 'kundenliste' %}">{% bootstrap_icon 'briefcase' %} Kundenliste</a></li>
-        <li class="{% active 'notizliste' %}"><a href="{% url 'notizliste' %}">{% bootstrap_icon 'list-alt' %} Notizen</a></li>
-        <li class="{% active 'terminkalender' %}"><a href="{% url 'terminkalender' %}">{% bootstrap_icon 'calendar' %} Terminkalender</a></li>
+        <li class="{% active 'mitarbeiterListe' %}"><a href="{% url 'mitarbeiterListe' %}">{% bootstrap_icon 'user' %} Mitarbeiter</a></li>
     </ul>
-
-    {% if request.user.is_superuser %}
-        <div class="divider">Admin-Bereich</div>
-        <ul class="nav">
-            <li class="{% active 'mitarbeiterListe' %}"><a href="{% url 'mitarbeiterListe' %}">{% bootstrap_icon 'user' %} Mitarbeiter</a></li>
-        </ul>
-    {% endif %}
-
-
-<!-- Menu Toggle Script -->
-<script>
-$(document).ready(function() {
-  $('[data-toggle=offcanvas]').click(function() {
-    $('.row-offcanvas').toggleClass('active');
-  });
-});
-</script>
+{% endif %}
