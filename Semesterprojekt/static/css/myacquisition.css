@@ -1,8 +1,12 @@
-h2 {
-    font-size: 18px;
+/***********
+ * General *
+ ***********/
+
+body {
+    padding-top: 51px;
 }
 
-h3 {
+h2, h3 {
     font-size: 18px;
 }
 
@@ -10,18 +14,25 @@ a {
     color: #00aced;
 }
 
+a:hover {
+    color: #0099d4;
+}
+
 hr {
     border-top: 1px solid #DDDDDD;
 }
 
-.active {
-    text-decoration: none;
-    background-color: #81c04d;
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
 }
 
-#sidebar .active a {
-    color: #ffffff;
-}
+
+/**********
+ * Header *
+ **********/
 
 .navbar-default {
     background-color: #37444e;
@@ -31,6 +42,23 @@ hr {
     color: #ffffff;
     font-size: 22px;
 }
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #dddddd;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+}
+
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle:hover .icon-bar {
+    background-color: #ffffff;
+}
 
 .navbar-text a {
     margin-left: 10px;
@@ -38,30 +66,59 @@ hr {
     color: #92a4b2;
 }
 
-.navbar-default .navbar-toggle {
-    border-color: transparent;
-}
 
-.row-offcanvas {
-    background-color: #ebeef0;
-}
+/***********
+ * Sidebar *
+ ***********/
 
-.sidebar-offcanvas {
+#sidebar {
     background-color: #fafafa;
+    padding: 10px 0 0 0;
 }
 
-.sidebar-offcanvas, .sidebar-offcanvas a {
+#sidebar .divider {
+    margin: 25px 0 0 0;
+    padding: 0 15px;
+    background-color: #f5f5f5;
+}
+
+#sidebar li {
+    border:0 #f2f2f2 solid;
+    border-bottom-width:1px;
+    font-size: 15px;
+}
+
+#sidebar li a {
+    padding: 15px 15px;
     color: #707980;
 }
 
-.sidebar-offcanvas li a:hover {
+#sidebar li a:hover {
     background-color: #ffffff;
     color: #000000;
 }
 
-.sidebar-offcanvas li.active a:hover {
+#sidebar li.active {
+    text-decoration: none;
+    background-color: #81c04d;
+}
+
+#sidebar li.active a {
+    color: #ffffff;
+}
+
+#sidebar li.active a:hover {
     background-color: #81c04d;
     color: #ffffff;
+}
+
+
+/***********
+ * Content *
+ ***********/
+
+.row-offcanvas {
+    background-color: #ebeef0;
 }
 
 .content {
@@ -76,31 +133,21 @@ hr {
     border-color: #ce5136;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.active.focus,
+.btn-primary.active:hover,
+.btn-primary:active.focus,
+.btn-primary:active:focus,
+.btn-primary:active:hover {
     color: #fff;
     background-color: #d54323;
     border-color: #c85438;
 }
 
-.row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display:         flex;
-}
-
 table .glyphicon {
     font-size: 16px;
     margin-right: 5px;
-}
-
-.navbar-default .navbar-toggle:focus,
-.navbar-default .navbar-toggle:hover {
-    background-color: transparent;
-}
-
-.navbar-default .navbar-toggle:hover .icon-bar {
-    background-color: #ffffff;
 }
 
 .footer {
@@ -112,6 +159,57 @@ table .glyphicon {
     font-style: italic;
 }
 
+.alert-success {
+    color: #ffffff;
+    background-color: #81c04d;
+    border-color: #6cab4d;
+    margin-top: 10px;
+}
+
+.alert-danger {
+    color: #fff;
+    background-color: #ef553a;
+    border-color: #ce5136;
+}
+
 .form-group.required .control-label:after {
     content:"*";
+}
+
+
+/*****************
+ * Media Queries *
+ *****************/
+
+/* collapsed sidebar styles */
+@media screen and (max-width: 767px) {
+    .row-offcanvas {
+        position: relative;
+        -webkit-transition: all 0.25s ease-out;
+        -moz-transition: all 0.25s ease-out;
+        transition: all 0.25s ease-out;
+    }
+    .row-offcanvas-right
+    .sidebar-offcanvas {
+        right: -41.6%;
+    }
+
+    .row-offcanvas-left
+    .sidebar-offcanvas {
+        left: -41.6%;
+    }
+    .row-offcanvas-right.active {
+        right: 41.6%;
+    }
+    .row-offcanvas-left.active {
+        left: 41.6%;
+    }
+    .sidebar-offcanvas {
+        position: absolute;
+        top: 0;
+        width: 41.6%;
+    }
+    #sidebar {
+        padding-top:0;
+    }
 }
