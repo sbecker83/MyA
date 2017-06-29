@@ -110,7 +110,8 @@ class NoteForm(ModelForm):
             'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
-        widgets = {'date': DateTimeInput(attrs={'id': 'datetimepicker'})}
+        widgets = {'date': DateTimeInput(attrs={'id': 'datetimepicker'}),
+                   'notetext':Textarea()}
 
     def __init__(self,  *args, **kwargs):
         # Initialize the two unbound fields and assign the values ​​when editing notes
@@ -156,4 +157,25 @@ class EventForm(ModelForm):
         }
         widgets = {'starttime': TimeInput(attrs={'class': 'datetimepicker'}),
                    'endtime': TimeInput(attrs={'class': 'datetimepicker'})}
+
+# Form with fields to add a intern member to an event
+class EventAddMembersInt(Form):
+    """
+        A form for add a employee to an event
+    """
+    required_css_class = 'required'
+    selemployee = ModelChoiceField (label='Mitarbeiter', queryset=Employee.objects.all (), required=False)
+    leader = BooleanField(label='Leiter',required=False)
+
+# Form with fields to add a intern member to an event
+class EventAddMembersExt(Form):
+    """
+        A form for add a employee to an event
+    """
+    required_css_class = 'required'
+    selcustomer = ModelChoiceField (queryset=Customer.objects.all (), label='Firma',
+                                    widget=Select (attrs={"onChange": 'mySelect()'}), required=False)
+    selcontact = ModelChoiceField (queryset=Contact.objects.all (), label='Ansprechpartner', required=False)
+
+
 

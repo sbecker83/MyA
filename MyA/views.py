@@ -605,7 +605,7 @@ def get_calendar(request, year=None, month=None):
                    })
 
 
-# create a new customer or edit a customer
+# create a new event
 def details_calendar(request, pk=None, year=None, month=None, day=None):
     act_year = int(year)
     act_month = int(month)
@@ -637,4 +637,125 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
     else:
         # form first call
         form = EventForm(instance=events, initial={'date': act_date})
-    return render(request, 'eventinput.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+
+# create  edit a event
+def details_with_Members_calendar(request, pk=None, year=None, month=None, day=None):
+    if pk == None:
+        # error back to calendar
+        return HttpResponseRedirect (reverse ('terminkalender'))
+    act_year = int(year)
+    act_month = int(month)
+    act_day = int(day)
+
+    act_date = datetime(act_year, act_month, act_day).__format__('%d.%m.%Y')
+
+    events = get_object_or_404 (Event, id=pk)
+
+    if request.method == 'POST':
+        if request.POST.get ('submit') == 'addEvent':
+            # form sent off
+            form = EventForm(request.POST, instance=events)
+
+            # Validity check
+            if form.is_valid():
+                form.save()
+                messages.success(request, u'Daten erfolgreich geändert')
+                #return HttpResponseRedirect(reverse('terminkalender'))
+
+            else:
+                # error message
+                messages.error(request, u'Daten konnten nicht gespeichert werden')
+                pass
+        elif request.POST.get ('submit') == 'addInt':
+            selemployee = request.POST.get ('selemployee')
+            if pk==None:
+                # error message
+                messages.error (request, u'Event muss gespeichert werden')
+                pass
+            elif selemployee=='':
+                # error message
+                messages.error (request, u'Mitarbeiter muss ausgewählt werden')
+                pass
+            else:
+                if request.POST.get ('leader')=='on':
+                    leader = True
+                else:
+                    leader=False
+                memberint=MemberInt(employee_id=int(selemployee),leader= leader,event_id=pk)
+                memberint.save()
+
+
+        elif request.POST.get ('submit') == 'addExt':
+            selcontact = request.POST.get ('selcontact')
+            if pk==None:
+                # error message
+                messages.error (request, u'Event muss gespeichert werden')
+                pass
+            elif selcontact=='':
+                # error message
+                messages.error (request, u'Ansprechpartner muss ausgewählt werden')
+                pass
+            else:
+                memberext=MemberExt(contact_id=int(selcontact),event_id=pk)
+                memberext.save()
+
+    page_title = "Termin ändern"
+    form = EventForm (instance=events, initial={'date': act_date})
+    memberints = MemberInt.objects.all().filter(event_id=pk)
+    memberexts = MemberExt.objects.all().filter(event_id=pk)
+    formInt = EventAddMembersInt()
+    formExt = EventAddMembersExt()
+    return render(request, 'eventinput.html', {'page_title': page_title, 'forms': form,
+                                               'memberints': memberints,
+                                               'memberexts': memberexts,
+                                               'formsL': formInt, 'formsR': formExt})
+
+def delete_MemberInt(request, pk=None):
+    if pk == None:
+        return HttpResponseRedirect (reverse ('terminkalender'))
+
+    memberInt = get_object_or_404(MemberInt, id=pk)
+    eventId=memberInt.event_id
+    memberInt.delete()
+    # use for select act_date
+    event = Event.objects.all ().filter (id=eventId)
+    act_date = event[0].date.strftime ('%d.%m.%Y')
+    # use for from
+    events = get_object_or_404 (Event, id=eventId)
+
+    page_title = "Termin ändern"
+    form = EventForm (instance=events, initial={'date': act_date})
+    memberints = MemberInt.objects.all().filter(event_id=pk)
+    memberexts = MemberExt.objects.all().filter(event_id=pk)
+    formInt = EventAddMembersInt()
+    formExt = EventAddMembersExt()
+    return render(request, 'eventinput.html', {'page_title': page_title, 'forms': form,
+                                               'memberints': memberints,
+                                               'memberexts': memberexts,
+                                               'formsL': formInt, 'formsR': formExt})
+
+
+def delete_MemberExt(request, pk=None):
+    if pk == None:
+        return HttpResponseRedirect (reverse ('terminkalender'))
+
+    memberExt = get_object_or_404 (MemberExt, id=pk)
+    eventId = memberExt.event_id
+    memberExt.delete()
+    #use for select act_date
+    event= Event.objects.all().filter(id=eventId)
+    act_date = event[0].date.strftime ('%d.%m.%Y')
+    # use for from
+    events = get_object_or_404 (Event, id=eventId)
+
+    page_title = "Termin ändern"
+    form = EventForm (instance=events, initial={'date': act_date})
+    memberints = MemberInt.objects.all().filter(event_id=pk)
+    memberexts = MemberExt.objects.all().filter(event_id=pk)
+    formInt = EventAddMembersInt ()
+    formExt = EventAddMembersExt ()
+    return render (request, 'eventinput.html', {'page_title': page_title, 'forms': form,
+                                                'memberints': memberints,
+                                                'memberexts': memberexts,
+                                                'formsL': formInt, 'formsR': formExt})

@@ -102,13 +102,13 @@ class Event(models.Model):
 
 class MemberExt(models.Model):
     contact = models.ForeignKey(Contact)
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     status = models.IntegerField('status', default=0)
 
 
 class MemberInt(models.Model):
     employee = models.ForeignKey(Employee)
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     leader = models.BooleanField('leader', default=False)
     status = models.IntegerField('status', default=0)
 
@@ -116,7 +116,7 @@ class MemberInt(models.Model):
 class Note(models.Model):
     contact = models.ForeignKey(Contact)
     employee = models.ForeignKey(Employee)
-    notetext = models.CharField('notetext', max_length=300)
+    notetext = models.CharField('notetext', max_length=1000)
     date = models.DateTimeField('date', default=timezone.now())
 
     def __str__(self):

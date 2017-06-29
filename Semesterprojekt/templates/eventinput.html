@@ -1,3 +1,124 @@
-{# TODO: change to details.html in view for eventinput#}
-{% include "details.html" %}
+{# ------------------------------------------------------------  #}
+{# copy from details - specially javascript for selectionsfields #}
+{# ------------------------------------------------------------  #}
+{% extends 'base.html' %}
+{% load bootstrap3 %}
 
+{% block content %}
+    <h2>{{ page_title }}</h2>
+    <div class="content">
+
+        <div class="row">
+            <div class="col-md-4">
+                 <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+
+                    {% csrf_token %}
+
+                    {# all forms given are rendered #}
+
+                    {% bootstrap_form forms layout='horizontal' %}
+
+
+                    <button type="submit" value="addEvent" name="submit" class="btn btn-primary">Speichern</button>
+                    <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
+
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+
+                    {% csrf_token %}
+
+                    {% bootstrap_form formsL layout='horizontal' %}
+
+                    <button type="submit" value="addInt" name="submit" class="btn btn-primary">Mitarbeiter hinzufügen</button>
+
+                </form>
+            </div>
+            <div class="col-md-4">
+                 <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+
+                    {% csrf_token %}
+                    {% bootstrap_form formsR layout='horizontal' %}
+
+                    <button type="submit" value="addExt" name="submit" class="btn btn-primary">Ansprechpartner hinzufügen</button>
+
+                </form>
+            </div>
+        </div>
+       <br/>
+        <table class="table table-bordered table-striped">
+
+            <tr>
+                <th>{% bootstrap_icon 'pencil' %}</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Firma</th>
+                <th>Status</th>
+                <th>&nbsp</th>
+            </tr>
+            {% for memberint in memberints %}
+                <tr >
+                    <td> {% if memberint.leader %} x {% endif %}</td>
+                    <td>{{ memberint.employee.firstname }} {{ memberint.employee.lastname }} </td>
+                    <td>{{ memberint.employee.position }}</td>
+                    <td> intern </td>
+                    <td>{% if memberint.status == 0 %} eingeladen
+                        {% elif memberint.status == 1 %} zugesagt
+                        {% elif memberint.status == 2 %} abgesagt
+                    {% endif %}</td>
+                    <td><a href="{% url 'deleteMemberInt' pk=memberint.id  %}">{% bootstrap_icon 'trash' %}</a></td>
+                 </tr>
+            {% endfor %}
+            {% for memberext in memberexts %}
+                <tr >
+                    <td> </td>
+                    <td>{{ memberext.contact.firstname }} {{ memberext.contact.lastname }} </td>
+                    <td>{{ memberext.contact.position }}</td>
+                    <td>{{ memberext.contact.customer.company }}</td>
+                    <td>{% if memberext.status == 0 %} eingeladen
+                        {% elif memberext.status == 1 %} zugesagt
+                        {% elif memberext.status == 2 %} abgesagt
+                    {% endif %}</td>
+                    <td><a href="{% url 'deleteMemberExt' pk=memberext.id  %}">{% bootstrap_icon 'trash' %}</a></td>
+                 </tr>
+            {% endfor %}
+
+        </table>
+        <br>
+    </div>
+
+
+
+
+    <script type="text/javascript">
+        function mySelect() {
+            mycustomer = document.getElementById("id_selcustomer").value;
+
+            var ddcontact = document.getElementById("id_selcontact");
+            while (ddcontact.options.length > 0) {
+                ddcontact.remove(0);
+            }
+            opt = document.createElement("option");
+            opt.value = '';
+            opt.text= '---------';
+            opt.setAttribute('selected', true);
+            ddcontact.add(opt);
+            {% for contact in mylist %}
+                if ( mycustomer == {{ contact.customer.id }}) {
+                    opt = document.createElement("option");
+                    opt.value = {{ contact.id }};
+                    opt.text= '{{ contact.firstname }} {{ contact.lastname }}';
+                    ddcontact.add(opt);
+                }
+
+            {% endfor %}
+
+
+
+        }
+
+    </script>
+
+
+{% endblock %}
