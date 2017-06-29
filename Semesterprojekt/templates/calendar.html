@@ -66,7 +66,9 @@
                                         <!-- second if order: request of event from date each column -->
                                         {% if event.date.day == x and event.date.month == month and event.date.year == year %}
                                             <ul>
-                                                <a href="{% url 'editTermin' year=year month=month day=x pk=event.id %}"> {{ event.title }} {% bootstrap_icon 'edit' %}</a>
+                                                <a href="{% url 'editTermin' year=year month=month day=x pk=event.id %}">
+                                                    {{ event.title|truncatechars:10 }} <br> {{ event.starttime }} {% bootstrap_icon 'edit' %}
+                                                </a>
                                             </ul>
                                             <!-- close second if -->
                                         {% endif %}

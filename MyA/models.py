@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.utils import timezone
 
 # Create your models here.
 
@@ -93,9 +93,9 @@ class Contact(models.Model):
 class Event(models.Model):
     employee = models.ManyToManyField(Employee, through='MemberInt')       # many to many Field
     contact = models.ManyToManyField(Contact, through='MemberExt')   # many to many Field
-    date = models.DateTimeField('date', default=datetime.now().__format__('%d.%m.%Y'))
-    starttime = models.DateTimeField('starttime')
-    endtime = models.DateTimeField('endtime')
+    date = models.DateTimeField('date', default=timezone.now().__format__('%d.%m.%Y'))
+    starttime = models.TimeField('starttime')
+    endtime = models.TimeField('endtime')
     title = models.CharField('title', max_length=100)
     location = models.CharField('location', max_length=100)
 
@@ -117,7 +117,7 @@ class Note(models.Model):
     contact = models.ForeignKey(Contact)
     employee = models.ForeignKey(Employee)
     notetext = models.CharField('notetext', max_length=300)
-    date = models.DateTimeField('date', default=datetime.now())
+    date = models.DateTimeField('date', default=timezone.now())
 
     def __str__(self):
         return "{}".format(self.notetext)

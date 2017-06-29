@@ -3,7 +3,8 @@ $(document).ready(function() {
     $('input.datetimepicker').each(function () {
         $(this).datetimepicker({
             locale: 'de',
-            sideBySide: true
+            sideBySide: true,
+            format: 'LT'
         });
     });
 });
