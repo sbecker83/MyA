@@ -1,15 +1,29 @@
-{# -------------------------------------------  #}
-{# Attention, there is a copy - noteinput.html  #}
-{# -------------------------------------------  #}
-
 {% extends 'base.html' %}
+
 {% load bootstrap3 %}
+{% load static %}
+
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{# load page specific css #}
+{% block css %}
+    {{ block.super }} {# use the css defined in the extended template #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/bootstrap-datetimepicker.min.css' %}" />
+{% endblock %}
+
+{# load page specific javascript #}
+{% block js %}
+    {{ block.super }} {# use the javascript defined in the extended template #}
+    <script type="text/javascript" src="{% static 'js/vendor/moment-with-locales.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/myaDatepicker.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <h2>{{ page_title }}</h2>
     <div class="content">
-
-        <br>
         <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
             {% csrf_token %}
@@ -24,5 +38,4 @@
 
         </form>
     </div>
-
 {% endblock %}

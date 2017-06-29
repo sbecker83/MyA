@@ -1,58 +1,55 @@
-<!-- File Decsription: HTML base template for all sites !-->
+<!-- File Description: HTML base template for all sites !-->
+{% load bootstrap3 %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}My Acquisition{% endblock %}</title>
-    {# Load the tag library #}
-    {% load bootstrap3 %}
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}My Acquisition{% endblock %}</title>
 
-    {# Load CSS and JavaScript #}
-    {% bootstrap_css %}
-    {% bootstrap_javascript jquery=1 %}
+        {# --- CSS --- #}
+        {% bootstrap_css %}
+        {% block css %}
+            {# these css files are loaded on every page, they may be extended in other templates #}
+            <link rel="stylesheet" type="text/css" href="{% static 'css/myacquisition.css' %}" />
+            <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}" />
+        {% endblock %}
 
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/myacquisition.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-datetimepicker.min.css' %}" />
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.css"/>
-
-    <!--<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.js"></script>-->
-
-    <script type="text/javascript" src="{% static 'js/moment-with-locales.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
-
-</head>
-<body>
-    <div class="container-fluid">
-
-    {% block top_navigation %}
-        {% include "top_navigation.html" %}
-    {% endblock %}
-
-        <div class="row row-offcanvas row-offcanvas-left row-eq-height">
-            <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
-            {% if user.is_authenticated %}
-                {% block navigation %}
-                    {% include "navigation.html" %}
-                {% endblock %}
-            {% endif %}
-            </div>
-            <div class="col-xs-12 col-sm-10">
-
-            {# Display django.contrib.messages as Bootstrap alerts #}
-            {% bootstrap_messages %}
-
-            {% block content %}
-
-
+        {# --- JAVASCRIPT --- #}
+        {% bootstrap_javascript jquery=1 %}
+        {% block js %}
+            {# these javascripts files are loaded on every page, they may be extended in other templates #}
+            <script type="text/javascript" src="{% static 'js/myaSidebar.js' %}"></script>
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container-fluid">
+            {% block top_navigation %}
+                {% include "top_navigation.html" %}
             {% endblock %}
-            <div class="footer">
-                <hr>
-                © MyAcquisition 2017
+
+            <div class="row row-offcanvas row-offcanvas-left row-eq-height">
+                {% if user.is_authenticated %}
+                    <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
+                        {% block navigation %}
+                            {% include "navigation.html" %}
+                        {% endblock %}
+                    </div>
+                {% endif %}
+
+                <div class="col-xs-12 col-sm-10">
+                    {# Display django.contrib.messages as Bootstrap alerts #}
+                    {% bootstrap_messages %}
+
+                    {% block content %}
+                        {# the actual content #}
+                    {% endblock %}
+                    <div class="footer">
+                        <hr>
+                        © MyAcquisition 2017
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>

@@ -1,8 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'list_base.html' %}
 {% load bootstrap3 %}
-{% block title %}
-    {{ page_title }}
-{% endblock %}
+
 {% block content %}
     <h2>{{ page_title }}</h2>
     <div class="content">
@@ -14,39 +12,47 @@
                 {% bootstrap_form form layout='horizontal' %}
             {% endfor %}
 
-            <button type="submit" class="btn btn-primary">Filter anwenden</button>
+            <button type="submit" class="btn btn-primary pull-right">Filter anwenden</button>
 
         </form>
         <br/>
         <h3>{{ page_filtertext }}</h3>
         <br/>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Datum</th>
-                <th>Mitarbeiter</th>
-                <th>Kunde/Ansprechpartner</th>
-                <th>Notiz</th>
-                <th>&nbsp</th>
-            </tr>
-
-            {% for note in notes %}
+        <table id="data-table" class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td>{{ note.date|date:"d.m.Y H:i" }}</td>
-                    <td>{{ note.employee.lastname }}, {{ note.employee.firstname }}</td>
-                    <td>{{ note.contact.customer }} / {{ note.contact.lastname }},{{ note.contact.firstname }} </td>
-                    <td>{{ note.notetext|truncatechars:50 }}</td>
-                    <td><a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a>
-                    <a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a></td>
+                    <th>Datum</th>
+                    <th>Mitarbeiter</th>
+                    <th>Kunde/Ansprechpartner</th>
+                    <th>Notiz</th>
+                    <th class="no-sort">&nbsp</th>
                 </tr>
-            {% endfor %}
-
+            </thead>
+            <tbody>
+                {% for note in notes %}
+                    <tr>
+                        <td>{{ note.date|date:"d.m.Y H:i" }}</td>
+                        <td>{{ note.employee.lastname }}, {{ note.employee.firstname }}</td>
+                        <td>{{ note.contact.customer }} / {{ note.contact.lastname }},{{ note.contact.firstname }} </td>
+                        <td>{{ note.notetext|truncatechars:50 }}</td>
+                        <td>
+                            <a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a>
+                            <a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
         <br>
 
         <a href="{% url 'neuenotiz'  %}" class="btn btn-primary">Neu Anlegen</a>
         <a href="{% url 'exportNotiz'  %}" class="btn btn-primary">Excel Export</a>
     </div>
-<script type="text/javascript">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }} {# use the javascript defined in the extended template #}
+    <script type="text/javascript">
         function mySelect() {
             mycustomer = document.getElementById("id_selcustomer").value;
             var ddcontact = document.getElementById("id_selcontact");
@@ -65,14 +71,7 @@
                     opt.text= '{{ contact.firstname }} {{ contact.lastname }}';
                     ddcontact.add(opt);
                 }
-
             {% endfor %}
-
-
-
         }
-
     </script>
-
-
 {% endblock %}

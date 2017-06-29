@@ -154,6 +154,6 @@ class EventForm(ModelForm):
             'title': 'Beschreibung',
             'location': 'Ort'
         }
-        widgets = {'starttime': DateTimeInput(attrs={'id': 'datetimepicker-start'}),
-                   'endtime': DateTimeInput(attrs={'id': 'datetimepicker-end'})}
+        widgets = {'starttime': DateTimeInput(attrs={'class': 'datetimepicker'}),
+                   'endtime': DateTimeInput(attrs={'class': 'datetimepicker'})}
 

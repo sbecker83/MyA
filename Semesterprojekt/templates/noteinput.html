@@ -1,35 +1,10 @@
-{# ------------------------------------------------------------  #}
-{# copy from details - specially javascript for selectionsfields #}
-{# ------------------------------------------------------------  #}
-{% extends 'base.html' %}
-{% load bootstrap3 %}
+{% extends "details.html" %}
 
-{% block content %}
-    <h2>{{ page_title }}</h2>
-    <div class="content">
+{% block js %}
+    {{ block.super }} {# use the javascript defined in the extended template #}
 
-        <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
-
-            {% csrf_token %}
-
-            {# all forms given are rendered #}
-            {% for form in forms %}
-                {% bootstrap_form form layout='horizontal' %}
-            {% endfor %}
-
-            <button type="submit" class="btn btn-primary">Speichern</button>
-            <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
-
-        </form>
-    </div>
+    {# this javascript needs to be inline, because templatetags are used within the script #}
     <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker').datetimepicker({
-                locale: 'de',
-                sideBySide: true,
-            });
-        });
-
         function mySelect() {
             mycustomer = document.getElementById("id_selcustomer").value;
 
@@ -51,12 +26,7 @@
                 }
 
             {% endfor %}
-
-
-
         }
-
     </script>
-
 
 {% endblock %}
