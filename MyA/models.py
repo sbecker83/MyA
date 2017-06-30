@@ -34,8 +34,11 @@ class Employee(models.Model):
     mobile = models.CharField('mobile', blank=True, max_length=100)
     email = models.CharField('email', blank=True, max_length=100)
 
+    def get_fullname(self):
+        return self.firstname + " " + self.lastname
+
     @receiver(post_save, sender=User)
-    def create_employee_for_superuser(self, instance, created, **kwargs):
+    def create_employee_for_superuser(sender, instance, created, **kwargs):
         """This signal receiver guarantees a creation of an employee object when the superuser is created"""
         if created and instance.is_superuser:
             employee = Employee()
