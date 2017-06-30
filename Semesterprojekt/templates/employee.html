@@ -29,9 +29,9 @@
                         <a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
                         {% if not employee.user.is_superuser %}
                             {% if employee.user.is_active %}
-                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'remove' %}</a>
+                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}" title="Deaktivieren">{% bootstrap_icon 'remove' %}</a>
                             {% else %}
-                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'ok' %}</a>
+                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}" title="Aktivieren">{% bootstrap_icon 'ok' %}</a>
                             {% endif %}
                         {% endif %}
                     </td>
