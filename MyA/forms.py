@@ -1,7 +1,8 @@
-# TODO File Description
 """
- File Decsription:
+Filename: forms.py
+Description: Handles all forms
 """
+
 from django.forms import *
 from django.contrib.auth.forms import UserChangeForm
 from MyA.models import *
@@ -15,17 +16,16 @@ class UserEditForm(UserChangeForm):
 
     class Meta:
         model = User
-        # overwrites the fields of the super class
+        # overwrites the shown fields of the super class
         fields = {'username', 'password'}
 
     def __init__(self, *args, **kwargs):
         super(UserEditForm, self).__init__(*args, **kwargs)
 
 
-# Form with fields to create or update employees
 class EmployeeForm(ModelForm):
     """
-    A form for create or update employees and update profil of current user
+    A form for creating or updating employees and update profile of current user
     """
     required_css_class = 'required'
 
@@ -45,10 +45,9 @@ class EmployeeForm(ModelForm):
         }
 
 
-# Form for a customer - dynamically Form from model
 class CustomerForm(ModelForm):
     """
-    A form for create or update customers
+    A form for creating or updating customers
     """
     required_css_class = 'required'
 
@@ -65,10 +64,9 @@ class CustomerForm(ModelForm):
         }
 
 
-# Form for a contac - dynamically Form from model
 class ContactForm(ModelForm):
     """
-    A form for create or update contacts
+    A form for creating or updating contacts
     """
     required_css_class = 'required'
 
@@ -90,17 +88,16 @@ class ContactForm(ModelForm):
         exclude = {'customer'}
 
 
-# Form for a note - dynamically Form from model
 class NoteForm(ModelForm):
     """
-    A form for create or update notes
+    A form for creating or updating notes
     With two fields for selecting customer/company and the respective contact
     """
     required_css_class = 'required'
 
     selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
                                    widget=Select(attrs={"onChange": 'mySelect()'}))
-    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprecchpartner')
+    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprechpartner')
 
     class Meta:
         model = Note
@@ -110,8 +107,9 @@ class NoteForm(ModelForm):
             'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
+        # set a datetimepicker class which can be used to initialize a datetimepicker via javascript
         widgets = {'date': DateTimeInput(attrs={'class': 'datetimepicker'}),
-                   'notetext':Textarea()}
+                   'notetext': Textarea()}
 
     def __init__(self,  *args, **kwargs):
         # Initialize the two unbound fields and assign the values ​​when editing notes
@@ -119,7 +117,7 @@ class NoteForm(ModelForm):
         mycustomer = kwargs.pop('mycustomer', None)
         mycontact = kwargs.pop('mycontact', None)
         super(NoteForm, self).__init__(*args, **kwargs)
-        if mycustomer != None:
+        if mycustomer is not None:
             self.fields['selcustomer'].initial = mycustomer
             # filter the contactlist
             self.fields['selcontact'].queryset = Contact.objects.filter(customer=mycustomer)
@@ -128,20 +126,17 @@ class NoteForm(ModelForm):
 
 class FilterNoteForm(Form):
     """
-    A form for filter notes
+    A form for filtering notes
     """
-    required_css_class = 'required'
-
     selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all(), required=False)
     selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
-                                    widget=Select(attrs={"onChange": 'mySelect()'}), required=False)
-    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprecchpartner', required=False)
+                                   widget=Select(attrs={"onChange": 'mySelect()'}), required=False)
+    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprechpartner', required=False)
 
 
-# Form with fields to create or update employees
 class EventForm(ModelForm):
     """
-    A form for create or update events
+    A form for creating or updating events
     """
     required_css_class = 'required'
 
@@ -155,27 +150,25 @@ class EventForm(ModelForm):
             'title': 'Beschreibung',
             'location': 'Ort'
         }
+        # set a timepicker class which can be used to initialize a datetimepicker via javascript
         widgets = {'starttime': TimeInput(attrs={'class': 'timepicker'}),
                    'endtime': TimeInput(attrs={'class': 'timepicker'})}
 
-# Form with fields to add a intern member to an event
+
 class EventAddMembersInt(Form):
     """
-        A form for add a employee to an event
+    A form for adding an employee to an event
     """
     required_css_class = 'required'
-    selemployee = ModelChoiceField (label='Mitarbeiter', queryset=Employee.objects.all (), required=False)
-    leader = BooleanField(label='Leiter',required=False)
+    selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all(), required=False)
+    leader = BooleanField(label='Leiter', required=False)
 
-# Form with fields to add a intern member to an event
+
 class EventAddMembersExt(Form):
     """
-        A form for add a employee to an event
+    A form for adding an customer contact to an event
     """
     required_css_class = 'required'
-    selcustomer = ModelChoiceField (queryset=Customer.objects.all (), label='Firma',
-                                    widget=Select (attrs={"onChange": 'mySelect()'}), required=False)
-    selcontact = ModelChoiceField (queryset=Contact.objects.all (), label='Ansprechpartner', required=False)
-
-
-
+    selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
+                                   widget=Select(attrs={"onChange": 'mySelect()'}), required=False)
+    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprechpartner', required=False)
