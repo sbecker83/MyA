@@ -21,11 +21,13 @@
                         <tr>
                             <th>Datum</th>
                             <th>Notiz</th>
+                            <th></th>
                         </tr>
                     {% for my_note in my_notes %}
                         <tr>
                             <td>{{ my_note.date }}</td>
-                            <td>{{ my_note.notetext }}</td>
+                            <td>{{ my_note.notetext|truncatechars:40 }}</td>
+                            <td><a href="{% url 'editnotiz' pk=my_note.id %}">{% bootstrap_icon 'edit' %}</a></td>
                         </tr>
                     {% endfor %}
                     </table>
