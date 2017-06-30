@@ -2,6 +2,7 @@
 Filename: views.py
 Description: All view definition and their logic
 """
+import locale
 from calendar import *
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
@@ -327,7 +328,7 @@ def list_contacts(request, fk=None):
     """
     contacts = Contact.objects.filter(customer_id=fk)
     # show the customers company name in the title
-    customer = get_object_or_404(Customer,id=fk)
+    customer = get_object_or_404(Customer, id=fk)
     page_title = "Ansprechpartner - {}".format(customer.company)
 
     #TODO: mit Rita besprechen
@@ -344,7 +345,7 @@ def details_contact(request, pk=None, fk=None):
     Create/edits a contact for a customer
     """
     # show the company in the title - select from customer
-    customer = get_object_or_404(Customer,id=fk)
+    customer = get_object_or_404(Customer, id=fk)
 
     # set page-title for a new contact or for edit contact
     if pk is None:
@@ -406,7 +407,7 @@ def delete_contact(request, pk=None, fk=None, status=None):
                 # check if customer active
                 customer = Customer.objects.filter(id=contact.customer_id).first()
                 if customer.status == 0 and contact.status == 0:
-                    # contact has relaticns to a child-table so it can only be disabled
+                    # contact has relations to a child-table so it can only be disabled
                     contact.status = 1
                     contact.save()
                     messages.success(request, u'Daten erfolgreich de-/aktiviert')
@@ -466,13 +467,14 @@ def list_notes(request):
         elif selcustomer != '' and selcontact == '':
             # filter by customer - no contact
             if selemployee == '':
-                notes = Note.objects.raw(
-                'SELECT * FROM mya_note WHERE contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
+                notes = Note.objects.raw('SELECT * FROM mya_note WHERE contact_id IN ' +
+                                         '(SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
 
             elif selemployee != '':
                 # filter employee and customer
                 notes = Note.objects.raw('SELECT * FROM mya_note WHERE employee_id = ' + selemployee +
-                                         ' AND contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
+                                         ' AND contact_id IN ' +
+                                         '(SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
                 # show employee in filtertext
                 for e in Employee.objects.filter(id=int(selemployee)):
                     if filtertext == '':
@@ -527,7 +529,12 @@ def list_notes(request):
     form = FilterNoteForm()
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
-    return render(request, 'list_note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist, 'page_filtertext':filtertext})
+    return render(request, 'list_note.html',
+                  {'page_title': 'Notizen',
+                   'notes': notes,
+                   'forms': [form],
+                   'mylist': mylist,
+                   'page_filtertext': filtertext})
 
 
 def detail_note(request, pk=None):
@@ -607,8 +614,10 @@ def export_notes(request):
 
 def named_day(day_number):
     """
-    Returns the name of the day
+    Returns the name of the day in german
     """
+    # set name of month in german, only for Windows OS
+    locale.setlocale(locale.LC_ALL, 'deu_deu')
     return datetime(1900, 1, day_number).strftime("%A")
 
 
@@ -665,7 +674,6 @@ def get_calendar(request, year=None, month=None):
                    'year_before_this': year_befor_this,
                    'year_after_this': year_after_this,
                    'all_events': all_events
-                   # 'event_today': event_today
                    })
 
 

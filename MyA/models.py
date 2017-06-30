@@ -38,6 +38,7 @@ class Employee(models.Model):
         return self.firstname + " " + self.lastname
 
     @receiver(post_save, sender=User)
+    #TODO Parameter **kwarg nicht verwendet => wird der benötigt?
     def create_employee_for_superuser(sender, instance, created, **kwargs):
         """This signal receiver guarantees a creation of an employee object when the superuser is created"""
         if created and instance.is_superuser:
