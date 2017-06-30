@@ -24,8 +24,9 @@ def homesite(request):
     except ObjectDoesNotExist:
         my_notes = []
 
+    today = datetime.today()
     try:
-        my_events = Event.objects.filter(employee=employee)
+        my_events = Event.objects.filter(memberint__employee_id=employee.id).exclude(date__lt=today)
     except ObjectDoesNotExist:
         my_events = []
 
