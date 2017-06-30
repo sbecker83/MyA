@@ -58,7 +58,7 @@
                                         {% if event.date.day == x and event.date.month == month and event.date.year == year %}
                                             <ul>
                                                 <a href="{% url 'edit_event' year=year month=month day=x pk=event.id %}">{{ event.title|truncatechars:10 }}
-                                                    <br> {{ event.starttime }} {% bootstrap_icon 'edit' %} </a>
+                                                    <br> {{ event.starttime }}</a>
                                                 <a href="{% url 'delete_event' pk=event.id %}"> {% bootstrap_icon 'trash' %}</a>
                                             </ul>
                                             <!-- close second if -->
