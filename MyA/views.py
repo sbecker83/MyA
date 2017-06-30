@@ -182,20 +182,6 @@ def toggle_employee_active(request, pk=None):
     return HttpResponseRedirect(reverse('mitarbeiterListe'))
 
 
-# only the superuser is allowed for this view
-@user_passes_test(lambda u: u.is_superuser)
-def delete_employee(request, pk=None):
-    if pk == None:
-        messages.error(request, u'Daten konnten nicht gelöscht werden')
-    else:
-        employee = get_object_or_404(Employee, id=pk)
-        user = employee.user
-        employee.delete()
-        user.delete()
-        messages.success(request, u'Daten erfolgreich gelöscht')
-    return HttpResponseRedirect(reverse('mitarbeiterListe'))
-
-
 # ======================================================== #
 # Customer - View
 # ======================================================== #

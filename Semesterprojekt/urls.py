@@ -32,7 +32,6 @@ urlpatterns = (
     url(r'^mitarbeiter/neuerMA/$', MyA.views.details_employee, name='neuerMitarbeiter'),
     url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/change//?$', MyA.views.details_employee, name='editMitarbeiter'),
     url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
-    url(r'^mitarbeiter/deleteMa/(?P<pk>[0-9]+)/?$', MyA.views.delete_employee, name='deleteMitarbeiter'),
     url(r'^mitarbeiter/export$', MyA.views.export_employees, name='exportMitarbeiter'),
 
     # user profil and pwd change of current user
