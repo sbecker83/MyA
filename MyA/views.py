@@ -241,7 +241,7 @@ def detail_customer(request, pk=None):
             return HttpResponseRedirect(reverse('list_customers'))
         else:
             # error message
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            messages.error(request, u'Der Kunde konnte nicht gespeichert werden!')
             pass
     else:
         # form first call
@@ -255,7 +255,7 @@ def delete_customer(request, pk=None, is_delete=None):
     If a customer can not be deleted (because contacts exist), it will be deactivated for further use.
     """
     if pk is None:
-        messages.error(request, u'Daten konnten nicht gelöscht werden')
+        messages.error(request, u'Der Kunde konnte nicht gelöscht werden!')
     else:
         customer = get_object_or_404(Customer, id=pk)
         if is_delete == 1:
@@ -265,16 +265,16 @@ def delete_customer(request, pk=None, is_delete=None):
             has_contacts = Contact.objects.filter(customer_id=pk).exists()
             if not has_contacts:
                 customer.delete()
-                messages.success(request, u'Daten erfolgreich gelöscht')
+                messages.success(request, u'Der Kunde wurde erfolgreich gelöscht!')
             else:
                 if customer.is_active:
-                    # Customer has contact so he can only be disabled
+                    # Customer has contacts so he can only be disabled
                     customer.is_active = False
                     Contact.objects.select_related().filter(customer=customer.id).update(is_active=False)
                     customer.save()
-                    messages.success(request, u'Daten erfolgreich de-/aktiviert')
+                    messages.success(request, u'Der Kunde hat zugeordnete Ansprechpartner, deshalb konnte er nicht gelöscht werden! Der Kunde wurde erfolgreich deaktiviert!')
                 else:
-                    messages.error(request, u'Daten konnten nicht gelöscht werden')
+                    messages.error(request, u'Der Kunde konnte nicht gelöscht werden, weil es noch Ansprechpartner gibt!')
         else:
             # active/deactivate the customer and all its contacts
             if customer.is_active:
@@ -286,7 +286,7 @@ def delete_customer(request, pk=None, is_delete=None):
                 # update all contacts of the customer as well
                 Contact.objects.select_related().filter(customer=customer.id).update(is_active=True)
             customer.save()
-            messages.success(request, u'Daten erfolgreich de-/aktiviert')
+            messages.success(request, u'Der Kunde erfolgreich de-/aktiviert!')
     return HttpResponseRedirect(reverse('list_customers'))
 
 
@@ -350,13 +350,13 @@ def details_contact(request, pk=None, fk=None):
             # set customer-id
             form.customer_id = fk
             form.save()
-            messages.success(request, u'Daten erfolgreich geändert')
+            messages.success(request, u'Der Ansprechpartner wurde erfolgreich geändert!')
             # parameter to filter to the selected customer (fk) per args
             return HttpResponseRedirect(reverse('list_contacts', args=[fk]))
 
         else:
             # error message
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            messages.error(request, u'Der Ansprechpartner konnte nicht gespeichert werden!')
             pass
     else:
         # form first call
@@ -383,7 +383,7 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
             has_member_ext = MemberExt.objects.filter(contact_id=contact.id).exists()
             if not has_notes and not has_member_ext:
                 contact.delete()
-                messages.success(request, u'Daten erfolgreich gelöscht')
+                messages.success(request, u'Der Ansprechpartner wurde erfolgreich gelöscht!')
             else:
                 # check if customer active
                 customer = Customer.objects.get(id=contact.customer_id)
@@ -391,9 +391,9 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
                     # contact has relations to a child-table so it can only be disabled
                     contact.is_active = False
                     contact.save()
-                    messages.success(request, u'Daten erfolgreich de-/aktiviert')
+                    messages.success(request, u'Der Ansprechpartner wurde erfolgreich de-/aktiviert!')
                 else:
-                    messages.error(request, u'Daten konnten nicht gelöscht werden')
+                    messages.error(request, u'Der Ansprechpartner konnte nicht gelöscht werden!')
         else:
             # active/deactivate the customer and all its contacts
             contact = get_object_or_404(Contact, id=pk)
@@ -536,11 +536,11 @@ def detail_note(request, pk=None):
             # set contact from the Select-Contact-Field - value form the request
             form.contact_id = request.POST.get('selcontact')
             form.save()
-            messages.success(request, u'Daten erfolgreich geändert')
+            messages.success(request, u'Die Notiz wurde erfolgreich geändert!')
             return HttpResponseRedirect(reverse('list_notes'))
         else:
             # error message
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            messages.error(request, u'Die Notiz konnte nicht gespeichert werden!')
             pass
 
     else:
@@ -563,7 +563,7 @@ def delete_note(request, pk=None):
     Deletes a note.
     """
     if pk is None:
-        messages.error(request, u'Daten konnten nicht gelöscht werden')
+        messages.error(request, u'Die Notiz konnte nicht gelöscht werden!')
     else:
         note = get_object_or_404(Note, id=pk)
         note.delete()
