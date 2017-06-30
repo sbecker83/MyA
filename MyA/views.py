@@ -8,13 +8,17 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from MyA.forms import *
 from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, SetPasswordForm
+from MyA.forms import *
 from MyA.admin import EmployeeResource, CustomerResource, ContactResource, NoteResource
 from datetime import datetime
 
+
+# ======================================================== #
+# Dashboard - View
+# ======================================================== #
 
 def dashboard(request):
     """
@@ -44,7 +48,6 @@ def dashboard(request):
 # ======================================================== #
 # Employee - View
 # ======================================================== #
-
 
 @user_passes_test(lambda u: u.is_superuser)
 def list_employees(request):
@@ -142,7 +145,7 @@ def edit_profile(request):
     profile specifics
     """
     # get the current employee from the current user id
-    employee = Employee.objects.get(user=request.user.id)
+    employee = get_object_or_404(Employee, user=request.user.id)
 
     # use the detail_employee view with the is_profile flag set
     return detail_employee(request, pk=employee.id, is_profile=True)
@@ -239,10 +242,9 @@ def detail_customer(request, pk=None):
         page_title = "Kunden ändern"
 
     if request.method == 'POST':
-
         # form sent off
         form = CustomerForm(request.POST, instance=customer)
-        # Validity check
+        # validity check
         if form.is_valid():
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
@@ -264,11 +266,13 @@ def delete_customer(request, pk=None, status=None):
     if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
+        customer = get_object_or_404(Customer, id=pk)
         if status == '2':
+            # trying to delete the customer
 
-            customer = get_object_or_404(Customer, id=pk)
             # check if customer has no contacts
             nocontact = 0
+            # TODO: Contact.objects.filter(customer__id=pk)
             for c in Contact.objects.raw('SELECT * FROM mya_contact where customer_id='+pk):
                 nocontact = 1
             if nocontact == 0:
@@ -284,13 +288,14 @@ def delete_customer(request, pk=None, status=None):
                 else:
                     messages.error(request, u'Daten konnten nicht gelöscht werden')
         else:
-            customer = get_object_or_404(Customer, id=pk)
-
+            # active/deactivate the customer and all its contacts
             if customer.status == 0:
                 customer.status = 1
+                # update all contacts of the customer as well
                 Contact.objects.select_related().filter(customer=customer.id).update(status=1)
             elif customer.status == 1:
                 customer.status = 0
+                # update all contacts of the customer as well
                 Contact.objects.select_related().filter(customer=customer.id).update(status=0)
             customer.save()
             messages.success(request, u'Daten erfolgreich de-/aktiviert')
@@ -320,40 +325,40 @@ def list_contacts(request, fk=None):
     """
     Renders a list with all contacts of a specific customer (fk).
     """
-    contacts = Contact.objects.all().filter(customer_id=fk)
-    # show the company in the title - select from customer
-    customers = Customer.objects.filter(id=fk)
-    for c in customers:
-        customername = " - " + c.company
-    page_title = "Ansprechpartner" + customername
+    contacts = Contact.objects.filter(customer_id=fk)
+    # show the customers company name in the title
+    customer = get_object_or_404(Customer,id=fk)
+    page_title = "Ansprechpartner - {}".format(customer.company)
 
-    # paraameter selcted customer for the list_contact.html using by call view new contact
+    #TODO: mit Rita besprechen
+    #customers = Customer.objects.filter(id=fk)
+    #for c in customers:
+    #    customername = " - " + c.company
+
     return render(request, 'list_contact.html', {'page_title': page_title, 'contacts': contacts,
                                                  'selected_customer_id': fk})
 
 
-# create a new contact or edit a contact
-# parameters for create and edit selected customer (foreign key)
-#            for edit primary key of the contact
 def details_contact(request, pk=None, fk=None):
+    """
+    Create/edits a contact for a customer
+    """
     # show the company in the title - select from customer
-    customers = Customer.objects.filter(id=fk)
-    for c in customers:
-        customername = " - " + c.company
-    # set page-title for a nwe contact or for edit contact
+    customer = get_object_or_404(Customer,id=fk)
+
+    # set page-title for a new contact or for edit contact
     if pk is None:
         # new contact
         contact = Contact()
-        page_title = "Ansprechpartner anlegen" + customername
+        page_title = "Ansprechpartner anlegen - {}".format(customer.company)
     else:
         # edit contact
         contact = get_object_or_404(Contact, id=pk)
-        page_title = "Ansprechpartner ändern" + customername
+        page_title = "Ansprechpartner ändern- {}".format(customer.company)
 
     if request.method == 'POST':
-
         # form sent off
-        # parameter of the form selcted customer (fk) per initial
+        # parameter of the form selected customer (fk) per initial
         form = ContactForm(request.POST, instance=contact, initial={'customer': fk})
 
         # Validity check
@@ -374,6 +379,7 @@ def details_contact(request, pk=None, fk=None):
         # form first call
         # parameter of the form selcted customer (fk) per initial
         form = ContactForm(instance=contact,  initial={'customer': fk})
+
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
@@ -385,6 +391,7 @@ def delete_contact(request, pk=None, fk=None, status=None):
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         if status == '2':
+            # trying to delete the customer
             contact = get_object_or_404(Contact, id=pk)
             # check if contact has no notes and no events / memberext
             no_notes_and_events = 0
@@ -406,6 +413,7 @@ def delete_contact(request, pk=None, fk=None, status=None):
                 else:
                     messages.error(request, u'Daten konnten nicht gelöscht werden')
         else:
+            # active/deactivate the customer and all its contacts
             contact = get_object_or_404(Contact, id=pk)
             # check if customer active
             customer = Customer.objects.filter(id=contact.customer_id).first()
@@ -596,6 +604,7 @@ def export_notes(request):
 # ======================================================== #
 # Calendar - View
 # ======================================================== #
+
 def named_day(day_number):
     """
     Returns the name of the day
