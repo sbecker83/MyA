@@ -24,54 +24,54 @@ admin.autodiscover()
 
 urlpatterns = (
     url(r'^admin/', admin.site.urls),
-    # index
-    url(r'^$', MyA.views.homesite, name='startseite'),
+    # index/dashboard
+    url(r'^$', MyA.views.homesite, name='dashboard'),
 
-    # employee - overview, new, edit, delete
-    url(r'^mitarbeiter/$', MyA.views.get_employee, name='mitarbeiterListe'),
-    url(r'^mitarbeiter/neuerMA/$', MyA.views.details_employee, name='neuerMitarbeiter'),
-    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/change//?$', MyA.views.details_employee, name='editMitarbeiter'),
-    url(r'^mitarbeiter/editMa/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='setPasswordForUser'),
-    url(r'^mitarbeiter/export$', MyA.views.export_employees, name='exportMitarbeiter'),
+    # employee - list, new, edit, toggle, export
+    url(r'^employee/$', MyA.views.get_employee, name='list_employees'),
+    url(r'^employee/new/$', MyA.views.details_employee, name='new_employee'),
+    url(r'^employee/edit/(?P<pk>[0-9]+)/change//?$', MyA.views.details_employee, name='edit_employee'),
+    url(r'^employee/edit/(?P<pk>[0-9]+)/password//?$', MyA.views.set_password, name='set_password_user'),
+    url(r'^employee/toggle_status/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggle_employee_status'),
+    url(r'^employee/export$', MyA.views.export_employees, name='export_employees'),
 
     # user profil and pwd change of current user
-    url(r'^profil/$', MyA.views.edit_profile, name='profil'),
-    url(r'^password/$', MyA.views.change_password, name='setPasswordForUser'),
-    url(r'^profil/toggleMa/(?P<pk>[0-9]+)/?$', MyA.views.toggle_employee_active, name='toggleMitarbeiter'),
+    url(r'^profile/$', MyA.views.edit_profile, name='profile'),
+    url(r'^password/$', MyA.views.change_password, name='set_password_user'),
 
     # calendar
-    url(r'^kalender/?$', MyA.views.get_calendar, name='terminkalender'),
-    url(r'^kalender/(?P<year>[0-9]+)/(?P<month>[0-9]+)/?$', MyA.views.get_calendar, name='terminkalender'),
-    url(r'^kalender/neuerTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$', MyA.views.details_calendar, name='neuerTermin'),
-    url(r'^kalender/editTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/?$', MyA.views.details_with_Members_calendar, name='editTermin'),
-    url(r'^kalender/deleteTermin/(?P<pk>[0-9]+)/?$', MyA.views.delete_event, name='deleteTermin'),
-    url(r'^kalender/deleteMemInt/(?P<pk>[0-9]+)/?$', MyA.views.delete_MemberInt, name='deleteMemberInt'),
-    url(r'^kalender/deleteMemExt/(?P<pk>[0-9]+)/?$', MyA.views.delete_MemberExt, name='deleteMemberExt'),
+    url(r'^calendar/?$', MyA.views.get_calendar, name='calendar'),
+    url(r'^calendar/(?P<year>[0-9]+)/(?P<month>[0-9]+)/?$', MyA.views.get_calendar, name='calendar'),
+    url(r'^calendar/event/new/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$', MyA.views.details_calendar, name='new_event'),
+    url(r'^calendar/event/edit/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/?$', MyA.views.details_with_Members_calendar, name='edit_event'),
+    url(r'^calendar/event/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event, name='delete_event'),
+    url(r'^calendar/event/member/internal/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_MemberInt, name='delete_event_member_internal'),
+    url(r'^calendar/event/member/external/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_MemberExt, name='delete_event_member_external'),
 
     # login / logout
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
 
-    # customer - overview, new, edit, delete
-    url(r'^kunden/$', MyA.views.get_customer, name='kundenliste'),
-    url(r'^kunden/neuerKD/$',  MyA.views.details_customer, name='neuerkunde'),
-    url(r'^kunden/editKD/(?P<pk>[0-9]+)/?$',  MyA.views.details_customer, name='editkunde'),
-    url(r'^kunden/deleteKD/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.delete_customer, name='deletekunde'),
-    url(r'^kunden/export$', MyA.views.export_customers, name='exportKunde'),
+    # customer - list, new, edit, delete, export
+    url(r'^customer/$', MyA.views.get_customer, name='list_customers'),
+    url(r'^customer/new/$', MyA.views.details_customer, name='new_customer'),
+    url(r'^customer/edit/(?P<pk>[0-9]+)/?$', MyA.views.details_customer, name='edit_customer'),
+    url(r'^customer/delete/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.delete_customer, name='delete_customer'),
+    url(r'^customer/export$', MyA.views.export_customers, name='export_customers'),
 
-    # contact - overview, new, edit, delete
-    url(r'^ansprechpartner/(?P<fk>[0-9]+)/?$', MyA.views.get_contact, name='ansprechpartnerliste'),
-    url(r'^ansprechpartner/neuerAP/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='neueransprechpartner'),
-    url(r'^ansprechpartner/editAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='editansprechpartner'),
-    url(r'^ansprechpartner/deleteAP/(?P<status>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='deleteansprechpartner'),
-    url(r'^ansprechpartner/export$', MyA.views.export_contacts, name='exportAnsprechpartner'),
+    # contact - overview, new, edit, delete, export
+    url(r'^contact/(?P<fk>[0-9]+)/?$', MyA.views.get_contact, name='list_contacts'),
+    url(r'^contact/neuerAP/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='new_contact'),
+    url(r'^contact/editAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='edit_contact'),
+    url(r'^contact/deleteAP/(?P<status>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='delete_contact'),
+    url(r'^contact/export$', MyA.views.export_contacts, name='export_contacts'),
 
-    # note - overview, new, edit, delete
-    url(r'^notiz/$', MyA.views.get_notes, name='notizliste'),
-    url(r'^notiz/neuerNO/$', MyA.views.details_note, name='neuenotiz'),
-    url(r'^notiz/editNO/(?P<pk>[0-9]+)/?$', MyA.views.details_note, name='editnotiz'),
-    url(r'^notiz/deleteNO/(?P<pk>[0-9]+)/?$', MyA.views.delete_note, name='deletenotiz'),
-    url(r'^notiz/export$', MyA.views.export_notes, name='exportNotiz'),
+    # note - overview, new, edit, delete, export
+    url(r'^note/$', MyA.views.get_notes, name='list_notes'),
+    url(r'^note/new/$', MyA.views.details_note, name='new_note'),
+    url(r'^note/edit/(?P<pk>[0-9]+)/?$', MyA.views.details_note, name='edit_note'),
+    url(r'^note/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_note, name='delete_note'),
+    url(r'^note/export$', MyA.views.export_notes, name='export_notes'),
 
 
 )

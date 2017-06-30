@@ -84,10 +84,10 @@ def details_employee(request, pk=None, is_profile=False):
 
             if is_profile:
                 messages.success(request, u'Profil gespeichert')
-                return HttpResponseRedirect(reverse('profil'))
+                return HttpResponseRedirect(reverse('profile'))
             else:
                 messages.success(request, u'Mitarbeiter gespeichert')
-                return HttpResponseRedirect(reverse('mitarbeiterListe'))
+                return HttpResponseRedirect(reverse('list_employees'))
         else:
             messages.error(request, u'Daten konnten nicht gespeichert werden')
             pass
@@ -179,7 +179,7 @@ def toggle_employee_active(request, pk=None):
             user.is_active = True
             user.save()
             messages.success(request, u'Mitarbeiter erfolgreich aktiviert')
-    return HttpResponseRedirect(reverse('mitarbeiterListe'))
+    return HttpResponseRedirect(reverse('list_employees'))
 
 
 # ======================================================== #
@@ -207,7 +207,7 @@ def details_customer(request, pk=None):
         if form.is_valid():
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('kundenliste'))
+            return HttpResponseRedirect(reverse('list_customers'))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
@@ -253,7 +253,7 @@ def delete_customer(request, pk=None, status=None):
                 Contact.objects.select_related().filter(customer=customer.id).update(status=0)
             customer.save()
             messages.success(request, u'Daten erfolgreich de-/aktiviert')
-    return HttpResponseRedirect(reverse('kundenliste'))
+    return HttpResponseRedirect(reverse('list_customers'))
 
 
 def export_customers(request):
@@ -316,7 +316,7 @@ def details_contact(request, pk=None, fk=None):
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
             # parameter to filter to the selected customer (fk) per args
-            return HttpResponseRedirect(reverse('ansprechpartnerliste', args=[fk]))
+            return HttpResponseRedirect(reverse('list_contacts', args=[fk]))
 
         else:
             # error message
@@ -372,7 +372,7 @@ def delete_contact(request, pk=None, fk=None, status=None):
                 messages.error(request,
                                u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
     # paramter to filter to the selected customer (fk) per args
-    return HttpResponseRedirect(reverse('ansprechpartnerliste', args=[fk]))
+    return HttpResponseRedirect(reverse('list_contacts', args=[fk]))
 
 
 def export_contacts(request):
@@ -487,7 +487,7 @@ def details_note(request, pk=None):
             form.contact_id = request.POST.get('selcontact')
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('notizliste'))
+            return HttpResponseRedirect(reverse('list_notes'))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
@@ -516,7 +516,7 @@ def delete_note(request, pk=None):
         note = get_object_or_404(Note, id=pk)
         note.delete()
 
-    return HttpResponseRedirect(reverse('notizliste'))
+    return HttpResponseRedirect(reverse('list_notes'))
 
 
 def export_notes(request):
@@ -616,7 +616,7 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
         if form.is_valid():
             form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('terminkalender'))
+            return HttpResponseRedirect(reverse('calendar'))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
@@ -636,14 +636,14 @@ def delete_event(request, pk=None):
         delevent = get_object_or_404(Event, id=pk)
         delevent.delete()
 
-    return HttpResponseRedirect(reverse('terminkalender'))
+    return HttpResponseRedirect(reverse('calendar'))
 
 
 # create  edit an event
 def details_with_Members_calendar(request, pk=None, year=None, month=None, day=None):
     if pk == None:
         # error back to calendar
-        return HttpResponseRedirect (reverse ('terminkalender'))
+        return HttpResponseRedirect (reverse ('calendar'))
     act_year = int(year)
     act_month = int(month)
     act_day = int(day)
@@ -661,7 +661,7 @@ def details_with_Members_calendar(request, pk=None, year=None, month=None, day=N
             if form.is_valid():
                 form.save()
                 messages.success(request, u'Daten erfolgreich geändert')
-                #return HttpResponseRedirect(reverse('terminkalender'))
+                #return HttpResponseRedirect(reverse('calendar'))
 
             else:
                 # error message
@@ -713,7 +713,7 @@ def details_with_Members_calendar(request, pk=None, year=None, month=None, day=N
 
 def delete_MemberInt(request, pk=None):
     if pk == None:
-        return HttpResponseRedirect (reverse ('terminkalender'))
+        return HttpResponseRedirect (reverse ('calendar'))
 
     memberInt = get_object_or_404(MemberInt, id=pk)
     eventId=memberInt.event_id
@@ -738,7 +738,7 @@ def delete_MemberInt(request, pk=None):
 
 def delete_MemberExt(request, pk=None):
     if pk == None:
-        return HttpResponseRedirect (reverse ('terminkalender'))
+        return HttpResponseRedirect (reverse ('calendar'))
 
     memberExt = get_object_or_404 (MemberExt, id=pk)
     eventId = memberExt.event_id

@@ -24,9 +24,9 @@
                         <td>{{ contact.mobile }}</td>
                         <td>{{ contact.email }}</td>
                         <td>
-                            <a href="{% url 'editansprechpartner' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a>
-                            <a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id status=contact.status%}">{% bootstrap_icon 'lock' %}</a>
-                            <a href="{% url 'deleteansprechpartner' pk=contact.id fk=contact.customer.id  status=2  %}">{% bootstrap_icon 'trash' %}</a>
+                            <a href="{% url 'edit_contact' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a>
+                            <a href="{% url 'delete_contact' pk=contact.id fk=contact.customer.id status=contact.status%}">{% bootstrap_icon 'lock' %}</a>
+                            <a href="{% url 'delete_contact' pk=contact.id fk=contact.customer.id  status=2  %}">{% bootstrap_icon 'trash' %}</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -34,9 +34,9 @@
         </table>
         <br>
 
-        <a href="{% url 'neueransprechpartner' fk=selected_customer_id  %}" class="btn btn-primary">Neu Anlegen</a>
-        <a href="{% url 'kundenliste'  %}" class="btn btn-primary">Zurück</a>
-        <a href="{% url 'exportAnsprechpartner'  %}" class="btn btn-primary">Excel Export</a>
+        <a href="{% url 'new_contact' fk=selected_customer_id  %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'list_customers' %}" class="btn btn-primary">Zurück</a>
+        <a href="{% url 'export_contacts' %}" class="btn btn-primary">Excel Export</a>
 
     </div>
 

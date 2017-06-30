@@ -36,8 +36,8 @@
                         <td>{{ note.contact.customer }} / {{ note.contact.lastname }},{{ note.contact.firstname }} </td>
                         <td>{{ note.notetext|truncatechars:50 }}</td>
                         <td>
-                            <a href="{% url 'editnotiz' pk=note.id %}">{% bootstrap_icon 'edit' %}</a>
-                            <a href="{% url 'deletenotiz' pk=note.id %}">{% bootstrap_icon 'trash' %}</a>
+                            <a href="{% url 'edit_note' pk=note.id %}">{% bootstrap_icon 'edit' %}</a>
+                            <a href="{% url 'delete_note' pk=note.id %}">{% bootstrap_icon 'trash' %}</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -45,8 +45,8 @@
         </table>
         <br>
 
-        <a href="{% url 'neuenotiz'  %}" class="btn btn-primary">Neu Anlegen</a>
-        <a href="{% url 'exportNotiz'  %}" class="btn btn-primary">Excel Export</a>
+        <a href="{% url 'new_note' %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'export_notes' %}" class="btn btn-primary">Excel Export</a>
     </div>
 {% endblock %}
 

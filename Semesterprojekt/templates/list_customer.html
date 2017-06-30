@@ -23,12 +23,12 @@
                         <td>{{ customer.phone }}/{{ customer.fax }}</td>
                         <td>{{ customer.website }}</td>
                         <td>
-                            <a href="{% url 'editkunde' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a>
-                            <a href="{% url 'deletekunde' pk=customer.id status=customer.status %}">{% bootstrap_icon 'lock' %}</a>
-                            <a href="{% url 'deletekunde' pk=customer.id status=2 %}">{% bootstrap_icon 'trash' %}</a>
+                            <a href="{% url 'edit_customer' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a>
+                            <a href="{% url 'delete_customer' pk=customer.id status=customer.status %}">{% bootstrap_icon 'lock' %}</a>
+                            <a href="{% url 'delete_customer' pk=customer.id status=2 %}">{% bootstrap_icon 'trash' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'ansprechpartnerliste' fk=customer.id %}">{% bootstrap_icon 'list' %}</a>
+                            <a href="{% url 'list_contacts' fk=customer.id %}">{% bootstrap_icon 'list' %}</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -36,8 +36,8 @@
         </table>
         <br>
 
-        <a href="{% url 'neuerkunde'  %}" class="btn btn-primary">Neu Anlegen</a>
-        <a href="{% url 'exportKunde'  %}" class="btn btn-primary">Excel Export</a>
+        <a href="{% url 'new_customer' %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'export_customers' %}" class="btn btn-primary">Excel Export</a>
     </div>
 
 {% endblock %}
