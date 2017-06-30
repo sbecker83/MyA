@@ -1,6 +1,6 @@
 """
-Fielname: view.py
-Description: All view definition and their logical
+Filename: views.py
+Description: All view definition and their logic
 """
 from calendar import *
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -13,44 +13,61 @@ from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, SetPasswordForm
 from MyA.admin import EmployeeResource, CustomerResource, ContactResource, NoteResource
+from datetime import datetime
 
 
-# Index - View
-def homesite(request):
+def dashboard(request):
+    """
+    Renders a dashboard page with a list of notes and events of the current user
+    """
+    # get the employee model of the current user
     employee = Employee.objects.get(user=request.user.id)
-    employee_name = employee.firstname + " " + employee.lastname
+
+    # get the notes of the current user
     try:
         my_notes = Note.objects.filter(employee=employee)
     except ObjectDoesNotExist:
         my_notes = []
 
-    today = datetime.today()
+    # get the future events of the current user
     try:
-        my_events = Event.objects.filter(memberint__employee_id=employee.id).exclude(date__lt=today)
+        my_events = Event.objects.filter(memberint__employee_id=employee.id).exclude(date__lt=datetime.today())
     except ObjectDoesNotExist:
         my_events = []
 
-    return render(request, 'dashboard.html', {'page_title': 'Startseite',
-                                          'employee_name': employee_name,
-                                          'my_notes': my_notes,
-                                          'my_events': my_events})
+    return render(request, 'dashboard.html', {'page_title': 'Dashboard',
+                                              'employee_name': employee.get_fullname(),
+                                              'my_notes': my_notes,
+                                              'my_events': my_events})
 
 
 # ======================================================== #
 # Employee - View
 # ======================================================== #
-# only the superuser is allowed for this view
+
+
 @user_passes_test(lambda u: u.is_superuser)
-def get_employee(request):
+def list_employees(request):
+    """
+    Renders a list with all employees.
+    ADMIN ONLY: This view can only be used by the superuser
+    """
     employees = Employee.objects.all()
     return render(request, 'list_employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
 
 
-# create a new employee or edit a employee
-def details_employee(request, pk=None, is_profile=False):
+def detail_employee(request, pk=None, is_profile=False):
+    """
+    Creates/edits an employee.
+    The employee model will be directly linked to the django auth user.
+    It may also be used with the profile of an user (hence the is_profile variable), the only difference is
+    the redirect after an edit.
+    """
+    # if an existing employee is edited, this variable will be set to True
     is_edit = False
-    if pk == None:
-        # a new user is will be created
+
+    if pk is None:
+        # a new user/employee is will be created as no primary key if given
         user = User()
         employee = Employee()
         page_title = "Mitarbeiter anlegen"
@@ -63,10 +80,8 @@ def details_employee(request, pk=None, is_profile=False):
         if not (request.user.is_superuser or user == request.user):
             raise PermissionDenied
         # set page title
-        if is_profile:
-            page_title = "Profil bearbeiten"
-        else:
-            page_title = "Mitarbeiter ändern"
+        page_title = "Bearbeiten: {}".format(employee.get_fullname())
+
     if request.method == 'POST':
         # the form for a new user and an existing user differs (password field)
         if is_edit:
@@ -103,6 +118,9 @@ def details_employee(request, pk=None, is_profile=False):
 
 
 def export_employees(request):
+    """
+    Exports the list of employees to an Excel document
+    """
     dataset = EmployeeResource().export()
     filename = 'employees.xls'
 
@@ -117,21 +135,30 @@ def export_employees(request):
 # ======================================================== #
 # Profile - View
 # ======================================================== #
-# edit Profile - View
-def edit_profile(request, pk=None):
+
+def edit_profile(request):
+    """
+    Uses the detail_employee view but with the is_profile variable set, so the details_employee view can handle
+    profile specifics
+    """
     # get the current employee from the current user id
     employee = Employee.objects.get(user=request.user.id)
 
-    # use the view for creating and editing employees but for the current user id
-    return details_employee(request, pk=employee.id, is_profile=True)
+    # use the detail_employee view with the is_profile flag set
+    return detail_employee(request, pk=employee.id, is_profile=True)
 
 
 # ======================================================== #
 # Superuser - View
 # ======================================================== #
+
 # only the superuser is allowed for this view
 @user_passes_test(lambda u: u.is_superuser)
 def set_password(request, pk):
+    """
+    Sets the password for a user WITHOUT entering the old password
+    ADMIN ONLY: This view can only be used by the superuser
+    """
     user = get_object_or_404(User, id=pk)
     page_title = "Passwort für User " + user.username + " ändern"
     if request.method == 'POST':
@@ -147,6 +174,9 @@ def set_password(request, pk):
 
 
 def change_password(request):
+    """
+    Changes the password for a user with entering the old password
+    """
     user = request.user
     page_title = "Eigenes Passwort ändern"
     if request.method == 'POST':
@@ -163,10 +193,13 @@ def change_password(request):
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
-# only the superuser is allowed for this view
 @user_passes_test(lambda u: u.is_superuser)
 def toggle_employee_active(request, pk=None):
-    if pk == None:
+    """
+    Deactivates/activates a user  depending on the current status
+    ADMIN ONLY: This view can only be used by the superuser
+    """
+    if pk is None:
         messages.error(request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
     else:
         employee = get_object_or_404(Employee, id=pk)
@@ -185,14 +218,20 @@ def toggle_employee_active(request, pk=None):
 # ======================================================== #
 # Customer - View
 # ======================================================== #
-def get_customer(request):
+
+def list_customers(request):
+    """
+    Renders a list with all customers.
+    """
     customers = Customer.objects.all
     return render(request, 'list_customer.html', {'page_title': 'Kunden', 'customers': customers})
 
 
-# create a new customer or edit a customer
-def details_customer(request, pk=None):
-    if pk == None:
+def detail_customer(request, pk=None):
+    """
+    Creates/edits a customer.
+    """
+    if pk is None:
         customer = Customer()
         page_title = "Kunden anlegen"
     else:
@@ -218,9 +257,11 @@ def details_customer(request, pk=None):
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
-# delete a customer
 def delete_customer(request, pk=None, status=None):
-    if pk == None:
+    """
+    Deletes a customer.
+    """
+    if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         if status == '2':
@@ -257,6 +298,9 @@ def delete_customer(request, pk=None, status=None):
 
 
 def export_customers(request):
+    """
+    Exports the list of customers to an Excel document
+    """
     dataset = CustomerResource().export()
     filename = 'customers.xls'
 
@@ -271,8 +315,11 @@ def export_customers(request):
 # ======================================================== #
 # Contact - View
 # ======================================================== #
-# all contacts of the selected customer (fk)
-def get_contact(request, fk=None):
+
+def list_contacts(request, fk=None):
+    """
+    Renders a list with all contacts of a specific customer (fk).
+    """
     contacts = Contact.objects.all().filter(customer_id=fk)
     # show the company in the title - select from customer
     customers = Customer.objects.filter(id=fk)
@@ -281,7 +328,8 @@ def get_contact(request, fk=None):
     page_title = "Ansprechpartner" + customername
 
     # paraameter selcted customer for the list_contact.html using by call view new contact
-    return render(request, 'list_contact.html', {'page_title': page_title, 'contacts': contacts, 'selected_customer_id': fk})
+    return render(request, 'list_contact.html', {'page_title': page_title, 'contacts': contacts,
+                                                 'selected_customer_id': fk})
 
 
 # create a new contact or edit a contact
@@ -293,7 +341,7 @@ def details_contact(request, pk=None, fk=None):
     for c in customers:
         customername = " - " + c.company
     # set page-title for a nwe contact or for edit contact
-    if pk == None:
+    if pk is None:
         # new contact
         contact = Contact()
         page_title = "Ansprechpartner anlegen" + customername
@@ -329,11 +377,11 @@ def details_contact(request, pk=None, fk=None):
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
-# delete a contact
-# parameters primary key of the contact and selected customer (foreign key)
 def delete_contact(request, pk=None, fk=None, status=None):
-
-    if pk == None:
+    """
+    Deletes a contact for a customer (fk)
+    """
+    if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         if status == '2':
@@ -376,6 +424,9 @@ def delete_contact(request, pk=None, fk=None, status=None):
 
 
 def export_contacts(request):
+    """
+    Exports the list of contacts to an Excel document
+    """
     dataset = ContactResource().export()
     filename = 'contacts.xls'
 
@@ -390,34 +441,38 @@ def export_contacts(request):
 # ======================================================== #
 # Note - View
 # ======================================================== #
-def get_notes(request):
-    filtertext=''
+
+def list_notes(request):
+    """
+    Renders a list with notes. Can be filtered.
+    """
+    filtertext = ''
     if request.method == 'POST':
         selemployee = request.POST.get('selemployee')
-        selcustomer = request.POST.get ('selcustomer')
+        selcustomer = request.POST.get('selcustomer')
         selcontact = request.POST.get('selcontact')
 
         if selemployee == '' and selcustomer == '' and selcontact == '':
-            #No filter
+            # no filter
             notes = Note.objects.all()
-        elif  selcustomer != ''and selcontact == '':
+        elif selcustomer != '' and selcontact == '':
             # filter by customer - no contact
             if selemployee == '':
-                notes = Note.objects.raw (
+                notes = Note.objects.raw(
                 'SELECT * FROM mya_note WHERE contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
 
             elif selemployee != '':
                 # filter employee and customer
-                notes = Note.objects.raw ('SELECT * FROM mya_note WHERE employee_id = ' + selemployee + \
-                                          ' AND contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
+                notes = Note.objects.raw('SELECT * FROM mya_note WHERE employee_id = ' + selemployee +
+                                         ' AND contact_id IN (SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
                 # show employee in filtertext
-                for e in Employee.objects.filter (id=int(selemployee)):
+                for e in Employee.objects.filter(id=int(selemployee)):
                     if filtertext == '':
                         filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
                     else:
                         filtertext += ', ' + e.firstname + ' ' + e.lastname
             # show customer in filtertext
-            for c in Customer.objects.filter (id=int(selcustomer)):
+            for c in Customer.objects.filter(id=int(selcustomer)):
                 if filtertext == '':
                     filtertext = 'Filter nach: ' + c.company
                 else:
@@ -426,33 +481,33 @@ def get_notes(request):
 
             if selemployee != '' and selcontact != '':
                 # filter employee and contact
-                notes = Note.objects.filter (employee_id=int(selemployee), contact_id=int(selcontact))
+                notes = Note.objects.filter(employee_id=int(selemployee), contact_id=int(selcontact))
                 # show employee in filtertext
-                for e in Employee.objects.filter (id=int(selemployee)):
+                for e in Employee.objects.filter(id=int(selemployee)):
                     if filtertext == '':
                         filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
                     else:
                         filtertext += ', ' + e.firstname + ' ' + e.lastname
                 # show contact in filtertext
-                for co in Contact.objects.filter (id=int (selcontact)):
+                for co in Contact.objects.filter(id=int(selcontact)):
                     if filtertext == '':
                         filtertext = 'Filter nach: ' + co.firstname + ' ' + co.lastname
                     else:
                         filtertext += ', ' + + co.firstname + ' ' + co.lastname
             elif selemployee != '' and selcontact == '':
                 # filter employee
-                notes = Note.objects.filter (employee_id=int(selemployee))
+                notes = Note.objects.filter(employee_id=int(selemployee))
                 # show employee in filtertext
-                for e in Employee.objects.filter (id=int(selemployee)):
+                for e in Employee.objects.filter(id=int(selemployee)):
                     if filtertext == '':
                         filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
                     else:
                         filtertext += ', ' + e.firstname + ' ' + e.lastname
             elif selemployee == '' and selcontact != '':
                 # filter contact
-                notes = Note.objects.filter ( contact_id=int(selcontact))
+                notes = Note.objects.filter(contact_id=int(selcontact))
                 # show contact in filtertext
-                for co in Contact.objects.filter (id=int (selcontact)):
+                for co in Contact.objects.filter(id=int(selcontact)):
                     if filtertext == '':
                         filtertext = 'Filter nach: ' + co.firstname + ' ' + co.lastname
                     else:
@@ -461,15 +516,17 @@ def get_notes(request):
         # first call
         notes = Note.objects.all()
 
-    form = FilterNoteForm ()
+    form = FilterNoteForm()
     # Contact list for use in javascript for the dynamic list
-    mylist = Contact.objects.all ()
+    mylist = Contact.objects.all()
     return render(request, 'list_note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist, 'page_filtertext':filtertext})
 
 
-# create a new note or edit a note
-def details_note(request, pk=None):
-    if pk == None:
+def detail_note(request, pk=None):
+    """
+    Creates/edits a note.
+    """
+    if pk is None:
         note = Note()
         page_title = "Notiz anlegen"
     else:
@@ -495,7 +552,7 @@ def details_note(request, pk=None):
 
     else:
 
-        if pk == None:
+        if pk is None:
             # form first call - to insert a new note
             form = NoteForm(instance=note)
         else:
@@ -508,9 +565,11 @@ def details_note(request, pk=None):
     return render(request, 'detail_note.html', {'page_title': page_title, 'forms': [form], 'mylist': mylist})
 
 
-# delete a note
 def delete_note(request, pk=None):
-    if pk == None:
+    """
+    Deletes a note.
+    """
+    if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         note = get_object_or_404(Note, id=pk)
@@ -520,6 +579,9 @@ def delete_note(request, pk=None):
 
 
 def export_notes(request):
+    """
+    Exports the list of notes to an Excel document
+    """
     dataset = NoteResource().export()
     filename = 'notes.xls'
 
@@ -535,18 +597,24 @@ def export_notes(request):
 # Calendar - View
 # ======================================================== #
 def named_day(day_number):
-    # show the name of the day
+    """
+    Returns the name of the day
+    """
     return datetime(1900, 1, day_number).strftime("%A")
 
 
 def named_month(month_number):
-    # show the name of the month
+    """
+    Returns the name of the month
+    """
     return datetime(1900, month_number, 1).strftime("%B")
 
 
 def get_calendar(request, year=None, month=None):
-
-    if year!=None and month!=None:
+    """
+    Renders the calendar
+    """
+    if year is not None and month is not None:
         act_year = int(year)
         act_month = int(month)
     else:
@@ -592,14 +660,16 @@ def get_calendar(request, year=None, month=None):
                    })
 
 
-# create a new event
-def details_calendar(request, pk=None, year=None, month=None, day=None):
+def detail_event(request, pk=None, year=None, month=None, day=None):
+    """
+    Creates/edits an event
+    """
     act_year = int(year)
     act_month = int(month)
     act_day = int(day)
 
     act_date = datetime(act_year, act_month, act_day).__format__('%d.%m.%Y')
-    if pk == None:
+    if pk is None:
         events = Event()
         page_title = "Neuen Termin anlegen"
     else:
@@ -629,8 +699,10 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
 
 # delete an event in calendar View
 def delete_event(request, pk=None):
-
-    if pk == None:
+    """
+    Deletes an event
+    """
+    if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         delevent = get_object_or_404(Event, id=pk)
@@ -639,21 +711,23 @@ def delete_event(request, pk=None):
     return HttpResponseRedirect(reverse('calendar'))
 
 
-# create  edit an event
-def details_with_Members_calendar(request, pk=None, year=None, month=None, day=None):
-    if pk == None:
+def detail_event_members(request, pk=None, year=None, month=None, day=None):
+    """
+    Assign event members to a member
+    """
+    if pk is None:
         # error back to calendar
-        return HttpResponseRedirect (reverse ('calendar'))
+        return HttpResponseRedirect(reverse('calendar'))
     act_year = int(year)
     act_month = int(month)
     act_day = int(day)
 
     act_date = datetime(act_year, act_month, act_day).__format__('%d.%m.%Y')
 
-    events = get_object_or_404 (Event, id=pk)
+    events = get_object_or_404(Event, id=pk)
 
     if request.method == 'POST':
-        if request.POST.get ('submit') == 'addEvent':
+        if request.POST.get('submit') == 'addEvent':
             # form sent off
             form = EventForm(request.POST, instance=events)
 
@@ -661,101 +735,106 @@ def details_with_Members_calendar(request, pk=None, year=None, month=None, day=N
             if form.is_valid():
                 form.save()
                 messages.success(request, u'Daten erfolgreich geändert')
-                #return HttpResponseRedirect(reverse('calendar'))
+                # return HttpResponseRedirect(reverse('calendar'))
 
             else:
                 # error message
                 messages.error(request, u'Daten konnten nicht gespeichert werden')
                 pass
-        elif request.POST.get ('submit') == 'addInt':
-            selemployee = request.POST.get ('selemployee')
-            if pk==None:
+        elif request.POST.get('submit') == 'addInt':
+            selemployee = request.POST.get('selemployee')
+            if pk is None:
                 # error message
-                messages.error (request, u'Event muss gespeichert werden')
+                messages.error(request, u'Event muss gespeichert werden')
                 pass
-            elif selemployee=='':
+            elif selemployee == '':
                 # error message
-                messages.error (request, u'Mitarbeiter muss ausgewählt werden')
+                messages.error(request, u'Mitarbeiter muss ausgewählt werden')
                 pass
             else:
-                if request.POST.get ('leader')=='on':
+                if request.POST.get('leader') == 'on':
                     leader = True
                 else:
-                    leader=False
-                memberint=MemberInt(employee_id=int(selemployee),leader= leader,event_id=pk)
+                    leader = False
+                memberint = MemberInt(employee_id=int(selemployee), leader=leader, event_id=pk)
                 memberint.save()
-
-
-        elif request.POST.get ('submit') == 'addExt':
-            selcontact = request.POST.get ('selcontact')
-            if pk==None:
+        elif request.POST.get('submit') == 'addExt':
+            selcontact = request.POST.get('selcontact')
+            if pk is None:
                 # error message
-                messages.error (request, u'Event muss gespeichert werden')
+                messages.error(request, u'Event muss gespeichert werden')
                 pass
-            elif selcontact=='':
+            elif selcontact == '':
                 # error message
-                messages.error (request, u'Ansprechpartner muss ausgewählt werden')
+                messages.error(request, u'Ansprechpartner muss ausgewählt werden')
                 pass
             else:
-                memberext=MemberExt(contact_id=int(selcontact),event_id=pk)
+                memberext = MemberExt(contact_id=int(selcontact), event_id=pk)
                 memberext.save()
 
     page_title = "Termin ändern"
-    form = EventForm (instance=events, initial={'date': act_date})
+    form = EventForm(instance=events, initial={'date': act_date})
     memberints = MemberInt.objects.all().filter(event_id=pk)
     memberexts = MemberExt.objects.all().filter(event_id=pk)
-    formInt = EventAddMembersInt()
-    formExt = EventAddMembersExt()
+    form_int = EventAddMembersInt()
+    form_ext = EventAddMembersExt()
     return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
-                                               'memberints': memberints,
-                                               'memberexts': memberexts,
-                                               'formsL': formInt, 'formsR': formExt})
+                                                 'memberints': memberints,
+                                                 'memberexts': memberexts,
+                                                 'formsL': form_int, 'formsR': form_ext})
 
-def delete_MemberInt(request, pk=None):
-    if pk == None:
-        return HttpResponseRedirect (reverse ('calendar'))
 
-    memberInt = get_object_or_404(MemberInt, id=pk)
-    eventId=memberInt.event_id
-    memberInt.delete()
+def delete_event_member_internal(request, pk=None):
+    """
+    Remove internal members (employees) from an event
+    """
+    if pk is None:
+        return HttpResponseRedirect(reverse('calendar'))
+
+    member_int = get_object_or_404(MemberInt, id=pk)
+    event_id = member_int.event_id
+    member_int.delete()
     # use for select act_date
-    event = Event.objects.all ().filter (id=eventId)
-    act_date = event[0].date.strftime ('%d.%m.%Y')
+    event = Event.objects.all().filter(id=event_id)
+    act_date = event[0].date.strftime('%d.%m.%Y')
     # use for from
-    events = get_object_or_404 (Event, id=eventId)
+    events = get_object_or_404(Event, id=event_id)
 
     page_title = "Termin ändern"
-    form = EventForm (instance=events, initial={'date': act_date})
+    form = EventForm(instance=events, initial={'date': act_date})
     memberints = MemberInt.objects.all().filter(event_id=pk)
     memberexts = MemberExt.objects.all().filter(event_id=pk)
-    formInt = EventAddMembersInt()
-    formExt = EventAddMembersExt()
+    form_int = EventAddMembersInt()
+    form_ext = EventAddMembersExt()
     return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
-                                               'memberints': memberints,
-                                               'memberexts': memberexts,
-                                               'formsL': formInt, 'formsR': formExt})
+                                                 'memberints': memberints,
+                                                 'memberexts': memberexts,
+                                                 'formsL': form_int, 'formsR': form_ext})
 
 
-def delete_MemberExt(request, pk=None):
-    if pk == None:
-        return HttpResponseRedirect (reverse ('calendar'))
+def delete_event_member_external(request, pk=None):
+    """
+    Remove external members (contacts of cusomters) from an event
+    """
+    if pk is None:
+        return HttpResponseRedirect(reverse('calendar'))
 
-    memberExt = get_object_or_404 (MemberExt, id=pk)
-    eventId = memberExt.event_id
-    memberExt.delete()
-    #use for select act_date
-    event= Event.objects.all().filter(id=eventId)
-    act_date = event[0].date.strftime ('%d.%m.%Y')
+    member_ext = get_object_or_404(MemberExt, id=pk)
+    event_id = member_ext.event_id
+    member_ext.delete()
+    # use for select act_date
+    event = Event.objects.all().filter(id=event_id)
+    act_date = event[0].date.strftime('%d.%m.%Y')
     # use for from
-    events = get_object_or_404 (Event, id=eventId)
+    events = get_object_or_404(Event, id=event_id)
 
     page_title = "Termin ändern"
-    form = EventForm (instance=events, initial={'date': act_date})
+    form = EventForm(instance=events, initial={'date': act_date})
     memberints = MemberInt.objects.all().filter(event_id=pk)
     memberexts = MemberExt.objects.all().filter(event_id=pk)
-    formInt = EventAddMembersInt ()
-    formExt = EventAddMembersExt ()
-    return render (request, 'detail_event.html', {'page_title': page_title, 'forms': form,
-                                                'memberints': memberints,
-                                                'memberexts': memberexts,
-                                                'formsL': formInt, 'formsR': formExt})
+    form_int = EventAddMembersInt()
+    form_ext = EventAddMembersExt()
+    return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
+                                                 'memberints': memberints,
+                                                 'memberexts': memberexts,
+                                                 'formsL': form_int, 'formsR': form_ext})
