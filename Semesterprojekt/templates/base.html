@@ -24,14 +24,14 @@
     <body>
         <div class="container-fluid">
             {% block top_navigation %}
-                {% include "top_navigation.html" %}
+                {% include "navigation_top.html" %}
             {% endblock %}
 
             <div class="row row-offcanvas row-offcanvas-left row-eq-height">
                 {% if user.is_authenticated %}
                     <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
                         {% block navigation %}
-                            {% include "navigation.html" %}
+                            {% include "navigation_sidebar.html" %}
                         {% endblock %}
                     </div>
                 {% endif %}

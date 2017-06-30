@@ -30,7 +30,7 @@ def homesite(request):
     except ObjectDoesNotExist:
         my_events = []
 
-    return render(request, 'index.html', {'page_title': 'Startseite',
+    return render(request, 'dashboard.html', {'page_title': 'Startseite',
                                           'employee_name': employee_name,
                                           'my_notes': my_notes,
                                           'my_events': my_events})
@@ -43,7 +43,7 @@ def homesite(request):
 @user_passes_test(lambda u: u.is_superuser)
 def get_employee(request):
     employees = Employee.objects.all()
-    return render(request, 'employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
+    return render(request, 'list_employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
 
 
 # create a new employee or edit a employee
@@ -99,7 +99,7 @@ def details_employee(request, pk=None, is_profile=False):
         else:
             user_form = UserCreationForm(instance=user)
 
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [user_form, employee_form]})
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [user_form, employee_form]})
 
 
 def export_employees(request):
@@ -143,7 +143,7 @@ def set_password(request, pk):
             messages.error(request, 'Fehler')
     else:
         form = SetPasswordForm(user)
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
 def change_password(request):
@@ -160,7 +160,7 @@ def change_password(request):
             messages.error(request, 'Fehler')
     else:
         form = PasswordChangeForm(user=user)
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
 # only the superuser is allowed for this view
@@ -187,7 +187,7 @@ def toggle_employee_active(request, pk=None):
 # ======================================================== #
 def get_customer(request):
     customers = Customer.objects.all
-    return render(request, 'customer.html', {'page_title': 'Kunden', 'customers': customers})
+    return render(request, 'list_customer.html', {'page_title': 'Kunden', 'customers': customers})
 
 
 # create a new customer or edit a customer
@@ -215,7 +215,7 @@ def details_customer(request, pk=None):
     else:
         # form first call
         form = CustomerForm(instance=customer)
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
 # delete a customer
@@ -280,8 +280,8 @@ def get_contact(request, fk=None):
         customername = " - " + c.company
     page_title = "Ansprechpartner" + customername
 
-    # paraameter selcted customer for the contact.html using by call view new contact
-    return render(request, 'contact.html', {'page_title': page_title, 'contacts': contacts, 'selected_customer_id': fk})
+    # paraameter selcted customer for the list_contact.html using by call view new contact
+    return render(request, 'list_contact.html', {'page_title': page_title, 'contacts': contacts, 'selected_customer_id': fk})
 
 
 # create a new contact or edit a contact
@@ -326,7 +326,7 @@ def details_contact(request, pk=None, fk=None):
         # form first call
         # parameter of the form selcted customer (fk) per initial
         form = ContactForm(instance=contact,  initial={'customer': fk})
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
 # delete a contact
@@ -464,7 +464,7 @@ def get_notes(request):
     form = FilterNoteForm ()
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all ()
-    return render(request, 'note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist,'page_filtertext':filtertext})
+    return render(request, 'list_note.html', {'page_title': 'Notizen', 'notes': notes, 'forms': [form], 'mylist': mylist, 'page_filtertext':filtertext})
 
 
 # create a new note or edit a note
@@ -505,7 +505,7 @@ def details_note(request, pk=None):
 
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
-    return render(request, 'noteinput.html', {'page_title': page_title, 'forms': [form], 'mylist': mylist})
+    return render(request, 'detail_note.html', {'page_title': page_title, 'forms': [form], 'mylist': mylist})
 
 
 # delete a note
@@ -624,7 +624,7 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
     else:
         # form first call
         form = EventForm(instance=events, initial={'date': act_date})
-    return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
 # delete an event in calendar View
@@ -706,7 +706,7 @@ def details_with_Members_calendar(request, pk=None, year=None, month=None, day=N
     memberexts = MemberExt.objects.all().filter(event_id=pk)
     formInt = EventAddMembersInt()
     formExt = EventAddMembersExt()
-    return render(request, 'eventinput.html', {'page_title': page_title, 'forms': form,
+    return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
                                                'memberints': memberints,
                                                'memberexts': memberexts,
                                                'formsL': formInt, 'formsR': formExt})
@@ -730,7 +730,7 @@ def delete_MemberInt(request, pk=None):
     memberexts = MemberExt.objects.all().filter(event_id=pk)
     formInt = EventAddMembersInt()
     formExt = EventAddMembersExt()
-    return render(request, 'eventinput.html', {'page_title': page_title, 'forms': form,
+    return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
                                                'memberints': memberints,
                                                'memberexts': memberexts,
                                                'formsL': formInt, 'formsR': formExt})
@@ -755,7 +755,7 @@ def delete_MemberExt(request, pk=None):
     memberexts = MemberExt.objects.all().filter(event_id=pk)
     formInt = EventAddMembersInt ()
     formExt = EventAddMembersExt ()
-    return render (request, 'eventinput.html', {'page_title': page_title, 'forms': form,
+    return render (request, 'detail_event.html', {'page_title': page_title, 'forms': form,
                                                 'memberints': memberints,
                                                 'memberexts': memberexts,
                                                 'formsL': formInt, 'formsR': formExt})
