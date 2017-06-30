@@ -110,7 +110,7 @@ class NoteForm(ModelForm):
             'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
-        widgets = {'date': DateTimeInput(attrs={'id': 'datetimepicker'}),
+        widgets = {'date': DateTimeInput(attrs={'class': 'datetimepicker'}),
                    'notetext':Textarea()}
 
     def __init__(self,  *args, **kwargs):
@@ -155,8 +155,8 @@ class EventForm(ModelForm):
             'title': 'Beschreibung',
             'location': 'Ort'
         }
-        widgets = {'starttime': TimeInput(attrs={'class': 'datetimepicker'}),
-                   'endtime': TimeInput(attrs={'class': 'datetimepicker'})}
+        widgets = {'starttime': TimeInput(attrs={'class': 'timepicker'}),
+                   'endtime': TimeInput(attrs={'class': 'timepicker'})}
 
 # Form with fields to add a intern member to an event
 class EventAddMembersInt(Form):
