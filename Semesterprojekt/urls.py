@@ -45,6 +45,7 @@ urlpatterns = (
     url(r'^kalender/(?P<year>[0-9]+)/(?P<month>[0-9]+)/?$', MyA.views.get_calendar, name='terminkalender'),
     url(r'^kalender/neuerTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$', MyA.views.details_calendar, name='neuerTermin'),
     url(r'^kalender/editTermin/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/?$', MyA.views.details_with_Members_calendar, name='editTermin'),
+    url(r'^kalender/deleteTermin/(?P<pk>[0-9]+)/?$', MyA.views.delete_event, name='deleteTermin'),
     url(r'^kalender/deleteMemInt/(?P<pk>[0-9]+)/?$', MyA.views.delete_MemberInt, name='deleteMemberInt'),
     url(r'^kalender/deleteMemExt/(?P<pk>[0-9]+)/?$', MyA.views.delete_MemberExt, name='deleteMemberExt'),
 

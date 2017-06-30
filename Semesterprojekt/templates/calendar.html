@@ -69,6 +69,7 @@
                                                 <a href="{% url 'editTermin' year=year month=month day=x pk=event.id %}">
                                                     {{ event.title|truncatechars:10 }} <br> {{ event.starttime }} {% bootstrap_icon 'edit' %}
                                                 </a>
+                                                <a href="{% url 'deleteTermin' pk=event.id %}"> {% bootstrap_icon 'trash' %} </a>
                                             </ul>
                                             <!-- close second if -->
                                         {% endif %}

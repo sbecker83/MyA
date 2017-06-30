@@ -141,9 +141,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-
-
-
 # auth redirects
 LOGIN_REDIRECT_URL = 'startseite'
 LOGOUT_REDIRECT_URL = 'startseite'

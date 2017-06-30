@@ -639,7 +639,20 @@ def details_calendar(request, pk=None, year=None, month=None, day=None):
         form = EventForm(instance=events, initial={'date': act_date})
     return render(request, 'details.html', {'page_title': page_title, 'forms': [form]})
 
-# create  edit a event
+
+# delete an event in calendar View
+def delete_event(request, pk=None):
+
+    if pk == None:
+        messages.error(request, u'Daten konnten nicht gelöscht werden')
+    else:
+        delevent = get_object_or_404(Event, id=pk)
+        delevent.delete()
+
+    return HttpResponseRedirect(reverse('terminkalender'))
+
+
+# create  edit an event
 def details_with_Members_calendar(request, pk=None, year=None, month=None, day=None):
     if pk == None:
         # error back to calendar
