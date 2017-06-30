@@ -751,8 +751,12 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
                     leader = True
                 else:
                     leader = False
-                memberint = MemberInt(employee_id=int(selemployee), leader=leader, event_id=pk)
-                memberint.save()
+                    # Add employee only once to the event
+                    try:
+                        m = MemberInt.objects.get (employee_id=int (selemployee), event_id=pk)
+                    except MemberInt.DoesNotExist:
+                        m = MemberInt (employee_id=int (selemployee), event_id=pk, leader=leader)
+                        m.save ()
         elif request.POST.get('submit') == 'addExt':
             selcontact = request.POST.get('selcontact')
             if pk is None:
@@ -764,8 +768,7 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
                 messages.error(request, u'Ansprechpartner muss ausgewählt werden')
                 pass
             else:
-                memberext = MemberExt(contact_id=int(selcontact), event_id=pk)
-                memberext.save()
+                MemberExt.objects.get_or_create (contact_id=int (selcontact), event_id=pk)
 
     page_title = "Termin ändern"
     form = EventForm(instance=events, initial={'date': act_date})
@@ -790,22 +793,11 @@ def delete_event_member_internal(request, pk=None):
     event_id = member_int.event_id
     member_int.delete()
     # use for select act_date
-    event = Event.objects.all().filter(id=event_id)
-    act_date = event[0].date.strftime('%d.%m.%Y')
-    # use for form
-    events = get_object_or_404(Event, id=event_id)
-
-    page_title = "Termin ändern"
-    form = EventForm(instance=events, initial={'date': act_date})
-    memberints = MemberInt.objects.all().filter(event_id=pk)
-    memberexts = MemberExt.objects.all().filter(event_id=pk)
-    form_int = EventAddMembersInt()
-    form_ext = EventAddMembersExt()
-    return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
-                                                 'memberints': memberints,
-                                                 'memberexts': memberexts,
-                                                 'formsL': form_int, 'formsR': form_ext})
-
+    event = Event.objects.get(id=event_id)
+    act_year = event.date.year
+    act_month= event.date.month
+    act_day = event.date.day
+    return HttpResponseRedirect (reverse ('edit_event', args=[act_year,act_month,act_day,event_id]))
 
 def delete_event_member_external(request, pk=None):
     """
@@ -818,18 +810,8 @@ def delete_event_member_external(request, pk=None):
     event_id = member_ext.event_id
     member_ext.delete()
     # use for select act_date
-    event = Event.objects.all().filter(id=event_id)
-    act_date = event[0].date.strftime('%d.%m.%Y')
-    # use for from
-    events = get_object_or_404(Event, id=event_id)
-
-    page_title = "Termin ändern"
-    form = EventForm(instance=events, initial={'date': act_date})
-    memberints = MemberInt.objects.all().filter(event_id=pk)
-    memberexts = MemberExt.objects.all().filter(event_id=pk)
-    form_int = EventAddMembersInt()
-    form_ext = EventAddMembersExt()
-    return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
-                                                 'memberints': memberints,
-                                                 'memberexts': memberexts,
-                                                 'formsL': form_int, 'formsR': form_ext})
+    event = Event.objects.get (id=event_id)
+    act_year = event.date.year
+    act_month = event.date.month
+    act_day = event.date.day
+    return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event_id]))
