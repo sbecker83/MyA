@@ -17,15 +17,19 @@
             </thead>
             <tbody>
                 {% for customer in customers %}
-                    <tr {% if customer.status == 1 %}class="text-muted"{% endif %}>
+                    <tr {% if not customer.is_active %}class="text-muted"{% endif %}>
                         <td>{{ customer.company }}</td>
                         <td>{{ customer.plzcity }}, {{ customer.street }}</td>
                         <td>{{ customer.phone }}/{{ customer.fax }}</td>
                         <td>{{ customer.website }}</td>
                         <td>
                             <a href="{% url 'edit_customer' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a>
-                            <a href="{% url 'delete_customer' pk=customer.id status=customer.status %}">{% bootstrap_icon 'lock' %}</a>
-                            <a href="{% url 'delete_customer' pk=customer.id status=2 %}">{% bootstrap_icon 'trash' %}</a>
+                            {% if customer.is_active %}
+                            <a href="{% url 'delete_customer' pk=customer.id is_delete=0 %}" title="Deaktivieren">{% bootstrap_icon 'remove' %}</a>
+                            {% else %}
+                            <a href="{% url 'delete_customer' pk=customer.id is_delete=0 %}" title="Aktivieren">{% bootstrap_icon 'ok' %}</a>
+                            {% endif %}
+                            <a href="{% url 'delete_customer' pk=customer.id is_delete=1 %}">{% bootstrap_icon 'trash' %}</a>
                         </td>
                         <td>
                             <a href="{% url 'list_contacts' fk=customer.id %}">{% bootstrap_icon 'list' %}</a>

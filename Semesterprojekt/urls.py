@@ -56,14 +56,14 @@ urlpatterns = (
     url(r'^customer/$', MyA.views.list_customers, name='list_customers'),
     url(r'^customer/new/$', MyA.views.detail_customer, name='new_customer'),
     url(r'^customer/edit/(?P<pk>[0-9]+)/?$', MyA.views.detail_customer, name='edit_customer'),
-    url(r'^customer/delete/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.delete_customer, name='delete_customer'),
+    url(r'^customer/delete/(?P<pk>[0-9]+)/(?P<is_delete>[0-1])/?$', MyA.views.delete_customer, name='delete_customer'),
     url(r'^customer/export$', MyA.views.export_customers, name='export_customers'),
 
     # contact - overview, new, edit, delete, export
     url(r'^contact/(?P<fk>[0-9]+)/?$', MyA.views.list_contacts, name='list_contacts'),
-    url(r'^contact/neuerAP/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='new_contact'),
-    url(r'^contact/editAP/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='edit_contact'),
-    url(r'^contact/deleteAP/(?P<status>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='delete_contact'),
+    url(r'^contact/neuer/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='new_contact'),
+    url(r'^contact/edit/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='edit_contact'),
+    url(r'^contact/delete/(?P<is_delete>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='delete_contact'),
     url(r'^contact/export$', MyA.views.export_contacts, name='export_contacts'),
 
     # note - overview, new, edit, delete, export
