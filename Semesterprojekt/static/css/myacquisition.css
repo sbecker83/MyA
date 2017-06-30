@@ -176,6 +176,10 @@ table .glyphicon {
     content:"*";
 }
 
+#calendar td {
+    width: 14.28%;
+}
+
 
 /*****************
  * Media Queries *

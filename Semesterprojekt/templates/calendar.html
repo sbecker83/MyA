@@ -8,25 +8,16 @@
     <div class="content">
 
         <h2 style="text-align: center;">
-            <a href="{% url 'terminkalender' year=year_before_this month=month %}"> {% bootstrap_icon 'chevron-left' %} </a>
+            <a href="{% url 'calendar' year=year_before_this month=month %}"> {% bootstrap_icon 'chevron-left' %} </a>
             {{ year }}
-            <a href="{% url 'terminkalender' year=year_after_this month=month %}"> {% bootstrap_icon 'chevron-right' %} </a>
+            <a href="{% url 'calendar' year=year_after_this month=month %}"> {% bootstrap_icon 'chevron-right' %} </a>
         </h2>
 
         <hr>
-        <table class="table table-bordered table-striped">
-            <colgroup>
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-            </colgroup>
+        <table id="calendar" class="table table-bordered table-striped">
             <tr>
                 <td>
-                    <a href="{% url 'terminkalender' year=previous_year month=previous_month %}"> {% bootstrap_icon 'chevron-left' %} {{ previous_month_name }} </a>
+                    <a href="{% url 'calendar' year=previous_year month=previous_month %}"> {% bootstrap_icon 'chevron-left' %} {{ previous_month_name }} </a>
                 </td>
                 <td></td>
                 <td></td>
@@ -34,7 +25,7 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <a href="{% url 'terminkalender' year=next_year month=next_month %}">{{ next_month_name }} {% bootstrap_icon 'chevron-right' %} </a>
+                    <a href="{% url 'calendar' year=next_year month=next_month %}">{{ next_month_name }} {% bootstrap_icon 'chevron-right' %} </a>
                 </td>
             </tr>
             <tr>
@@ -59,17 +50,17 @@
                             {% else %}
                                 <td>
                                     {{ x }}
-                                    <a href="{% url 'neuerTermin' year=year month=month day=x %}">{% bootstrap_icon 'plus' %}</a>
+                                    <a href="{% url 'new_event' year=year month=month day=x %}">{% bootstrap_icon 'plus' %}</a>
 
                                     <!-- beginn third for-iteration: list of all events -->
                                     {% for event in all_events %}
                                         <!-- second if order: request of event from date each column -->
                                         {% if event.date.day == x and event.date.month == month and event.date.year == year %}
                                             <ul>
-                                                <a href="{% url 'editTermin' year=year month=month day=x pk=event.id %}">
-                                                    {{ event.title|truncatechars:10 }} <br> {{ event.starttime }} {% bootstrap_icon 'edit' %}
+                                                <a href="{% url 'edit_event' year=year month=month day=x pk=event.id %}">
+                                                    {{ event.title|truncatechars:10 }} <br> {{ event.starttime }}
                                                 </a>
-                                                <a href="{% url 'deleteTermin' pk=event.id %}"> {% bootstrap_icon 'trash' %} </a>
+                                                <a href="{% url 'delete_event' pk=event.id %}"> {% bootstrap_icon 'trash' %} </a>
                                             </ul>
                                             <!-- close second if -->
                                         {% endif %}

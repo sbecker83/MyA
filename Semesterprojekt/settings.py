@@ -142,5 +142,5 @@ STATICFILES_DIRS = (
 )
 
 # auth redirects
-LOGIN_REDIRECT_URL = 'startseite'
-LOGOUT_REDIRECT_URL = 'startseite'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'dashboard'

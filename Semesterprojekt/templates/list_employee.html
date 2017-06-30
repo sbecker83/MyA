@@ -26,12 +26,12 @@
                     <td>{{ employee.title }}</td>
                     <td>{{ employee.position }}</td>
                     <td >
-                        <a href="{% url 'editMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
+                        <a href="{% url 'edit_employee' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
                         {% if not employee.user.is_superuser %}
                             {% if employee.user.is_active %}
-                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'remove' %}</a>
+                            <a href="{% url 'toggle_employee_status' pk=employee.id %}" title="Deaktivieren">{% bootstrap_icon 'remove' %}</a>
                             {% else %}
-                            <a href="{% url 'toggleMitarbeiter' pk=employee.id %}">{% bootstrap_icon 'ok' %}</a>
+                            <a href="{% url 'toggle_employee_status' pk=employee.id %}" title="Aktivieren">{% bootstrap_icon 'ok' %}</a>
                             {% endif %}
                         {% endif %}
                     </td>
@@ -41,8 +41,8 @@
         </table>
         <br>
 
-        <a href="{% url 'neuerMitarbeiter'  %}" class="btn btn-primary">Neu Anlegen</a>
-        <a href="{% url 'exportMitarbeiter'  %}" class="btn btn-primary">Excel Export</a>
+        <a href="{% url 'new_employee' %}" class="btn btn-primary">Neu Anlegen</a>
+        <a href="{% url 'export_employees' %}" class="btn btn-primary">Excel Export</a>
 
     </div>
 {% endblock %}

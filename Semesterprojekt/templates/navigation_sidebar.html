@@ -1,0 +1,17 @@
+<!-- File Description: HTML Template for the navigation !-->
+{% load mya_tags %}
+{% load bootstrap3 %}
+
+<ul class="nav">
+    <li class="{% active 'dashboard' %}"><a href="{% url 'dashboard' %}">{% bootstrap_icon 'dashboard' %} Dashboard</a></li>
+    <li class="{% active 'list_customers' %}"><a href="{% url 'list_customers' %}">{% bootstrap_icon 'briefcase' %} Kundenliste</a></li>
+    <li class="{% active 'list_notes' %}"><a href="{% url 'list_notes' %}">{% bootstrap_icon 'list-alt' %} Notizen</a></li>
+    <li class="{% active 'calendar' %}"><a href="{% url 'calendar' %}">{% bootstrap_icon 'calendar' %} Terminkalender</a></li>
+</ul>
+
+{% if request.user.is_superuser %}
+    <div class="divider">Admin-Bereich</div>
+    <ul class="nav">
+        <li class="{% active 'list_employees' %}"><a href="{% url 'list_employees' %}">{% bootstrap_icon 'user' %} Mitarbeiter</a></li>
+    </ul>
+{% endif %}

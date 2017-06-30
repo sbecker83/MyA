@@ -67,7 +67,7 @@
                         {% elif memberint.status == 1 %} zugesagt
                         {% elif memberint.status == 2 %} abgesagt
                     {% endif %}</td>
-                    <td><a href="{% url 'deleteMemberInt' pk=memberint.id  %}">{% bootstrap_icon 'trash' %}</a></td>
+                    <td><a href="{% url 'delete_event_member_internal' pk=memberint.id  %}">{% bootstrap_icon 'trash' %}</a></td>
                  </tr>
             {% endfor %}
             {% for memberext in memberexts %}
@@ -80,7 +80,7 @@
                         {% elif memberext.status == 1 %} zugesagt
                         {% elif memberext.status == 2 %} abgesagt
                     {% endif %}</td>
-                    <td><a href="{% url 'deleteMemberExt' pk=memberext.id  %}">{% bootstrap_icon 'trash' %}</a></td>
+                    <td><a href="{% url 'delete_event_member_external' pk=memberext.id  %}">{% bootstrap_icon 'trash' %}</a></td>
                  </tr>
             {% endfor %}
 
