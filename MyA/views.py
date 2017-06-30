@@ -29,16 +29,10 @@ def dashboard(request):
     employee = Employee.objects.get(user=request.user.id)
 
     # get the notes of the current user
-    try:
-        my_notes = Note.objects.filter(employee=employee)
-    except ObjectDoesNotExist:
-        my_notes = []
+    my_notes = Note.objects.filter(employee=employee)
 
     # get the future events of the current user
-    try:
-        my_events = Event.objects.filter(memberint__employee_id=employee.id).exclude(date__lt=datetime.today())
-    except ObjectDoesNotExist:
-        my_events = []
+    my_events = Event.objects.filter(memberint__employee_id=employee.id).exclude(date__lt=datetime.today())
 
     return render(request, 'dashboard.html', {'page_title': 'Dashboard',
                                               'employee_name': employee.get_fullname(),
@@ -121,6 +115,48 @@ def detail_employee(request, pk=None, is_profile=False):
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [user_form, employee_form]})
 
 
+@user_passes_test(lambda u: u.is_superuser)
+def toggle_employee_active(request, pk=None):
+    """
+    Deactivates/activates a user  depending on the current status
+    ADMIN ONLY: This view can only be used by the superuser
+    """
+    if pk is None:
+        messages.error(request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
+    else:
+        employee = get_object_or_404(Employee, id=pk)
+        user = employee.user
+        if user.is_active:
+            user.is_active = False
+            user.save()
+            messages.success(request, u'Mitarbeiter erfolgreich deaktiviert')
+        else:
+            user.is_active = True
+            user.save()
+            messages.success(request, u'Mitarbeiter erfolgreich aktiviert')
+    return HttpResponseRedirect(reverse('list_employees'))
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def set_password(request, pk):
+    """
+    Sets the password for a user WITHOUT entering the old password
+    ADMIN ONLY: This view can only be used by the superuser
+    """
+    user = get_object_or_404(User, id=pk)
+    page_title = "Passwort für User " + user.username + " ändern"
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Das Passwort wurde geändert')
+        else:
+            messages.error(request, 'Fehler')
+    else:
+        form = SetPasswordForm(user)
+    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
+
+
 def export_employees(request):
     """
     Exports the list of employees to an Excel document
@@ -152,31 +188,6 @@ def edit_profile(request):
     return detail_employee(request, pk=employee.id, is_profile=True)
 
 
-# ======================================================== #
-# Superuser - View
-# ======================================================== #
-
-# only the superuser is allowed for this view
-@user_passes_test(lambda u: u.is_superuser)
-def set_password(request, pk):
-    """
-    Sets the password for a user WITHOUT entering the old password
-    ADMIN ONLY: This view can only be used by the superuser
-    """
-    user = get_object_or_404(User, id=pk)
-    page_title = "Passwort für User " + user.username + " ändern"
-    if request.method == 'POST':
-        form = SetPasswordForm(user, request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Das Passwort wurde geändert')
-        else:
-            messages.error(request, 'Fehler')
-    else:
-        form = SetPasswordForm(user)
-    return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
-
-
 def change_password(request):
     """
     Changes the password for a user with entering the old password
@@ -195,28 +206,6 @@ def change_password(request):
     else:
         form = PasswordChangeForm(user=user)
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def toggle_employee_active(request, pk=None):
-    """
-    Deactivates/activates a user  depending on the current status
-    ADMIN ONLY: This view can only be used by the superuser
-    """
-    if pk is None:
-        messages.error(request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
-    else:
-        employee = get_object_or_404(Employee, id=pk)
-        user = employee.user
-        if user.is_active:
-            user.is_active = False
-            user.save()
-            messages.success(request, u'Mitarbeiter erfolgreich deaktiviert')
-        else:
-            user.is_active = True
-            user.save()
-            messages.success(request, u'Mitarbeiter erfolgreich aktiviert')
-    return HttpResponseRedirect(reverse('list_employees'))
 
 
 # ======================================================== #
@@ -260,44 +249,42 @@ def detail_customer(request, pk=None):
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
-def delete_customer(request, pk=None, status=None):
+def delete_customer(request, pk=None, is_delete=None):
     """
     Deletes a customer.
+    If a customer can not be deleted (because contacts exist), it will be deactivated for further use.
     """
     if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
         customer = get_object_or_404(Customer, id=pk)
-        if status == '2':
+        if is_delete == 1:
             # trying to delete the customer
 
-            # check if customer has no contacts
-            nocontact = 0
-            # TODO: Contact.objects.filter(customer__id=pk)
-            for c in Contact.objects.raw('SELECT * FROM mya_contact where customer_id='+pk):
-                nocontact = 1
-            if nocontact == 0:
+            # check if customer has contacts
+            has_contacts = Contact.objects.filter(customer_id=pk).exists()
+            if not has_contacts:
                 customer.delete()
                 messages.success(request, u'Daten erfolgreich gelöscht')
             else:
-                if customer.status == 0:
+                if customer.is_active:
                     # Customer has contact so he can only be disabled
-                    customer.status = 1
-                    Contact.objects.select_related().filter(customer=customer.id).update(status=1)
+                    customer.is_active = False
+                    Contact.objects.select_related().filter(customer=customer.id).update(is_active=False)
                     customer.save()
                     messages.success(request, u'Daten erfolgreich de-/aktiviert')
                 else:
                     messages.error(request, u'Daten konnten nicht gelöscht werden')
         else:
             # active/deactivate the customer and all its contacts
-            if customer.status == 0:
-                customer.status = 1
+            if customer.is_active:
+                customer.is_active = False
                 # update all contacts of the customer as well
-                Contact.objects.select_related().filter(customer=customer.id).update(status=1)
-            elif customer.status == 1:
-                customer.status = 0
+                Contact.objects.select_related().filter(customer=customer.id).update(is_active=False)
+            else:
+                customer.is_active = True
                 # update all contacts of the customer as well
-                Contact.objects.select_related().filter(customer=customer.id).update(status=0)
+                Contact.objects.select_related().filter(customer=customer.id).update(is_active=True)
             customer.save()
             messages.success(request, u'Daten erfolgreich de-/aktiviert')
     return HttpResponseRedirect(reverse('list_customers'))
@@ -331,11 +318,6 @@ def list_contacts(request, fk=None):
     customer = get_object_or_404(Customer, id=fk)
     page_title = "Ansprechpartner - {}".format(customer.company)
 
-    #TODO: mit Rita besprechen
-    #customers = Customer.objects.filter(id=fk)
-    #for c in customers:
-    #    customername = " - " + c.company
-
     return render(request, 'list_contact.html', {'page_title': page_title, 'contacts': contacts,
                                                  'selected_customer_id': fk})
 
@@ -355,7 +337,7 @@ def details_contact(request, pk=None, fk=None):
     else:
         # edit contact
         contact = get_object_or_404(Contact, id=pk)
-        page_title = "Ansprechpartner ändern- {}".format(customer.company)
+        page_title = "Ansprechpartner ändern - {}".format(customer.company)
 
     if request.method == 'POST':
         # form sent off
@@ -384,31 +366,30 @@ def details_contact(request, pk=None, fk=None):
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
-def delete_contact(request, pk=None, fk=None, status=None):
+def delete_contact(request, pk=None, fk=None, is_delete=None):
     """
     Deletes a contact for a customer (fk)
+    If a contact can not be deleted (because notes or events exist with this contact), it will be deactivated for
+    further use.
     """
     if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
-        if status == '2':
+        if is_delete == 1:
             # trying to delete the customer
             contact = get_object_or_404(Contact, id=pk)
             # check if contact has no notes and no events / memberext
-            no_notes_and_events = 0
-            for n in Note.objects.raw('SELECT * FROM mya_note where contact_id=' + pk):
-                no_notes_and_events = 1
-            for e in MemberExt.objects.raw('SELECT * FROM mya_memberext where contact_id=' + pk):
-                no_notes_and_events = 1
-            if no_notes_and_events == 0:
+            has_notes = Note.objects.filter(contact_id=contact.id).exists()
+            has_member_ext = MemberExt.objects.filter(contact_id=contact.id).exists()
+            if not has_notes and not has_member_ext:
                 contact.delete()
                 messages.success(request, u'Daten erfolgreich gelöscht')
             else:
                 # check if customer active
-                customer = Customer.objects.filter(id=contact.customer_id).first()
-                if customer.status == 0 and contact.status == 0:
+                customer = Customer.objects.get(id=contact.customer_id)
+                if customer.is_active and contact.is_active:
                     # contact has relations to a child-table so it can only be disabled
-                    contact.status = 1
+                    contact.is_active = False
                     contact.save()
                     messages.success(request, u'Daten erfolgreich de-/aktiviert')
                 else:
@@ -417,18 +398,21 @@ def delete_contact(request, pk=None, fk=None, status=None):
             # active/deactivate the customer and all its contacts
             contact = get_object_or_404(Contact, id=pk)
             # check if customer active
-            customer = Customer.objects.filter(id=contact.customer_id).first()
-            if customer.status == 0:
-                if contact.status == 0:
-                    contact.status = 1
-                elif contact.status == 1:
-                    contact.status = 0
-                contact.save()
-                messages.success(request, u'Daten erfolgreich de-/aktiviert')
+            customer = get_object_or_404(Customer, id=contact.customer_id)
+
+            if customer.is_active:
+                if contact.is_active:
+                    contact.is_active = False
+                    contact.save()
+                    messages.success(request, u'Kontakt erfolgreich deaktiviert')
+                elif not contact.is_active:
+                    contact.is_active = True
+                    contact.save()
+                    messages.success(request, u'Kontakt erfolgreich aktiviert')
             else:
                 messages.error(request,
                                u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
-    # paramter to filter to the selected customer (fk) per args
+    # parameter to filter to the selected customer (fk) per args
     return HttpResponseRedirect(reverse('list_contacts', args=[fk]))
 
 
@@ -451,6 +435,7 @@ def export_contacts(request):
 # Note - View
 # ======================================================== #
 
+
 def list_notes(request):
     """
     Renders a list with notes. Can be filtered.
@@ -461,67 +446,60 @@ def list_notes(request):
         selcustomer = request.POST.get('selcustomer')
         selcontact = request.POST.get('selcontact')
 
-        if selemployee == '' and selcustomer == '' and selcontact == '':
-            # no filter
-            notes = Note.objects.all()
-        elif selcustomer != '' and selcontact == '':
-            # filter by customer - no contact
-            if selemployee == '':
-                notes = Note.objects.raw('SELECT * FROM mya_note WHERE contact_id IN ' +
-                                         '(SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
-
-            elif selemployee != '':
-                # filter employee and customer
-                notes = Note.objects.raw('SELECT * FROM mya_note WHERE employee_id = ' + selemployee +
-                                         ' AND contact_id IN ' +
-                                         '(SELECT id FROM mya_contact WHERE customer_id=' + selcustomer + ')')
-                # show employee in filtertext
-                for e in Employee.objects.filter(id=int(selemployee)):
-                    if filtertext == '':
-                        filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
-                    else:
-                        filtertext += ', ' + e.firstname + ' ' + e.lastname
-            # show customer in filtertext
-            for c in Customer.objects.filter(id=int(selcustomer)):
-                if filtertext == '':
-                    filtertext = 'Filter nach: ' + c.company
-                else:
-                    filtertext += ', ' + c.company
+        # check if employee filter is set and get the corresponding employee object
+        if selemployee != '':
+            has_employee_filter = True
+            employee = get_object_or_404(Employee, id=selemployee)
         else:
+            has_employee_filter = False
 
-            if selemployee != '' and selcontact != '':
-                # filter employee and contact
-                notes = Note.objects.filter(employee_id=int(selemployee), contact_id=int(selcontact))
-                # show employee in filtertext
-                for e in Employee.objects.filter(id=int(selemployee)):
-                    if filtertext == '':
-                        filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
-                    else:
-                        filtertext += ', ' + e.firstname + ' ' + e.lastname
-                # show contact in filtertext
-                for co in Contact.objects.filter(id=int(selcontact)):
-                    if filtertext == '':
-                        filtertext = 'Filter nach: ' + co.firstname + ' ' + co.lastname
-                    else:
-                        filtertext += ', ' + + co.firstname + ' ' + co.lastname
-            elif selemployee != '' and selcontact == '':
-                # filter employee
-                notes = Note.objects.filter(employee_id=int(selemployee))
-                # show employee in filtertext
-                for e in Employee.objects.filter(id=int(selemployee)):
-                    if filtertext == '':
-                        filtertext = 'Filter nach: ' + e.firstname + ' ' + e.lastname
-                    else:
-                        filtertext += ', ' + e.firstname + ' ' + e.lastname
-            elif selemployee == '' and selcontact != '':
-                # filter contact
-                notes = Note.objects.filter(contact_id=int(selcontact))
-                # show contact in filtertext
-                for co in Contact.objects.filter(id=int(selcontact)):
-                    if filtertext == '':
-                        filtertext = 'Filter nach: ' + co.firstname + ' ' + co.lastname
-                    else:
-                        filtertext += ', ' + + co.firstname + ' ' + co.lastname
+        # check if customer filter is set and get the corresponding customer object
+        if selcustomer != '':
+            has_customer_filter = True
+            customer = get_object_or_404(Customer, id=selcustomer)
+        else:
+            has_customer_filter = False
+
+        # check if contact filter is set and get the corresponding contact object
+        if selcontact != '':
+            has_contact_filter = True
+            contact = get_object_or_404(Contact, id=selcontact)
+        else:
+            has_contact_filter = False
+
+        # no filter selected:
+        if not has_employee_filter and not has_customer_filter and not has_contact_filter:
+            notes = Note.objects.all()
+        else:
+            # at least one filter is set
+            filtertext = "Filter nach: "
+
+            # employee filter:
+            if has_employee_filter and not has_customer_filter and not has_contact_filter:
+                notes = Note.objects.filter(employee_id = selemployee)
+                filtertext += employee.get_fullname()
+
+            # customer filter:
+            elif not has_employee_filter and has_customer_filter and not has_contact_filter:
+                notes = Note.objects.filter(contact__customer_id=selcustomer)
+                filtertext += customer.company
+
+            # contact (or customer and contact combined) filter:
+            elif (not has_employee_filter and not has_customer_filter and has_contact_filter)\
+                    or (not has_employee_filter and has_customer_filter and has_contact_filter):
+                notes = Note.objects.filter(contact_id=selcontact)
+                filtertext += contact.get_fullname()
+
+            # employee and customer filter:
+            elif has_employee_filter and has_customer_filter and not has_contact_filter:
+                notes = Note.objects.filter(contact__customer_id=selcustomer, employee_id=selemployee)
+                filtertext += employee.get_fullname() + ", " + customer.company
+
+            # employee and contact filter:
+            elif has_employee_filter and not has_customer_filter and has_contact_filter:
+                notes = Note.objects.filter(contact_id = selcontact).filter(employee_id = selemployee)
+                filtertext += employee.get_fullname() + ", " + contact.get_fullname()
+
     else:
         # first call
         notes = Note.objects.all()
@@ -814,7 +792,7 @@ def delete_event_member_internal(request, pk=None):
     # use for select act_date
     event = Event.objects.all().filter(id=event_id)
     act_date = event[0].date.strftime('%d.%m.%Y')
-    # use for from
+    # use for form
     events = get_object_or_404(Event, id=event_id)
 
     page_title = "Termin ändern"

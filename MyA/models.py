@@ -26,7 +26,7 @@ class Employee(models.Model):
         ('F', 'Frau'),
         ('M', 'Herr'),
     )
-    gender = models.CharField('salutation', default='N', max_length=1, choices=GENDER)
+    gender = models.CharField('salutation', blank=True, default='N', max_length=1, choices=GENDER)
     title = models.CharField('title', blank=True, max_length=100)
     position = models.CharField('position', max_length=100)
     phone = models.CharField('phone', blank=True, max_length=25)
@@ -35,10 +35,10 @@ class Employee(models.Model):
     email = models.CharField('email', blank=True, max_length=100)
 
     def get_fullname(self):
-        return self.firstname + " " + self.lastname
+        """Returns the fullname in the form: F. Lastname"""
+        return self.firstname[0] + ". " + self.lastname
 
     @receiver(post_save, sender=User)
-    #TODO Parameter **kwarg nicht verwendet => wird der benötigt?
     def create_employee_for_superuser(sender, instance, created, **kwargs):
         """This signal receiver guarantees a creation of an employee object when the superuser is created"""
         if created and instance.is_superuser:
@@ -63,7 +63,7 @@ class Customer(models.Model):
     phone = models.CharField('phone', validators=[phoneRegex], blank=True, max_length=100)
     fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
     website = models.CharField('website', blank=True, max_length=100)
-    status = models.IntegerField('status', default=0)
+    is_active = models.BooleanField('is_active', default=True)
 
     def __str__(self):
         return "{}".format(self.company)
@@ -79,14 +79,18 @@ class Contact(models.Model):
         ('F', 'Frau'),
         ('M', 'Herr'),
     )
-    gender = models.CharField('gender', default='N', max_length=1, choices=GENDER)
+    gender = models.CharField('gender', blank=True, default='N', max_length=1, choices=GENDER)
     title = models.CharField('title', blank=True, max_length=100)
     position = models.CharField('position', max_length=100)
     phone = models.CharField('phone', validators=[phoneRegex], blank=True, max_length=25)
     fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
     mobile = models.CharField('mobile', blank=True, max_length=100)
     email = models.EmailField('email', blank=True, max_length=100)
-    status = models.IntegerField('status', default=0)
+    is_active = models.BooleanField('is_active', default=True)
+
+    def get_fullname(self):
+        """Returns the fullname in the form: F. Lastname"""
+        return self.firstname[0] + ". " + self.lastname
 
     def __str__(self):
         return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)
