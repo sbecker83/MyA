@@ -14,16 +14,7 @@
         </h2>
 
         <hr>
-        <table class="table table-bordered table-striped">
-            <colgroup>
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-                <col width="50">
-            </colgroup>
+        <table id="calendar" class="table table-bordered table-striped">
             <tr>
                 <td>
                     <a href="{% url 'terminkalender' year=previous_year month=previous_month %}"> {% bootstrap_icon 'chevron-left' %} {{ previous_month_name }} </a>
@@ -67,7 +58,7 @@
                                         {% if event.date.day == x and event.date.month == month and event.date.year == year %}
                                             <ul>
                                                 <a href="{% url 'editTermin' year=year month=month day=x pk=event.id %}">
-                                                    {{ event.title|truncatechars:10 }} <br> {{ event.starttime }} {% bootstrap_icon 'edit' %}
+                                                    {{ event.title|truncatechars:10 }} <br> {{ event.starttime }}
                                                 </a>
                                                 <a href="{% url 'deleteTermin' pk=event.id %}"> {% bootstrap_icon 'trash' %} </a>
                                             </ul>
