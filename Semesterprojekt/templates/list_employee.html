@@ -28,7 +28,9 @@
                     <td>{{ employee.title }}</td>
                     <td>{{ employee.position }}</td>
                     <td >
+                        {% if employee.user.is_active %}
                         <a href="{% url 'edit_employee' pk=employee.id %}">{% bootstrap_icon 'edit' %}</a>
+                        {% endif %}
                         {% if not employee.user.is_superuser %}
                             {% if employee.user.is_active %}
                             <a href="{% url 'toggle_employee_status' pk=employee.id %}" title="Deaktivieren">{% bootstrap_icon 'remove' %}</a>

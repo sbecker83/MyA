@@ -25,7 +25,9 @@
                         <td>{{ customer.phone }}/{{ customer.fax }}</td>
                         <td>{{ customer.website }}</td>
                         <td>
+                            {% if customer.is_active %}
                             <a href="{% url 'edit_customer' pk=customer.id %}">{% bootstrap_icon 'edit' %}</a>
+                            {% endif %}
                             {% if customer.is_active %}
                             <a href="{% url 'delete_customer' pk=customer.id is_delete=0 %}" title="Deaktivieren">{% bootstrap_icon 'remove' %}</a>
                             {% else %}
