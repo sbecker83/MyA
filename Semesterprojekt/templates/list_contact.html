@@ -26,7 +26,9 @@
                         <td>{{ contact.mobile }}</td>
                         <td>{{ contact.email }}</td>
                         <td>
+                            {% if contact.is_active %}
                             <a href="{% url 'edit_contact' pk=contact.id  fk=contact.customer.id %}">{% bootstrap_icon 'edit' %}</a>
+                            {% endif %}
                             {% if contact.is_active %}
                             <a href="{% url 'delete_contact' pk=contact.id fk=contact.customer.id is_delete=0 %}" title="Deaktivieren">{% bootstrap_icon 'remove' %}</a>
                             {% else %}
