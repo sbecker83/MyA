@@ -4,8 +4,22 @@ MyA is an portal to manage data of customer, contact, notes, events and employee
 
 <hr>
 
+Dashboard 
 
-<image src="images/calendar.PNG">
+<image src="images/dashboard.PNG" width="300">
+ 
+Notes 
+
+<image src="images/notes.PNG" width="300">
+
+Eventkalender 
+
+<image src="images/calendar.PNG" width="300">
+
+
+
+
+
 
 To install the project download the files or copy the link to your IDE (for example Pycharm)
 
