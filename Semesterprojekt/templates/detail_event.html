@@ -1,7 +1,4 @@
-{# ------------------------------------------------------------  #}
-{# copy from details - specially javascript for selectionsfields #}
-{# ------------------------------------------------------------  #}
-{% extends 'base.html' %}
+{% extends 'detail.html' %}
 {% load bootstrap3 %}
 
 {% block content %}
@@ -10,40 +7,44 @@
 
         <div class="row">
             <div class="col-md-4">
-                 <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+                <div class="content">
+                    <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
-                    {% csrf_token %}
+                        {% csrf_token %}
 
-                    {# all forms given are rendered #}
+                        {# all forms given are rendered #}
 
-                    {% bootstrap_form forms layout='horizontal' %}
+                        {% bootstrap_form forms  %}
 
 
-                    <button type="submit" value="addEvent" name="submit" class="btn btn-primary">Speichern</button>
-                    <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
-
-                </form>
+                        <button type="submit" value="addEvent" name="submit" class="btn btn-primary">Speichern</button>
+                        <button type="cancel" class="btn btn-primary" onclick="window.history.go(-1); return false;">Zurück</button>
+                    </form>
+                </div>
             </div>
             <div class="col-md-4">
-                <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+                <div class="content">
+                    <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
-                    {% csrf_token %}
+                        {% csrf_token %}
 
-                    {% bootstrap_form formsL layout='horizontal' %}
+                        {% bootstrap_form formsL %}
 
-                    <button type="submit" value="addInt" name="submit" class="btn btn-primary">Mitarbeiter hinzufügen</button>
+                        <button type="submit" value="addInt" name="submit" class="btn btn-primary">Mitarbeiter hinzufügen</button>
 
-                </form>
+                    </form>
+                </div>
             </div>
             <div class="col-md-4">
-                 <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
+                <div class="content">
+                    <form action="" enctype="multipart/form-data" method="post" class="form-horizontal">
 
-                    {% csrf_token %}
-                    {% bootstrap_form formsR layout='horizontal' %}
+                        {% csrf_token %}
+                        {% bootstrap_form formsR %}
 
-                    <button type="submit" value="addExt" name="submit" class="btn btn-primary">Ansprechpartner hinzufügen</button>
-
-                </form>
+                        <button type="submit" value="addExt" name="submit" class="btn btn-primary">Ansprechpartner hinzufügen</button>
+                    </form>
+                </div>
             </div>
         </div>
        <br/>
