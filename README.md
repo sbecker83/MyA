@@ -4,10 +4,18 @@ MyA is an portal to manage data of customer, contact, notes, events and employee
 
 <hr>
 
+Login 
+
+<image src="images/calendar.PNG" width="300">
+
 Dashboard 
 
 <image src="images/dashboard.PNG" width="300">
- 
+
+Kundeliste
+
+<image src="images/customer.PNG" width="300">
+
 Notes 
 
 <image src="images/notes.PNG" width="300">
