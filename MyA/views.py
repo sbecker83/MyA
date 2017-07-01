@@ -34,6 +34,11 @@ def dashboard(request):
     # get the future events of the current user
     my_events = Event.objects.filter(memberint__employee_id=employee.id).exclude(date__lt=datetime.today())
 
+    # add a custom field "status" for the events of the current user
+    for my_event in my_events:
+        member_int = MemberInt.objects.get(event=my_event, employee=employee)
+        my_event.status = member_int.status
+
     return render(request, 'dashboard.html', {'page_title': 'Dashboard',
                                               'employee_name': employee.get_fullname(),
                                               'my_notes': my_notes,
