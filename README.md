@@ -2,7 +2,7 @@
 
 MyA is an portal to manage data of customer, contact, notes, events and employees. 
 
-
+<hr>
 
 To install the project download the files or copy the link to your IDE (for example Pycharm)
 
