@@ -101,13 +101,13 @@ def detail_employee(request, pk=None, is_profile=False):
             employee.save()
 
             if is_profile:
-                messages.success(request, u'Profil gespeichert')
+                messages.success(request, u'Profil gespeichert!')
                 return HttpResponseRedirect(reverse('dashboard'))
             else:
-                messages.success(request, u'Mitarbeiter gespeichert')
+                messages.success(request, u'Mitarbeiter gespeichert!')
                 return HttpResponseRedirect(reverse('list_employees'))
         else:
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            messages.error(request, u'Daten konnten nicht gespeichert werden!')
             pass
     else:
         employee_form = EmployeeForm(instance=employee)
@@ -127,18 +127,18 @@ def toggle_employee_active(request, pk=None):
     ADMIN ONLY: This view can only be used by the superuser
     """
     if pk is None:
-        messages.error(request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden')
+        messages.error(request, u'Mitarbeiter konnten nicht aktiviert/deaktiviert werden!')
     else:
         employee = get_object_or_404(Employee, id=pk)
         user = employee.user
         if user.is_active:
             user.is_active = False
             user.save()
-            messages.success(request, u'Mitarbeiter erfolgreich deaktiviert')
+            messages.success(request, u'Mitarbeiter erfolgreich deaktiviert!')
         else:
             user.is_active = True
             user.save()
-            messages.success(request, u'Mitarbeiter erfolgreich aktiviert')
+            messages.success(request, u'Mitarbeiter erfolgreich aktiviert!')
     return HttpResponseRedirect(reverse('list_employees'))
 
 
@@ -154,10 +154,10 @@ def set_password(request, pk):
         form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Das Passwort wurde geändert')
+            messages.success(request, 'Das Passwort wurde geändert!')
             return HttpResponseRedirect(reverse('edit_employee',args=[pk]))
         else:
-            messages.error(request, 'Fehler')
+            messages.error(request, 'Fehler!')
     else:
         form = SetPasswordForm(user)
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
@@ -206,10 +206,10 @@ def change_password(request):
             user = form.save()
             # we need to update the session after a password change
             update_session_auth_hash(request, user)
-            messages.success(request, 'Das Passwort wurde geändert')
+            messages.success(request, 'Das Passwort wurde geändert!')
             return HttpResponseRedirect(reverse('profile'))
         else:
-            messages.error(request, 'Fehler')
+            messages.error(request, 'Fehler!')
     else:
         form = PasswordChangeForm(user=user)
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
@@ -244,7 +244,7 @@ def detail_customer(request, pk=None):
         # validity check
         if form.is_valid():
             form.save()
-            messages.success(request, u'Daten erfolgreich geändert')
+            messages.success(request, u'Daten erfolgreich geändert!')
             return HttpResponseRedirect(reverse('list_customers'))
         else:
             # error message
@@ -380,7 +380,7 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
     further use.
     """
     if pk is None:
-        messages.error(request, u'Daten konnten nicht gelöscht werden')
+        messages.error(request, u'Daten konnten nicht gelöscht werden!')
     else:
         if is_delete == "1":
             # trying to delete the customer
@@ -697,7 +697,7 @@ def detail_event(request, pk=None, year=None, month=None, day=None):
             return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event.id]))
         else:
             # error message
-            messages.error(request, u'Daten konnten nicht gespeichert werden')
+            messages.error(request, u'Daten konnten nicht gespeichert werden!')
             pass
     else:
         # form first call
@@ -711,7 +711,7 @@ def delete_event(request, pk=None):
     Deletes an event
     """
     if pk is None:
-        messages.error(request, u'Daten konnten nicht gelöscht werden')
+        messages.error(request, u'Daten konnten nicht gelöscht werden!')
     else:
         delevent = get_object_or_404(Event, id=pk)
         delevent.delete()
@@ -742,22 +742,22 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
             # Validity check
             if form.is_valid():
                 form.save()
-                messages.success(request, u'Daten erfolgreich geändert')
+                messages.success(request, u'Daten erfolgreich geändert!')
                 # return HttpResponseRedirect(reverse('calendar'))
 
             else:
                 # error message
-                messages.error(request, u'Daten konnten nicht gespeichert werden')
+                messages.error(request, u'Daten konnten nicht gespeichert werden!')
                 pass
         elif request.POST.get('submit') == 'addInt':
             selemployee = request.POST.get('selemployee')
             if pk is None:
                 # error message
-                messages.error(request, u'Event muss gespeichert werden')
+                messages.error(request, u'Event muss gespeichert werden!')
                 pass
             elif selemployee == '':
                 # error message
-                messages.error(request, u'Mitarbeiter muss ausgewählt werden')
+                messages.error(request, u'Mitarbeiter muss ausgewählt werden!')
                 pass
             else:
                 if request.POST.get('leader') == 'on':
@@ -781,11 +781,11 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
             selcontact = request.POST.get('selcontact')
             if pk is None:
                 # error message
-                messages.error(request, u'Event muss gespeichert werden')
+                messages.error(request, u'Event muss gespeichert werden!')
                 pass
             elif selcontact == '':
                 # error message
-                messages.error(request, u'Ansprechpartner muss ausgewählt werden')
+                messages.error(request, u'Ansprechpartner muss ausgewählt werden!')
                 pass
             else:
                 MemberExt.objects.get_or_create(contact_id=int(selcontact), event_id=pk)
