@@ -263,7 +263,7 @@ def delete_customer(request, pk=None, is_delete=None):
         messages.error(request, u'Der Kunde konnte nicht gelöscht werden!')
     else:
         customer = get_object_or_404(Customer, id=pk)
-        if is_delete == 1:
+        if is_delete == "1":
             # trying to delete the customer
 
             # check if customer has contacts
@@ -380,7 +380,7 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
     if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden')
     else:
-        if is_delete == 1:
+        if is_delete == "1":
             # trying to delete the customer
             contact = get_object_or_404(Contact, id=pk)
             # check if contact has no notes and no events / memberext
