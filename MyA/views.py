@@ -526,6 +526,8 @@ def detail_note(request, pk=None):
     """
     Creates/edits a note.
     """
+    # current employee
+    employee = get_object_or_404 (Employee, user=request.user.id)
     if pk is None:
         note = Note()
         page_title = "Notiz anlegen"
@@ -540,6 +542,8 @@ def detail_note(request, pk=None):
         # Validity check
         if form.is_valid():
             form = form.save(commit=False)
+            # set employee with current employee
+            form.employee_id = employee.id
             # set contact from the Select-Contact-Field - value form the request
             form.contact_id = request.POST.get('selcontact')
             form.save()
@@ -554,11 +558,12 @@ def detail_note(request, pk=None):
 
         if pk is None:
             # form first call - to insert a new note
-            form = NoteForm(instance=note)
+            # tranfer current employee
+            form = NoteForm(instance=note, myemployee=employee.id,)
         else:
             # form first call with a pk - to edit a note
             # transfer the customer_id and the contact_id for the unbound selection fields
-            form = NoteForm(instance=note,  mycustomer=note.contact.customer_id, mycontact=note.contact_id)
+            form = NoteForm(instance=note, myemployee=employee.id,  mycustomer=note.contact.customer_id, mycontact=note.contact_id)
 
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
@@ -687,9 +692,9 @@ def detail_event(request, pk=None, year=None, month=None, day=None):
 
         # Validity check
         if form.is_valid():
-            form.save()
+            event=form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect(reverse('calendar'))
+            return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event.id]))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden')
@@ -791,10 +796,12 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
     memberexts = MemberExt.objects.all().filter(event_id=pk)
     form_int = EventAddMembersInt()
     form_ext = EventAddMembersExt()
+    # Contact list for use in javascript for the dynamic list
+    mylist = Contact.objects.all()
     return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
                                                  'memberints': memberints,
                                                  'memberexts': memberexts,
-                                                 'formsL': form_int, 'formsR': form_ext})
+                                                 'formsL': form_int, 'formsR': form_ext,'mylist': mylist})
 
 
 def delete_event_member_internal(request, pk=None):
