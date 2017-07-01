@@ -102,7 +102,7 @@ def detail_employee(request, pk=None, is_profile=False):
 
             if is_profile:
                 messages.success(request, u'Profil gespeichert')
-                return HttpResponseRedirect(reverse('profile'))
+                return HttpResponseRedirect(reverse('dashboard'))
             else:
                 messages.success(request, u'Mitarbeiter gespeichert')
                 return HttpResponseRedirect(reverse('list_employees'))
@@ -155,6 +155,7 @@ def set_password(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Das Passwort wurde geändert')
+            return HttpResponseRedirect(reverse('edit_employee',args=[pk]))
         else:
             messages.error(request, 'Fehler')
     else:
@@ -206,6 +207,7 @@ def change_password(request):
             # we need to update the session after a password change
             update_session_auth_hash(request, user)
             messages.success(request, 'Das Passwort wurde geändert')
+            return HttpResponseRedirect(reverse('profile'))
         else:
             messages.error(request, 'Fehler')
     else:
