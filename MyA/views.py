@@ -755,14 +755,21 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
             else:
                 if request.POST.get('leader') == 'on':
                     leader = True
+                    status = 1
                 else:
                     leader = False
+                    status = 0
+
+                if not MemberInt.objects.filter(event_id=pk, leader=True).exists():
                     # Add employee only once to the event
-                try:
-                    MemberInt.objects.get(employee_id=int(selemployee), event_id=pk)
-                except MemberInt.DoesNotExist:
-                    m = MemberInt(employee_id=int(selemployee), event_id=pk, leader=leader)
-                    m.save()
+                    try:
+                        MemberInt.objects.get(employee_id=int(selemployee), event_id=pk)
+                    except MemberInt.DoesNotExist:
+                        m = MemberInt(employee_id=int(selemployee), event_id=pk, leader=leader, status=status)
+                        m.save()
+                else:
+                    messages.error (request, u'Es kann nur ein Mitarbeiter Leiter sein!')
+                    pass
         elif request.POST.get('submit') == 'addExt':
             selcontact = request.POST.get('selcontact')
             if pk is None:

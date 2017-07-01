@@ -66,9 +66,9 @@
                     <td>{{ memberint.employee.get_fullname }} </td>
                     <td>{{ memberint.employee.position }}</td>
                     <td> intern </td>
-                    <td>{% if memberint.status == 0 %} eingeladen
-                        {% elif memberint.status == 1 %} zugesagt
-                        {% elif memberint.status == 2 %} abgesagt
+                    <td>{% if memberint.status == 0 %} eingeladen <a>{% bootstrap_icon 'ok' %}</a><a> {% bootstrap_icon 'remove' %}</a>
+                        {% elif memberint.status == 1 %} teilnehmen {% bootstrap_icon 'remove' %}
+                        {% elif memberint.status == 2 %} abgesagt {% bootstrap_icon 'ok' %}
                     {% endif %}</td>
                     <td><a href="{% url 'delete_event_member_internal' pk=memberint.id  %}">{% bootstrap_icon 'trash' %}</a></td>
                  </tr>
