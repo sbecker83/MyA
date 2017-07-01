@@ -391,7 +391,7 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
                     # contact has relations to a child-table so it can only be disabled
                     contact.is_active = False
                     contact.save()
-                    messages.success(request, u'Der Ansprechpartner wurde erfolgreich de-/aktiviert!')
+                    messages.success(request, u'Der Ansprechpartner wurde erfolgreich deaktiviert!')
                 else:
                     messages.error(request, u'Der Ansprechpartner konnte nicht gelöscht werden!')
         else:
@@ -404,11 +404,11 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
                 if contact.is_active:
                     contact.is_active = False
                     contact.save()
-                    messages.success(request, u'Kontakt erfolgreich deaktiviert')
+                    messages.success(request, u'Kontakt erfolgreich deaktiviert!')
                 elif not contact.is_active:
                     contact.is_active = True
                     contact.save()
-                    messages.success(request, u'Kontakt erfolgreich aktiviert')
+                    messages.success(request, u'Kontakt erfolgreich aktiviert!')
             else:
                 messages.error(request,
                                u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
@@ -594,8 +594,7 @@ def named_day(day_number):
     """
     Returns the name of the day in german
     """
-    # set name of month in german, only for Windows OS
-    locale.setlocale(locale.LC_ALL, 'deu_deu')
+    locale.setlocale (locale.LC_ALL, 'deu_deu')
     return datetime(1900, 1, day_number).strftime("%A")
 
 
@@ -603,6 +602,8 @@ def named_month(month_number):
     """
     Returns the name of the month
     """
+    # set name of month in german, only for Windows OS
+    locale.setlocale(locale.LC_ALL, 'deu_deu')
     return datetime(1900, month_number, 1).strftime("%B")
 
 
