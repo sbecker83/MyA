@@ -47,6 +47,10 @@ urlpatterns = (
     url(r'^calendar/event/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event, name='delete_event'),
     url(r'^calendar/event/member/internal/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event_member_internal, name='delete_event_member_internal'),
     url(r'^calendar/event/member/external/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event_member_external, name='delete_event_member_external'),
+    url (r'^calendar/event/member/internal/edit/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.edit_event_member_internal,
+         name='edit_event_member_internal'),
+    url (r'^calendar/event/member/external/edit/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.edit_event_member_external,
+         name='edit_event_member_external'),
 
     # login / logout
     url(r'^login/$', auth_views.login, name='login'),

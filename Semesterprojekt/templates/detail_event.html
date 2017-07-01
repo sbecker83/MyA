@@ -66,9 +66,13 @@
                     <td>{{ memberint.employee.get_fullname }} </td>
                     <td>{{ memberint.employee.position }}</td>
                     <td> intern </td>
-                    <td>{% if memberint.status == 0 %} eingeladen <a>{% bootstrap_icon 'ok' %}</a><a> {% bootstrap_icon 'remove' %}</a>
-                        {% elif memberint.status == 1 %} teilnehmen {% bootstrap_icon 'remove' %}
-                        {% elif memberint.status == 2 %} abgesagt {% bootstrap_icon 'ok' %}
+                    <td>{% if memberint.status == 0 %} eingeladen
+                            <a href="{% url 'edit_event_member_internal' pk=memberint.id status=1 %}">{% bootstrap_icon 'ok' %}</a>
+                            <a href="{% url 'edit_event_member_internal' pk=memberint.id status=2 %}"> {% bootstrap_icon 'remove' %}</a>
+                        {% elif memberint.status == 1 %} teilnehmen
+                            <a href="{% url 'edit_event_member_internal' pk=memberint.id status=2 %}"> {% bootstrap_icon 'remove' %}</a>
+                        {% elif memberint.status == 2 %} nicht teilnehmen
+                        <a href="{% url 'edit_event_member_internal' pk=memberint.id status=1%}">{% bootstrap_icon 'ok' %}</a>
                     {% endif %}</td>
                     <td><a href="{% url 'delete_event_member_internal' pk=memberint.id  %}">{% bootstrap_icon 'trash' %}</a></td>
                  </tr>
@@ -80,8 +84,12 @@
                     <td>{{ memberext.contact.position }}</td>
                     <td>{{ memberext.contact.customer.company }}</td>
                     <td>{% if memberext.status == 0 %} eingeladen
-                        {% elif memberext.status == 1 %} zugesagt
-                        {% elif memberext.status == 2 %} abgesagt
+                            <a href="{% url 'edit_event_member_external' pk=memberext.id status=1 %}">{% bootstrap_icon 'ok' %}</a>
+                            <a href="{% url 'edit_event_member_external' pk=memberext.id status=2 %}"> {% bootstrap_icon 'remove' %}</a>
+                        {% elif memberext.status == 1 %} teilnehmen
+                             <a href="{% url 'edit_event_member_external' pk=memberext.id status=2 %}"> {% bootstrap_icon 'remove' %}</a>
+                        {% elif memberext.status == 2 %} nicht teilnehmen
+                            <a href="{% url 'edit_event_member_external' pk=memberext.id status=1 %}">{% bootstrap_icon 'ok' %}</a>
                     {% endif %}</td>
                     <td><a href="{% url 'delete_event_member_external' pk=memberext.id  %}">{% bootstrap_icon 'trash' %}</a></td>
                  </tr>

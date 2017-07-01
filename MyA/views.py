@@ -812,7 +812,6 @@ def delete_event_member_internal(request, pk=None):
     act_day = event.date.day
     return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event_id]))
 
-
 def delete_event_member_external(request, pk=None):
     """
     Remove external members (contacts of cusomters) from an event
@@ -829,3 +828,45 @@ def delete_event_member_external(request, pk=None):
     act_month = event.date.month
     act_day = event.date.day
     return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event_id]))
+
+def edit_event_member_internal(request, pk=None, status=0):
+    """
+    edit the status  to o-invited, 1-participate and 2-canceled
+    """
+    if pk is None:
+        messages.error(request, u'Es wurde kein Teilnehmer ausgewählt!')
+        pass
+
+    member_int = get_object_or_404(MemberInt, id=pk)
+    member_int.status = status
+    event_id = member_int.event_id
+    member_int.save()
+    messages.success(request, u'Teilnahmestatus eingetragen!')
+
+    # use for select act_date
+    event = Event.objects.get (id=event_id)
+    act_year = event.date.year
+    act_month = event.date.month
+    act_day = event.date.day
+    return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event_id]))
+
+def edit_event_member_external(request, pk=None, status=0):
+    """
+    edit the status  to o-invited, 1-participate and 2-canceled
+    """
+    if pk is None:
+        messages.error(request, u'Es wurde kein Teilnehmer ausgewählt!')
+        pass
+
+    member_ext= get_object_or_404(MemberExt, id=pk)
+    member_ext.status = status
+    event_id = member_ext.event_id
+    member_ext.save()
+    messages.success(request, u'Teilnahmestatus eingetragen!')
+
+    # use for select act_date
+    event = Event.objects.get (id=event_id)
+    act_year = event.date.year
+    act_month = event.date.month
+    act_day = event.date.day
+    return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event_id]))
