@@ -140,6 +140,18 @@ class EventForm(ModelForm):
     """
     required_css_class = 'required'
 
+    def clean(self):
+        """
+        A custom validation method to forbid a endtime which is earlier than the starttime.
+        The error will be rendered on the endtime field
+        """
+        cleaned_data = super().clean()
+        starttime = cleaned_data.get("starttime")
+        endtime = cleaned_data.get("endtime")
+        if endtime < starttime:
+            msg = u"Endzeit muss später sein als die Startzeit"
+            self._errors["endtime"] = self.error_class([msg])
+
     class Meta:
         model = Event
         fields = ('date', 'title', 'starttime', 'endtime', 'location')
