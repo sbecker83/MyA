@@ -56,6 +56,7 @@ def list_employees(request):
     ADMIN ONLY: This view can only be used by the superuser
     """
     employees = Employee.objects.all()
+
     return render(request, 'list_employee.html', {'page_title': 'Mitarbeiter', 'employees': employees})
 
 
@@ -95,7 +96,7 @@ def detail_employee(request, pk=None, is_profile=False):
         employee_form = EmployeeForm(request.POST, instance=employee)
         if employee_form.is_valid() and user_form.is_valid():
             user = user_form.save()
-            # we need to set the relationsship between the user and the employee manually
+            # we need to set the relationship between the user and the employee manually
             employee = employee_form.save(commit=False)
             employee.user = user
             employee.save()
@@ -139,6 +140,7 @@ def toggle_employee_active(request, pk=None):
             user.is_active = True
             user.save()
             messages.success(request, u'Mitarbeiter erfolgreich aktiviert!')
+
     return HttpResponseRedirect(reverse('list_employees'))
 
 
@@ -155,11 +157,12 @@ def set_password(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Das Passwort wurde geändert!')
-            return HttpResponseRedirect(reverse('edit_employee',args=[pk]))
+            return HttpResponseRedirect(reverse('edit_employee', args=[pk]))
         else:
             messages.error(request, 'Fehler!')
     else:
         form = SetPasswordForm(user)
+
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
@@ -212,6 +215,7 @@ def change_password(request):
             messages.error(request, 'Fehler!')
     else:
         form = PasswordChangeForm(user=user)
+
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
@@ -224,6 +228,7 @@ def list_customers(request):
     Renders a list with all customers.
     """
     customers = Customer.objects.all
+
     return render(request, 'list_customer.html', {'page_title': 'Kunden', 'customers': customers})
 
 
@@ -253,6 +258,7 @@ def detail_customer(request, pk=None):
     else:
         # form first call
         form = CustomerForm(instance=customer)
+
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
@@ -294,6 +300,7 @@ def delete_customer(request, pk=None, is_delete=None):
                 Contact.objects.select_related().filter(customer=customer.id).update(is_active=True)
             customer.save()
             messages.success(request, u'Der Kunde erfolgreich de-/aktiviert!')
+
     return HttpResponseRedirect(reverse('list_customers'))
 
 
@@ -351,7 +358,7 @@ def details_contact(request, pk=None, fk=None):
         # parameter of the form selected customer (fk) per initial
         form = ContactForm(request.POST, instance=contact, initial={'customer': fk})
 
-        # Validity check
+        # validity check
         if form.is_valid():
             form = form.save(commit=False)
             # set customer-id
@@ -360,7 +367,6 @@ def details_contact(request, pk=None, fk=None):
             messages.success(request, u'Der Ansprechpartner wurde erfolgreich geändert!')
             # parameter to filter to the selected customer (fk) per args
             return HttpResponseRedirect(reverse('list_contacts', args=[fk]))
-
         else:
             # error message
             messages.error(request, u'Der Ansprechpartner konnte nicht gespeichert werden!')
@@ -419,6 +425,7 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
             else:
                 messages.error(request,
                                u'Anspechpartner konnten nicht de-/aktiviert werden, da der Kunde deaktiviert ist! ')
+
     # parameter to filter to the selected customer (fk) per args
     return HttpResponseRedirect(reverse('list_contacts', args=[fk]))
 
@@ -514,6 +521,7 @@ def list_notes(request):
     form = FilterNoteForm()
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
+
     return render(request, 'list_note.html',
                   {'page_title': 'Notizen',
                    'notes': notes,
@@ -527,7 +535,7 @@ def detail_note(request, pk=None):
     Creates/edits a note.
     """
     # current employee
-    employee = get_object_or_404 (Employee, user=request.user.id)
+    employee = get_object_or_404(Employee, user=request.user.id)
     if pk is None:
         note = Note()
         page_title = "Notiz anlegen"
@@ -536,10 +544,9 @@ def detail_note(request, pk=None):
         page_title = "Notiz ändern"
 
     if request.method == 'POST':
-
         # form sent off
         form = NoteForm(request.POST, instance=note)
-        # Validity check
+        # validity check
         if form.is_valid():
             form = form.save(commit=False)
             # set employee with current employee
@@ -553,9 +560,7 @@ def detail_note(request, pk=None):
             # error message
             messages.error(request, u'Die Notiz konnte nicht gespeichert werden!')
             pass
-
     else:
-
         if pk is None:
             # form first call - to insert a new note
             # tranfer current employee
@@ -567,6 +572,7 @@ def detail_note(request, pk=None):
 
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
+
     return render(request, 'detail_note.html', {'page_title': page_title, 'forms': [form], 'mylist': mylist})
 
 
@@ -606,7 +612,7 @@ def named_day(day_number):
     """
     Returns the name of the day in german
     """
-    locale.setlocale (locale.LC_ALL, 'deu_deu')
+    locale.setlocale(locale.LC_ALL, 'deu_deu')
     return datetime(1900, 1, day_number).strftime("%A")
 
 
@@ -681,20 +687,18 @@ def detail_event(request, pk=None, year=None, month=None, day=None):
         events = Event()
         page_title = "Neuen Termin anlegen"
     else:
-
         events = get_object_or_404(Event, id=pk)
         page_title = "Termin ändern"
 
     if request.method == 'POST':
-
         # form sent off
         form = EventForm(request.POST, instance=events)
 
-        # Validity check
+        # validity check
         if form.is_valid():
-            event=form.save()
+            event = form.save()
             messages.success(request, u'Daten erfolgreich geändert')
-            return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event.id]))
+            return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event.id]))
         else:
             # error message
             messages.error(request, u'Daten konnten nicht gespeichert werden!')
@@ -702,6 +706,7 @@ def detail_event(request, pk=None, year=None, month=None, day=None):
     else:
         # form first call
         form = EventForm(instance=events, initial={'date': act_date})
+
     return render(request, 'detail.html', {'page_title': page_title, 'forms': [form]})
 
 
@@ -713,8 +718,8 @@ def delete_event(request, pk=None):
     if pk is None:
         messages.error(request, u'Daten konnten nicht gelöscht werden!')
     else:
-        delevent = get_object_or_404(Event, id=pk)
-        delevent.delete()
+        del_event = get_object_or_404(Event, id=pk)
+        del_event.delete()
 
     return HttpResponseRedirect(reverse('calendar'))
 
@@ -732,19 +737,17 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
 
     act_date = datetime(act_year, act_month, act_day).__format__('%d.%m.%Y')
 
-    events = get_object_or_404(Event, id=pk)
+    event = get_object_or_404(Event, id=pk)
 
     if request.method == 'POST':
         if request.POST.get('submit') == 'addEvent':
             # form sent off
-            form = EventForm(request.POST, instance=events)
+            form = EventForm(request.POST, instance=event)
 
-            # Validity check
+            # validity check
             if form.is_valid():
                 form.save()
                 messages.success(request, u'Daten erfolgreich geändert!')
-                # return HttpResponseRedirect(reverse('calendar'))
-
             else:
                 # error message
                 messages.error(request, u'Daten konnten nicht gespeichert werden!')
@@ -762,20 +765,22 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
             else:
                 if request.POST.get('leader') == 'on':
                     leader = True
+                    # the leader automatically has the event status: accepted
                     status = 1
                 else:
                     leader = False
+                    # the leader automatically has the event status: invited
                     status = 0
 
                 if not MemberInt.objects.filter(event_id=pk, leader=True).exists():
-                    # Add employee only once to the event
+                    # add employee only once to the event
                     try:
                         MemberInt.objects.get(employee_id=int(selemployee), event_id=pk)
                     except MemberInt.DoesNotExist:
-                        m = MemberInt(employee_id=int(selemployee), event_id=pk, leader=leader, status=status)
-                        m.save()
+                        member_int = MemberInt(employee_id=int(selemployee), event_id=pk, leader=leader, status=status)
+                        member_int.save()
                 else:
-                    messages.error (request, u'Es kann nur ein Mitarbeiter Leiter sein!')
+                    messages.error(request, u'Es kann nur ein Mitarbeiter Leiter sein!')
                     pass
         elif request.POST.get('submit') == 'addExt':
             selcontact = request.POST.get('selcontact')
@@ -791,17 +796,17 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
                 MemberExt.objects.get_or_create(contact_id=int(selcontact), event_id=pk)
 
     page_title = "Termin ändern"
-    form = EventForm(instance=events, initial={'date': act_date})
-    memberints = MemberInt.objects.all().filter(event_id=pk)
-    memberexts = MemberExt.objects.all().filter(event_id=pk)
+    form = EventForm(instance=event, initial={'date': act_date})
+    member_ints = MemberInt.objects.all().filter(event_id=pk)
+    member_exts = MemberExt.objects.all().filter(event_id=pk)
     form_int = EventAddMembersInt()
     form_ext = EventAddMembersExt()
     # Contact list for use in javascript for the dynamic list
     mylist = Contact.objects.all()
     return render(request, 'detail_event.html', {'page_title': page_title, 'forms': form,
-                                                 'memberints': memberints,
-                                                 'memberexts': memberexts,
-                                                 'formsL': form_int, 'formsR': form_ext,'mylist': mylist})
+                                                 'memberints': member_ints,
+                                                 'memberexts': member_exts,
+                                                 'formsL': form_int, 'formsR': form_ext, 'mylist': mylist})
 
 
 def delete_event_member_internal(request, pk=None):
@@ -814,6 +819,7 @@ def delete_event_member_internal(request, pk=None):
     member_int = get_object_or_404(MemberInt, id=pk)
     event_id = member_int.event_id
     member_int.delete()
+
     # use for select act_date
     event = Event.objects.get(id=event_id)
     act_year = event.date.year
@@ -821,9 +827,10 @@ def delete_event_member_internal(request, pk=None):
     act_day = event.date.day
     return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event_id]))
 
+
 def delete_event_member_external(request, pk=None):
     """
-    Remove external members (contacts of cusomters) from an event
+    Remove external members (contacts of customers) from an event
     """
     if pk is None:
         return HttpResponseRedirect(reverse('calendar'))
@@ -831,12 +838,14 @@ def delete_event_member_external(request, pk=None):
     member_ext = get_object_or_404(MemberExt, id=pk)
     event_id = member_ext.event_id
     member_ext.delete()
+
     # use for select act_date
     event = Event.objects.get(id=event_id)
     act_year = event.date.year
     act_month = event.date.month
     act_day = event.date.day
     return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event_id]))
+
 
 def edit_event_member_internal(request, pk=None, status=0):
     """
@@ -853,11 +862,12 @@ def edit_event_member_internal(request, pk=None, status=0):
     messages.success(request, u'Teilnahmestatus eingetragen!')
 
     # use for select act_date
-    event = Event.objects.get (id=event_id)
+    event = Event.objects.get(id=event_id)
     act_year = event.date.year
     act_month = event.date.month
     act_day = event.date.day
-    return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event_id]))
+    return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event_id]))
+
 
 def edit_event_member_external(request, pk=None, status=0):
     """
@@ -867,15 +877,15 @@ def edit_event_member_external(request, pk=None, status=0):
         messages.error(request, u'Es wurde kein Teilnehmer ausgewählt!')
         pass
 
-    member_ext= get_object_or_404(MemberExt, id=pk)
+    member_ext = get_object_or_404(MemberExt, id=pk)
     member_ext.status = status
     event_id = member_ext.event_id
     member_ext.save()
     messages.success(request, u'Teilnahmestatus eingetragen!')
 
     # use for select act_date
-    event = Event.objects.get (id=event_id)
+    event = Event.objects.get(id=event_id)
     act_year = event.date.year
     act_month = event.date.month
     act_day = event.date.day
-    return HttpResponseRedirect (reverse ('edit_event', args=[act_year, act_month, act_day, event_id]))
+    return HttpResponseRedirect(reverse('edit_event', args=[act_year, act_month, act_day, event_id]))
