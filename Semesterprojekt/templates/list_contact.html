@@ -18,7 +18,7 @@
             <tbody>
                 {% for contact in contacts %}
                     <tr {% if not contact.is_active %}class="text-muted"{% endif %}>
-                        <td>{{ contact.get_fullname }} {{ contact.lastname }} </td>
+                        <td>{{ contact.get_fullname }} </td>
                         <td>{{ contact.position }}</td>
                         <td>{{ contact.phone }} / {{ contact.fax }}</td>
                         <td>{{ contact.mobile }}</td>

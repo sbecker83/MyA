@@ -21,7 +21,7 @@
                 if ( mycustomer == {{ contact.customer.id }}) {
                     opt = document.createElement("option");
                     opt.value = {{ contact.id }};
-                    opt.text= '{{ contact.firstname }} {{ contact.lastname }}';
+                    opt.text= '{{ contact.get_fullname }}';
                     ddcontact.add(opt);
                 }
 
