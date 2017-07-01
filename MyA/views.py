@@ -279,7 +279,7 @@ def delete_customer(request, pk=None, is_delete=None):
                     customer.is_active = False
                     Contact.objects.select_related().filter(customer=customer.id).update(is_active=False)
                     customer.save()
-                    messages.success(request, u'Der Kunde hat zugeordnete Ansprechpartner, deshalb konnte er nicht gelöscht werden! Der Kunde wurde erfolgreich deaktiviert!')
+                    messages.success(request, u'Der Kunde hat zugeordnete Ansprechpartner, deshalb konnte er nicht gelöscht werden! Der Kunde wurde deaktiviert!')
                 else:
                     messages.error(request, u'Der Kunde konnte nicht gelöscht werden, weil es noch Ansprechpartner gibt!')
         else:
@@ -398,9 +398,9 @@ def delete_contact(request, pk=None, fk=None, is_delete=None):
                     # contact has relations to a child-table so it can only be disabled
                     contact.is_active = False
                     contact.save()
-                    messages.success(request, u'Der Ansprechpartner wurde erfolgreich deaktiviert!')
+                    messages.success(request, u'Der Ansprechpartner hat zugeordnete Notizen oder Termine, deshalb konnte er nicht gelöscht werden! Er wurde deaktiviert!')
                 else:
-                    messages.error(request, u'Der Ansprechpartner konnte nicht gelöscht werden!')
+                    messages.error(request, u'Der Ansprechpartner konnte nicht gelöscht werden, weil es noch zugeordnete Notizen oder Termine!')
         else:
             # active/deactivate the customer and all its contacts
             contact = get_object_or_404(Contact, id=pk)
