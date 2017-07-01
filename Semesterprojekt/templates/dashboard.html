@@ -47,12 +47,19 @@
                             <th>Datum</th>
                             <th>Titel</th>
                             <th>Ort</th>
+                            <th>Status</th>
                         </tr>
                     {% for my_event in my_events %}
                         <tr>
                             <td>{{ my_event.date }}</td>
                             <td>{{ my_event.title }}</td>
                             <td>{{ my_event.location }}</td>
+                            <td>
+                                {% if my_event.status == 0 %} eingeladen
+                                {% elif my_event.status == 1 %} zugesagt
+                                {% elif my_event.status == 2 %} abgesagt
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </table>
