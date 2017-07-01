@@ -94,16 +94,15 @@ class NoteForm(ModelForm):
     With two fields for selecting customer/company and the respective contact
     """
     required_css_class = 'required'
-
-    selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
-                                   widget=Select(attrs={"onChange": 'mySelect()'}))
-    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprechpartner')
+    selemployee= ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.filter(user__is_active=True), required=False,disabled=True)
+    selcustomer = ModelChoiceField(queryset=Customer.objects.filter(is_active=True), label='Firma',
+                                   widget=Select(attrs={"onChange": 'mySelect()'}),required=False)
+    selcontact = ModelChoiceField(queryset=Contact.objects.filter(is_active=True), label='Ansprechpartner')
 
     class Meta:
         model = Note
-        fields = ('selcustomer', 'selcontact', 'employee', 'date', 'notetext')
+        fields = ('selcustomer', 'selcontact','selemployee', 'date', 'notetext')
         labels = {
-            'employee': 'Mitarbeiter',
             'date': 'Datum / Uhrzeit',
             'notetext': 'Text der Notiz'
         }
@@ -114,9 +113,11 @@ class NoteForm(ModelForm):
     def __init__(self,  *args, **kwargs):
         # Initialize the two unbound fields and assign the values ​​when editing notes
         # Transfer by parameter in the views.py
+        myemployee = kwargs.pop ('myemployee', None)
         mycustomer = kwargs.pop('mycustomer', None)
         mycontact = kwargs.pop('mycontact', None)
         super(NoteForm, self).__init__(*args, **kwargs)
+        self.fields['selemployee'].initial = myemployee
         if mycustomer is not None:
             self.fields['selcustomer'].initial = mycustomer
             # filter the contactlist
@@ -128,6 +129,7 @@ class FilterNoteForm(Form):
     """
     A form for filtering notes
     """
+    required_css_class = 'required'
     selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all(), required=False)
     selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
                                    widget=Select(attrs={"onChange": 'mySelect()'}), required=False)
@@ -172,7 +174,7 @@ class EventAddMembersInt(Form):
     A form for adding an employee to an event
     """
     required_css_class = 'required'
-    selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.all(), required=False)
+    selemployee = ModelChoiceField(label='Mitarbeiter', queryset=Employee.objects.filter(user__is_active=True), required=False)
     leader = BooleanField(label='Leiter', required=False)
 
 
@@ -181,6 +183,6 @@ class EventAddMembersExt(Form):
     A form for adding an customer contact to an event
     """
     required_css_class = 'required'
-    selcustomer = ModelChoiceField(queryset=Customer.objects.all(), label='Firma',
+    selcustomer = ModelChoiceField(queryset=Customer.objects.filter(is_active=True), label='Firma',
                                    widget=Select(attrs={"onChange": 'mySelect()'}), required=False)
-    selcontact = ModelChoiceField(queryset=Contact.objects.all(), label='Ansprechpartner', required=False)
+    selcontact = ModelChoiceField(queryset=Contact.objects.filter(is_active=True), label='Ansprechpartner', required=False)

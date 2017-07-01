@@ -61,7 +61,7 @@ class Employee(models.Model):
             employee.save()
 
     def __str__(self):
-        return "{} {} {} {}".format(self.firstname, self.lastname, self.title, self.position)
+        return "{} {}".format(self.firstname, self.lastname)
 
 
 class Customer(models.Model):
@@ -113,7 +113,7 @@ class Contact(models.Model):
             return ""
 
     def __str__(self):
-        return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)
+        return "{} - {} {} ".format(self.customer, self.firstname, self.lastname)
 
 
 class Event(models.Model):
