@@ -31,8 +31,8 @@ class Employee(models.Model):
     position = models.CharField('position', max_length=100)
     phone = models.CharField('phone', blank=True, max_length=25)
     fax = models.CharField('fax', blank=True, max_length=100)
-    mobile = models.EmailField('mobile', blank=True, max_length=100)
-    email = models.CharField('email', blank=True, max_length=100)
+    mobile = models.CharField('mobile', blank=True, max_length=100)
+    email = models.EmailField('email', blank=True, max_length=100)
 
     def get_fullname(self):
         """
