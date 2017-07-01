@@ -1,3 +1,5 @@
+{# File Description: HTML template for the contact list page #}
+
 {% extends 'list_base.html' %}
 {% load bootstrap3 %}
 
@@ -18,7 +20,7 @@
             <tbody>
                 {% for contact in contacts %}
                     <tr {% if not contact.is_active %}class="text-muted"{% endif %}>
-                        <td>{{ contact.firstname }} {{ contact.lastname }} </td>
+                        <td>{{ contact.get_fullname }} </td>
                         <td>{{ contact.position }}</td>
                         <td>{{ contact.phone }} / {{ contact.fax }}</td>
                         <td>{{ contact.mobile }}</td>

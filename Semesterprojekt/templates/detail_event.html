@@ -1,3 +1,5 @@
+{# File Description: HTML template for the event input (extends detail.html template) #}
+
 {% extends 'detail.html' %}
 {% load bootstrap3 %}
 
@@ -61,7 +63,7 @@
             {% for memberint in memberints %}
                 <tr >
                     <td> {% if memberint.leader %} x {% endif %}</td>
-                    <td>{{ memberint.employee.firstname }} {{ memberint.employee.lastname }} </td>
+                    <td>{{ memberint.employee.get_fullname }} </td>
                     <td>{{ memberint.employee.position }}</td>
                     <td> intern </td>
                     <td>{% if memberint.status == 0 %} eingeladen
@@ -74,7 +76,7 @@
             {% for memberext in memberexts %}
                 <tr >
                     <td> </td>
-                    <td>{{ memberext.contact.firstname }} {{ memberext.contact.lastname }} </td>
+                    <td>{{ memberext.contact.get_fullname }} </td>
                     <td>{{ memberext.contact.position }}</td>
                     <td>{{ memberext.contact.customer.company }}</td>
                     <td>{% if memberext.status == 0 %} eingeladen
@@ -109,7 +111,7 @@
                 if ( mycustomer == {{ contact.customer.id }}) {
                     opt = document.createElement("option");
                     opt.value = {{ contact.id }};
-                    opt.text= '{{ contact.firstname }} {{ contact.lastname }}';
+                    opt.text= '{{ contact.get_fullname }}';
                     ddcontact.add(opt);
                 }
 

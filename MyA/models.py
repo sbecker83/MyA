@@ -35,8 +35,18 @@ class Employee(models.Model):
     email = models.CharField('email', blank=True, max_length=100)
 
     def get_fullname(self):
-        """Returns the fullname in the form: F. Lastname"""
-        return self.firstname[0] + ". " + self.lastname
+        """
+        Returns the fullname depending on the given fields
+        If both firstname and lastname are set, return following format: "F. Lastname"
+        """
+        if self.firstname and self.lastname:
+            return self.firstname[0] + ". " + self.lastname
+        elif self.firstname and not self.lastname:
+            return self.firstname
+        elif not self.firstname and self.lastname:
+            return self.lastname
+        else:
+            return ""
 
     @receiver(post_save, sender=User)
     def create_employee_for_superuser(sender, instance, created, **kwargs):
@@ -89,8 +99,18 @@ class Contact(models.Model):
     is_active = models.BooleanField('is_active', default=True)
 
     def get_fullname(self):
-        """Returns the fullname in the form: F. Lastname"""
-        return self.firstname[0] + ". " + self.lastname
+        """
+        Returns the fullname depending on the given fields
+        If both firstname and lastname are set, return following format: "F. Lastname"
+        """
+        if self.firstname and self.lastname:
+            return self.firstname[0] + ". " + self.lastname
+        elif self.firstname and not self.lastname:
+            return self.firstname
+        elif not self.firstname and self.lastname:
+            return self.lastname
+        else:
+            return ""
 
     def __str__(self):
         return "{} {} {} {}".format(self.customer, self.firstname, self.lastname, self.position)

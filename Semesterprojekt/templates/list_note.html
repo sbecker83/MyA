@@ -1,3 +1,5 @@
+{# File Description: HTML template for the note list page #}
+
 {% extends 'list_base.html' %}
 {% load bootstrap3 %}
 
@@ -32,8 +34,8 @@
                 {% for note in notes %}
                     <tr>
                         <td>{{ note.date|date:"d.m.Y H:i" }}</td>
-                        <td>{{ note.employee.lastname }}, {{ note.employee.firstname }}</td>
-                        <td>{{ note.contact.customer }} / {{ note.contact.lastname }},{{ note.contact.firstname }} </td>
+                        <td>{{ note.employee.get_fullname }} </td>
+                        <td>{{ note.contact.customer }} / {{ note.contact.get_fullname }} </td>
                         <td>{{ note.notetext|truncatechars:50 }}</td>
                         <td>
                             <a href="{% url 'edit_note' pk=note.id %}">{% bootstrap_icon 'edit' %}</a>
@@ -68,7 +70,7 @@
                 if ( mycustomer == {{ contact.customer.id }}) {
                     opt = document.createElement("option");
                     opt.value = {{ contact.id }};
-                    opt.text= '{{ contact.firstname }} {{ contact.lastname }}';
+                    opt.text= '{{ contact.get_fullname }}';
                     ddcontact.add(opt);
                 }
             {% endfor %}
