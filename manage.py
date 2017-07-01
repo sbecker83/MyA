@@ -6,7 +6,7 @@ from errno import errorcode
 import MySQLdb
 
 
-"""DB Verbindung testen"""
+"""check database connection"""
 try:
     db = MySQLdb.connect('localhost', 'MaSaRi', 'OOPss2017', 'myadb')
 except MySQLdb.connection.Error as err:
