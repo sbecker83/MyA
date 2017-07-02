@@ -1,6 +1,6 @@
 {#  File Description: HTML template for the dashboard #}
 
-{% extends 'base.html' %}
+{% extends 'list_base.html' %}
 {% load bootstrap3 %}
 
 {% block content %}
@@ -17,19 +17,23 @@
             <div class="content">
                 <h3>Meine Notizen</h3>
                 {% if my_notes %}
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <th>Datum</th>
-                            <th>Notiz</th>
-                            <th></th>
-                        </tr>
-                    {% for my_note in my_notes %}
-                        <tr>
-                            <td>{{ my_note.date }}</td>
-                            <td>{{ my_note.notetext|truncatechars:40 }}</td>
-                            <td><a href="{% url 'edit_note' pk=my_note.id %}">{% bootstrap_icon 'edit' %}</a></td>
-                        </tr>
-                    {% endfor %}
+                    <table class="table table-bordered table-striped data-table">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Notiz</th>
+                                <th class="no-sort"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for my_note in my_notes %}
+                            <tr>
+                                <td>{{ my_note.date }}</td>
+                                <td>{{ my_note.notetext|truncatechars:40 }}</td>
+                                <td><a href="{% url 'edit_note' pk=my_note.id %}">{% bootstrap_icon 'edit' %}</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 {% else %}
                     <p>Bislang keine Notizen.</p>
@@ -42,26 +46,30 @@
             <div class="content">
                 <h3>Meine Termine</h3>
                 {% if my_events %}
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <th>Datum</th>
-                            <th>Titel</th>
-                            <th>Ort</th>
-                            <th>Status</th>
-                        </tr>
-                    {% for my_event in my_events %}
-                        <tr>
-                            <td>{{ my_event.date }}</td>
-                            <td>{{ my_event.title }}</td>
-                            <td>{{ my_event.location }}</td>
-                            <td>
-                                {% if my_event.status == 0 %} eingeladen
-                                {% elif my_event.status == 1 %} zugesagt
-                                {% elif my_event.status == 2 %} abgesagt
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                    <table class="table table-bordered table-striped data-table">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Titel</th>
+                                <th>Ort</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for my_event in my_events %}
+                            <tr>
+                                <td>{{ my_event.date }}</td>
+                                <td>{{ my_event.title }}</td>
+                                <td>{{ my_event.location }}</td>
+                                <td>
+                                    {% if my_event.status == 0 %} eingeladen
+                                    {% elif my_event.status == 1 %} zugesagt
+                                    {% elif my_event.status == 2 %} abgesagt
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 {% else %}
                     <p>Derzeit keine Termine.</p>
