@@ -58,7 +58,7 @@
                         <tbody>
                         {% for my_event in my_events %}
                             <tr>
-                                <td>{{ my_event.date }}</td>
+                                <td>{{ my_event.date|date:'d.m.Y' }} {{ my_event.starttime }}</td>
                                 <td>{{ my_event.title }}</td>
                                 <td>{{ my_event.location }}</td>
                                 <td>
