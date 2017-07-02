@@ -17,6 +17,8 @@ REGEX_CODE_CITY = r'^\d{5} [a-zA-ZäöüÄÖÜ -ß]+$'
 
 
 class Employee(models.Model):
+    phoneRegex = RegexValidator(regex=REGEX_PHONE, message="Telefonnummern: bitte Zahlen eingeben, Format_ 123-456, 123/567")
+    plzcityRegex = RegexValidator(regex=REGEX_CODE_CITY, message="5 stellige PLZ und Stadt")
     # this connects the employee to the django auth user model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     firstname = models.CharField('firstname', max_length=100)
@@ -29,9 +31,9 @@ class Employee(models.Model):
     gender = models.CharField('salutation', blank=True, default='N', max_length=1, choices=GENDER)
     title = models.CharField('title', blank=True, max_length=100)
     position = models.CharField('position', max_length=100)
-    phone = models.CharField('phone', validators=[REGEX_PHONE], blank=True, max_length=25)
-    fax = models.CharField('fax', validators=[REGEX_PHONE], blank=True, max_length=100)
-    mobile = models.CharField('mobile', validators=[REGEX_PHONE], blank=True, max_length=100)
+    phone = models.CharField('phone', validators=[phoneRegex], blank=True, max_length=25)
+    fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
+    mobile = models.CharField('mobile', validators=[phoneRegex], blank=True, max_length=100)
     email = models.EmailField('email', blank=True, max_length=100)
 
     def get_fullname(self):
@@ -65,11 +67,13 @@ class Employee(models.Model):
 
 
 class Customer(models.Model):
+    phoneRegex = RegexValidator(regex=REGEX_PHONE, message="Telefonnummern: bitte Zahlen eingeben, Format_ 123-456, 123/567")
+    plzcityRegex = RegexValidator(regex=REGEX_CODE_CITY, message="5 stellige PLZ und Stadt")
     company = models.CharField('company', max_length=100)
     street = models.CharField('street', blank=True, max_length=100)
-    plzcity = models.CharField('plzcity', validators=[REGEX_CODE_CITY], blank=True, max_length=100)
-    phone = models.CharField('phone', validators=[REGEX_PHONE], blank=True, max_length=100)
-    fax = models.CharField('fax', validators=[REGEX_PHONE], blank=True, max_length=100)
+    plzcity = models.CharField('plzcity', validators=[plzcityRegex], blank=True, max_length=100)
+    phone = models.CharField('phone', validators=[phoneRegex], blank=True, max_length=100)
+    fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
     website = models.CharField('website', blank=True, max_length=100)
     is_active = models.BooleanField('is_active', default=True)
 
@@ -78,6 +82,7 @@ class Customer(models.Model):
 
 
 class Contact(models.Model):
+    phoneRegex = RegexValidator(regex=REGEX_PHONE, message="Telefonnummern: bitte Zahlen eingeben, Format_ 123-456, 123/567")
     customer = models.ForeignKey(Customer)
     firstname = models.CharField('firstname', max_length=100)
     lastname = models.CharField('lastname', max_length=100)
@@ -89,9 +94,9 @@ class Contact(models.Model):
     gender = models.CharField('gender', blank=True, default='N', max_length=1, choices=GENDER)
     title = models.CharField('title', blank=True, max_length=100)
     position = models.CharField('position', max_length=100)
-    phone = models.CharField('phone', validators=[REGEX_PHONE], blank=True, max_length=25)
-    fax = models.CharField('fax', validators=[REGEX_PHONE], blank=True, max_length=100)
-    mobile = models.CharField('mobile',validators=[REGEX_PHONE], blank=True, max_length=100)
+    phone = models.CharField('phone', validators=[phoneRegex], blank=True, max_length=25)
+    fax = models.CharField('fax', validators=[phoneRegex], blank=True, max_length=100)
+    mobile = models.CharField('mobile', validators=[phoneRegex], blank=True, max_length=100)
     email = models.EmailField('email', blank=True, max_length=100)
     is_active = models.BooleanField('is_active', default=True)
 
