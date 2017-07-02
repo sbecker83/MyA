@@ -764,21 +764,25 @@ def detail_event_members(request, pk=None, year=None, month=None, day=None):
                 pass
             else:
                 if request.POST.get('leader') == 'on':
-                    leader = True
-                    # the leader automatically has the event status: accepted
-                    status = 1
+                    if not MemberInt.objects.filter (event_id=pk, leader=True).exists ():
+                        # add employee leyader only once to the event
+                        leader = True
+                        # the leader automatically has the event status: accepted
+                        status = 1
+                    else:
+                        leader = False
+                        # the leader automatically has the event status: invited
+                        status = 0
                 else:
                     leader = False
                     # the leader automatically has the event status: invited
                     status = 0
 
-                if not MemberInt.objects.filter(event_id=pk, leader=True).exists():
-                    # add employee only once to the event
-                    try:
-                        MemberInt.objects.get(employee_id=int(selemployee), event_id=pk)
-                    except MemberInt.DoesNotExist:
-                        member_int = MemberInt(employee_id=int(selemployee), event_id=pk, leader=leader, status=status)
-                        member_int.save()
+                try:
+                    MemberInt.objects.get(employee_id=int(selemployee), event_id=pk)
+                except MemberInt.DoesNotExist:
+                    member_int = MemberInt(employee_id=int(selemployee), event_id=pk, leader=leader, status=status)
+                    member_int.save()
                 else:
                     messages.error(request, u'Es kann nur ein Mitarbeiter Leiter sein!')
                     pass
