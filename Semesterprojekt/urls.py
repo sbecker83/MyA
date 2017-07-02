@@ -42,15 +42,20 @@ urlpatterns = (
     # calendar
     url(r'^calendar/?$', MyA.views.get_calendar, name='calendar'),
     url(r'^calendar/(?P<year>[0-9]+)/(?P<month>[0-9]+)/?$', MyA.views.get_calendar, name='calendar'),
-    url(r'^calendar/event/new/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$', MyA.views.detail_event, name='new_event'),
-    url(r'^calendar/event/edit/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/?$', MyA.views.detail_event_members, name='edit_event'),
+    url(r'^calendar/event/new/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/?$',
+        MyA.views.detail_event, name='new_event'),
+    url(r'^calendar/event/edit/(?P<year>[0-9]+)/(?P<month>[0-9]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/?$',
+        MyA.views.detail_event_members, name='edit_event'),
     url(r'^calendar/event/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event, name='delete_event'),
-    url(r'^calendar/event/member/internal/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event_member_internal, name='delete_event_member_internal'),
-    url(r'^calendar/event/member/external/delete/(?P<pk>[0-9]+)/?$', MyA.views.delete_event_member_external, name='delete_event_member_external'),
-    url (r'^calendar/event/member/internal/edit/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.edit_event_member_internal,
+    url(r'^calendar/event/member/internal/delete/(?P<pk>[0-9]+)/?$',
+        MyA.views.delete_event_member_internal, name='delete_event_member_internal'),
+    url(r'^calendar/event/member/external/delete/(?P<pk>[0-9]+)/?$',
+        MyA.views.delete_event_member_external, name='delete_event_member_external'),
+    url(r'^calendar/event/member/internal/edit/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$',
+        MyA.views.edit_event_member_internal,
          name='edit_event_member_internal'),
-    url (r'^calendar/event/member/external/edit/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$', MyA.views.edit_event_member_external,
-         name='edit_event_member_external'),
+    url(r'^calendar/event/member/external/edit/(?P<pk>[0-9]+)/(?P<status>[0-9]+)/?$',
+        MyA.views.edit_event_member_external, name='edit_event_member_external'),
 
     # login / logout
     url(r'^login/$', auth_views.login, name='login'),
@@ -67,7 +72,8 @@ urlpatterns = (
     url(r'^contact/(?P<fk>[0-9]+)/?$', MyA.views.list_contacts, name='list_contacts'),
     url(r'^contact/neuer/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='new_contact'),
     url(r'^contact/edit/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.details_contact, name='edit_contact'),
-    url(r'^contact/delete/(?P<is_delete>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$', MyA.views.delete_contact, name='delete_contact'),
+    url(r'^contact/delete/(?P<is_delete>[0-9]+)/(?P<pk>[0-9]+)/(?P<fk>[0-9]+)/?$',
+        MyA.views.delete_contact, name='delete_contact'),
     url(r'^contact/export$', MyA.views.export_contacts, name='export_contacts'),
 
     # note - overview, new, edit, delete, export
