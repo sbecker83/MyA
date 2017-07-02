@@ -18,6 +18,8 @@
 {% block js %}
     {{ block.super }} {# use the javascript defined in the extended template #}
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/moment-with-locales.min.js' %}"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
     <script type="text/javascript" src="{% static 'js/myaDatatable.js' %}"></script>
 {% endblock %}
 
