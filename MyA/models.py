@@ -17,7 +17,8 @@ REGEX_CODE_CITY = r'^\d{5} [a-zA-ZäöüÄÖÜ -ß]+$'
 
 
 class Employee(models.Model):
-    phoneRegex = RegexValidator(regex=REGEX_PHONE, message="Telefonnummern: bitte Zahlen eingeben, Format_ 123-456, 123/567")
+    phoneRegex = RegexValidator(regex=REGEX_PHONE,
+                                message="Telefonnummern: bitte Zahlen eingeben, Format: 123-456, 123/567")
     plzcityRegex = RegexValidator(regex=REGEX_CODE_CITY, message="5 stellige PLZ und Stadt")
     # this connects the employee to the django auth user model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -67,7 +68,8 @@ class Employee(models.Model):
 
 
 class Customer(models.Model):
-    phoneRegex = RegexValidator(regex=REGEX_PHONE, message="Telefonnummern: bitte Zahlen eingeben, Format_ 123-456, 123/567")
+    phoneRegex = RegexValidator(regex=REGEX_PHONE,
+                                message="Telefonnummern: bitte Zahlen eingeben, Format: 123-456, 123/567")
     plzcityRegex = RegexValidator(regex=REGEX_CODE_CITY, message="5 stellige PLZ und Stadt")
     company = models.CharField('company', max_length=100)
     street = models.CharField('street', blank=True, max_length=100)
@@ -82,7 +84,8 @@ class Customer(models.Model):
 
 
 class Contact(models.Model):
-    phoneRegex = RegexValidator(regex=REGEX_PHONE, message="Telefonnummern: bitte Zahlen eingeben, Format_ 123-456, 123/567")
+    phoneRegex = RegexValidator(regex=REGEX_PHONE,
+                                message="Telefonnummern: bitte Zahlen eingeben, Format: 123-456, 123/567")
     customer = models.ForeignKey(Customer)
     firstname = models.CharField('firstname', max_length=100)
     lastname = models.CharField('lastname', max_length=100)
